@@ -1,15 +1,16 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet } from 'react-native';
+import { Pressable, Text, StyleSheet,ImageBackground, Dimensions } from 'react-native';
 import { Link } from 'expo-router';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { View } from '@/components/Themed';
-
+import BackgroundLayout from '@/components/BackgroundLayout';
 
 export default function LoginLayout() {
   const colorScheme = useColorScheme();
 
   return (
+    <BackgroundLayout>
     <View style={styles.container}>
       <Text style={{ color: Colors[colorScheme ?? 'light'].text, fontSize: 20 }}>
         Login Page
@@ -51,6 +52,7 @@ export default function LoginLayout() {
           </Pressable>
         </Link>
     </View>
+    </BackgroundLayout>
   );
 }
 
