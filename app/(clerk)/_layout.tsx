@@ -29,9 +29,10 @@ export default function TabLayout() {
         headerShown: useClientOnlyValue(false, true),
       }}>
       <Tabs.Screen
-        name="(reservations)"
+        name="(reservations)"        
         options={{
           title: 'Reservations',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
@@ -39,6 +40,7 @@ export default function TabLayout() {
         name="(equipments)"
         options={{
           title: 'Equipments',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
@@ -46,6 +48,7 @@ export default function TabLayout() {
         name="(maintenances)"
         options={{
           title: 'Maintenances',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
