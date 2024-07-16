@@ -1,33 +1,107 @@
-import { StyleSheet, Pressable } from 'react-native';
-import { Link } from 'expo-router';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
+import { StyleSheet, Pressable, FlatList } from 'react-native';
+import { Link, useLocalSearchParams, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
+import BackgroundLayout from '@/components/BackgroundLayout';
+import { ImageBackground } from 'react-native';
+import ContentContainer from '@/components/ContentContainer';
+import MainHeader from '@/components/MainHeader';
+import ContentContainerHeader from '@/components/ContentContainerHeader';
+import ListItemBackground from '@/components/ListItemBackground';
+import ListItemWithImage from '@/components/ListItemWithImage';
+
+interface Item {
+  id: number;
+  serialNumber: string;
+  status: string;
+  imageURL?: string | null;
+}
 
 export default function ViewItemsScreen() {
-  const colorScheme = useColorScheme();
+  const { labId, equipmentId } = useLocalSearchParams<{ labId: string, equipmentId: string }>();
+  if (!labId) throw new Error('Missing labId');
+  if (!equipmentId) throw new Error('Missing equipmentId');
+  const items: Item[] = [
+    {
+      id: 1,
+      serialNumber: 'FOC1234X56Y',
+      status: 'Available',
+    },
+    {
+      id: 2,
+      serialNumber: 'FOC1234X56Z',
+      status: 'Available',
+    },
+    {
+      id: 3,
+      serialNumber: 'FOC1234X56A',
+      status: 'Available',
+    },
+    {
+      id: 4,
+      serialNumber: 'FOC1234X56B',
+      status: 'Available',
+    },
+    {
+      id: 5,
+      serialNumber: 'HOC1234X56B',
+      status: 'Available',
+    },
+    {
+      id: 6,
+      serialNumber: 'HOC1234X56C',
+      status: 'Available',
+    },
+  ]
+  const handleButtonClick = () => {
+    router.push({ pathname: '/(clerk)/(equipments)/add-item', params: { equipmentId: equipmentId } });
+  }
+  const ItemComponent: React.FC<{ item: Item }> = ({ item }) => (
+    <Link href={{ pathname: `/(clerk)/(equipments)/view-item`, params: { equipmentId: item.id, labId: labId, itemId: item.id } }} asChild>
+            <Pressable>
+              {({ pressed }) => (
+                <ListItemBackground>
+                  <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+                  <Text style={styles.text}>
+                    Serial Number: {item.serialNumber}
+                  </Text>
+                  <Text style={styles.text}>
+                    Status: {item.status}
+                  </Text>
+                  </ListItemWithImage>
+                </ListItemBackground>
+                )}
+            </Pressable>
+    </Link>
+  );
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>View Items</Text>
-      <Link href="/(clerk)/(equipments)/view-item" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <Text style={{ color: Colors[colorScheme ?? 'light'].text, opacity: pressed ? 0.5 : 1 }}>
-                Item 1
-              </Text>
-              )}
-          </Pressable>
-      </Link>
-      <Link href="/(clerk)/(equipments)/add-item" asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <Text style={{ color: Colors[colorScheme ?? 'light'].text, opacity: pressed ? 0.5 : 1 }}>
-                Add Item
-              </Text>
-              )}
-          </Pressable>
-      </Link>
-    </View>
+    <BackgroundLayout>
+      <MainHeader title="Equipments" />
+      <ContentContainer>
+      <View style={styles.container}>
+        <ContentContainerHeader title="View Items" />
+        <FlatList
+            data={items}
+            renderItem={({ item }) => <ItemComponent item={item} />}
+            keyExtractor={(item) => item.id.toString()}
+            style={styles.flatList}
+            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+          />
+          <View style={styles.button}>
+              <ImageBackground
+                source={require('@/assets/images/blueBtn.webp')}
+                style={styles.buttonBackground}
+                borderRadius={10}
+              >
+                <Pressable onPress={handleButtonClick} style={{ width: '100%', alignItems: 'center' }}>
+                  <Text style={styles.buttonText}>
+                    Add New Item
+                  </Text>
+                </Pressable>
+              </ImageBackground>
+          </View>
+      </View>
+      </ContentContainer>
+    </BackgroundLayout>
   );
 }
 
@@ -36,14 +110,37 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
+    width: '100%',
   },
-  title: {
-    fontSize: 20,
+  flatList: {
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  titleText: {
+    color:'white',
+    fontSize: 13,
     fontWeight: 'bold',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  text: {
+    color: 'white',
+    fontSize: 10,
+  },
+  button: {
+    width: '100%',
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    marginTop: '4%',
+  },
+  buttonBackground: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    paddingTop: '2.5%',
+    paddingBottom: '2.5%',
   },
 });
