@@ -1,5 +1,6 @@
 import { StyleSheet, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
+import { Link, router, useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
@@ -7,6 +8,8 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 
 export default function VerifyBorrowingItemScreen() {
+  const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
+  if (!reservationId) throw new Error('Missing equipmentId');
   return (
     <BackgroundLayout>
     <MainHeader title="Reservations" />

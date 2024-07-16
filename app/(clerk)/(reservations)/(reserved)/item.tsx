@@ -24,8 +24,8 @@ interface Reservation {
   assignedAt: string;
 }
 
-const handleVerify = () => {
-  router.replace('/(clerk)/(reservations)/(reserved)/verify');
+const handleVerify = ({ item }: { item: Reservation }) => {
+  router.replace({ pathname: '/(clerk)/(reservations)/(reserved)/verify', params: { reservationId: item.id } })
 }
 
 export default function ViewRequestedItemScreen() {
@@ -95,7 +95,7 @@ export default function ViewRequestedItemScreen() {
                 style={styles.buttonBackground}
                 borderRadius={10}
               >
-                <Pressable onPress={handleVerify} style={{ width: '100%', alignItems: 'center' }}>
+                <Pressable onPress={() => handleVerify({ item: reservation })} style={{ width: '100%', alignItems: 'center' }}>
                   <Text style={styles.buttonText}>
                     Verify
                   </Text>

@@ -1,6 +1,5 @@
 import { StyleSheet, Pressable, FlatList } from 'react-native';
 import { Link } from 'expo-router';
-import { useColorScheme } from '@/components/useColorScheme';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -9,11 +8,6 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
-
-// 4-Port WiFi Router (Cisco SRP541W)
-// Lab : Network Lab
-// User : John Doe
-// Requested At 2024-08-02 12:03
 
 interface Reservation {
   id: number;
@@ -26,7 +20,7 @@ interface Reservation {
 }
 
 const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
-  <Link href={`/(clerk)/(reservations)/(requested)/${item.id}`} asChild>
+  <Link href={{ pathname: '/(clerk)/(reservations)/(requested)/item', params: { reservationId: item.id } }} asChild>
           <Pressable>
             {({ pressed }) => (
               <ListItemBackground>
@@ -96,7 +90,6 @@ export default function ViewRequestedItemsScreen() {
       requestedAt: '2024-08-02 12:03',
     }
   ];
-  const colorScheme = useColorScheme();
   return (
     <BackgroundLayout>
       <MainHeader title="Reservations" />
@@ -110,7 +103,6 @@ export default function ViewRequestedItemsScreen() {
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
             contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
-            
           />
       </View>
       </ContentContainer>

@@ -21,7 +21,7 @@ interface Reservation {
 }
 
 const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
-  <Link href={`/(clerk)/(reservations)/(reserved)/${item.id}`} asChild>
+  <Link href={{ pathname: '/(clerk)/(reservations)/(reserved)/item', params: { reservationId: item.id } }} asChild>
           <Pressable>
             {({ pressed }) => (
               <ListItemBackground>
