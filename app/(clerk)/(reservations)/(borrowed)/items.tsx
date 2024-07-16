@@ -1,24 +1,105 @@
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, Pressable, FlatList } from 'react-native';
 import { Link } from 'expo-router';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
 import { Text, View } from '@/components/Themed';
+import BackgroundLayout from '@/components/BackgroundLayout';
+import ContentContainer from '@/components/ContentContainer';
+import MainHeader from '@/components/MainHeader';
+import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBar';
+import ContentContainerHeader from '@/components/ContentContainerHeader';
+import ListItemBackground from '@/components/ListItemBackground';
+import ListItemWithImage from '@/components/ListItemWithImage';
 
-export default function ViewBorrowedItemsScreen() {
-  const colorScheme = useColorScheme();
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>View Borrowed Items</Text>
-      <Link href="/(clerk)/(reservations)/(borrowed)/item" asChild>
+interface Reservation {
+  id: number;
+  name: string;
+  model: string;
+  lab: string;
+  user: string;
+  dueDate: string;
+  imageURL?: string | null;
+}
+
+const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
+  <Link href={`/(clerk)/(reservations)/(borrowed)/${item.id}`} asChild>
           <Pressable>
             {({ pressed }) => (
-              <Text style={{ color: Colors[colorScheme ?? 'light'].text, opacity: pressed ? 0.5 : 1 }}>
-                Borrowed Item 1
-              </Text>
+              <ListItemBackground>
+                <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+                <Text style={styles.titleText}>
+                  {item.name}
+                </Text>
+                <Text style={styles.text}>
+                  Model: {item.model}
+                </Text>
+                <Text style={styles.text}>
+                  Lab: {item.lab}
+                </Text>
+                <Text style={styles.text}>
+                  User: {item.user}
+                </Text>
+                <Text style={styles.text}>
+                  Due Date: {item.dueDate}
+                </Text>
+                </ListItemWithImage>
+              </ListItemBackground>
               )}
           </Pressable>
-      </Link>
-    </View>
+  </Link>
+);
+
+export default function ViewBorrowedItemsScreen() {
+  const reservations: Reservation[] = [
+    {
+      id: 1,
+      name: '4-Port WiFi Router',
+      model: 'Cisco SRP541W',
+      lab: 'Network Lab',
+      user: 'John Doe',
+      dueDate: '2024-08-05',
+    },
+    {
+      id: 2,
+      name: 'Ethernet Cable',
+      model: 'Cat 6',
+      lab: 'Network Lab',
+      user: 'Jane Doe',
+      dueDate: '2024-08-05',
+    },
+    {
+      id: 3,
+      name: '8-Port Ethernet Switch',
+      model: 'Cisco SG350-10P',
+      lab: 'Network Lab',
+      user: 'John Doe',
+      dueDate: '2024-08-05',
+    },
+    {
+      id: 4,
+      name: '4-Port WiFi Router',
+      model: 'Cisco SRP541W',
+      lab: 'Network Lab',
+      user: 'John Doe',
+      dueDate: '2024-08-05',
+    },
+  ];
+  return (
+    <BackgroundLayout>
+      <MainHeader title="Reservations" />
+      <ClerkReservationsHorizontalBar selectedIndex = {2} />
+      <ContentContainer>
+      <View style={styles.container}>
+        <ContentContainerHeader title="Borrowed Items" />
+        <FlatList
+            data={reservations}
+            renderItem={({ item }) => <ItemComponent item={item} />}
+            keyExtractor={(item) => item.id.toString()}
+            style={styles.flatList}
+            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            
+          />
+      </View>
+      </ContentContainer>
+    </BackgroundLayout>
   );
 }
 
@@ -27,14 +108,20 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
+    width: '100%',
   },
-  title: {
-    fontSize: 20,
+  flatList: {
+    width: '100%',
+    backgroundColor: 'transparent',
+  },
+  titleText: {
+    color:'white',
+    fontSize: 13,
     fontWeight: 'bold',
   },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  text: {
+    color: 'white',
+    fontSize: 10,
   },
 });

@@ -50,7 +50,7 @@ function ReservationsBorrowedLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="items" options={{ headerShown: false }} />
-        <Stack.Screen name="item" options={{ headerShown: false }} />
+        <Stack.Screen name="[reservationId]" options={{ headerShown: false }} />
         <Stack.Screen name="verify" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>

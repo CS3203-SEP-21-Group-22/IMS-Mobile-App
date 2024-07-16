@@ -1,15 +1,22 @@
 import { StyleSheet, Pressable } from 'react-native';
-import { Link } from 'expo-router';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
 import { Text, View } from '@/components/Themed';
+import BackgroundLayout from '@/components/BackgroundLayout';
+import ContentContainer from '@/components/ContentContainer';
+import MainHeader from '@/components/MainHeader';
+import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBar';
+import ContentContainerHeader from '@/components/ContentContainerHeader';
 
 export default function VerifyReturningItemScreen() {
-  const colorScheme = useColorScheme();
   return (
+    <BackgroundLayout>
+    <MainHeader title="Reservations" />
+    <ClerkReservationsHorizontalBar selectedIndex = {2} />
+    <ContentContainer>
     <View style={styles.container}>
-      <Text style={styles.title}>QR Code</Text>
+      <ContentContainerHeader title="Verify Returning Item" />
     </View>
+    </ContentContainer>
+    </BackgroundLayout>
   );
 }
 
@@ -18,6 +25,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'transparent',
+    width: '100%',
   },
   title: {
     fontSize: 20,
