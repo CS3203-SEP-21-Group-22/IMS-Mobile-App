@@ -16,7 +16,7 @@ export default function Root({ children }: { children: React.ReactNode }) {
           Disable body scrolling on web. This makes ScrollView components work closer to how they do on native. 
           However, body scrolling is often nice to have for mobile web. If you want to enable it, remove this line.
         */}
-        <ScrollViewStyleReset />
+        {/* <ScrollViewStyleReset /> */}
 
         {/* Using raw CSS styles as an escape-hatch to ensure the background color never flickers in dark-mode. */}
         <style dangerouslySetInnerHTML={{ __html: responsiveBackground }} />
@@ -30,9 +30,11 @@ export default function Root({ children }: { children: React.ReactNode }) {
 const responsiveBackground = `
 body {
   background-color: #fff;
+  color: #000;
 }
 @media (prefers-color-scheme: dark) {
   body {
     background-color: #000;
+    color: #fff;
   }
 }`;

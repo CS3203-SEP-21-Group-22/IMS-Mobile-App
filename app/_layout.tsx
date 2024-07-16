@@ -4,7 +4,8 @@ import { useColorScheme } from '@/components/useColorScheme';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
 import 'react-native-reanimated';
 
 export {
@@ -13,7 +14,7 @@ export {
 } from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: '(login)',
+  initialRouteName: 'login',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -54,7 +55,7 @@ function RootLayoutNav() {
         <Stack.Screen name="(admin)" options={{ headerShown: false }} />
         <Stack.Screen name="(clerk)" options={{ headerShown: false }} />
         <Stack.Screen name="(student)" options={{ headerShown: false }} />
-        <Stack.Screen name="(technician)" options={{ headerShown: false }} />
+        <Stack.Screen name="(technician)" options={{ headerShown: false }} /> 
       </Stack>
     </ThemeProvider>
   );
