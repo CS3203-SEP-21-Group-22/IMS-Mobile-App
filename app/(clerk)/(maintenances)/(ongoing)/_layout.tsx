@@ -50,8 +50,9 @@ function MaintenancesOnGoingLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="maintenances" options={{ headerShown: false }} />
-        <Stack.Screen name="add-maintenance" options={{ title: 'Add New Maintenance' }} />
-        <Stack.Screen name="update-maintenance" options={{ title: 'Update Maintenance' }} />
+        <Stack.Screen name="view-maintenance" options={{ headerShown: false }} />
+        <Stack.Screen name="add-maintenance" options={{ headerShown: false }} />
+        <Stack.Screen name="update-maintenance" options={{ headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );
