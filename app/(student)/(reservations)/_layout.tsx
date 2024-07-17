@@ -49,8 +49,9 @@ function ReservationsLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="borrow-item" options={{ title: 'Borrow Item' }} />
         <Stack.Screen name="reserved-items" options={{ title: 'Reserved Items' }} />
+        <Stack.Screen name="view-item" options={{ title: 'View Item' }} />
+        <Stack.Screen name="borrow-item" options={{ title: 'Borrow Item' }} />
       </Stack>
     </ThemeProvider>
   );

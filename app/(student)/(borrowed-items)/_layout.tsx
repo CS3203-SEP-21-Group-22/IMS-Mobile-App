@@ -50,6 +50,7 @@ function BorrowedItemsLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="borrowed-items" options={{ title: 'Borrowed Items' }} />
+        <Stack.Screen name="view-item" options={{ title: 'View Item' }} />
         <Stack.Screen name="return-item" options={{ title: 'Return Item' }} />
       </Stack>
     </ThemeProvider>
