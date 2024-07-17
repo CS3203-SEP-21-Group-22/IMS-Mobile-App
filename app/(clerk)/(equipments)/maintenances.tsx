@@ -6,6 +6,7 @@ import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
+import { useState, useEffect } from 'react';
 
 interface Maintenance {
   id: number;
@@ -26,73 +27,79 @@ interface Maintenance {
 
 export default function ViewMaintenancesScreen() {
   const { itemId } = useLocalSearchParams<{ itemId: string }>();
-  if (!itemId) throw new Error('Missing itemId');
-  const maintenances: Maintenance[] = [
-    {
-      id: 1,
-      description: 'Replace broken parts',
-      assignedTo: 'John Doe',
-      createdBy: 'Jane Doe',
-      createdAt: '2021-09-01 10:00',
-      submitNote: 'Replaced the broken parts with new ones',
-      cost: 100,
-      returnedAt: '2021-09-02 10:00',
-      reviewNote: 'The maintenance was done perfectly',
-      reviewedBy: 'John Doe',
-      reviewedAt: '2021-09-03 10:00',
-      startDate: '2021-09-01',
-      endDate: '2021-09-02',
-      status: 'Completed',
-    },
-    {
-      id: 2,
-      description: 'Replace broken parts',
-      assignedTo: 'John Doe',
-      createdBy: 'Jane Doe',
-      createdAt: '2021-09-01 10:00',
-      submitNote: 'Replaced the broken parts with new ones',
-      cost: 100,
-      returnedAt: '2021-09-02 10:00',
-      reviewNote: 'The maintenance was done perfectly',
-      reviewedBy: 'John Doe',
-      reviewedAt: '2021-09-03 10:00',
-      startDate: '2021-09-01',
-      endDate: '2021-09-02',
-      status: 'Completed',
-    },
-    {
-      id: 3,
-      description: 'Replace broken parts',
-      assignedTo: 'John Doe',
-      createdBy: 'Jane Doe',
-      createdAt: '2021-09-01 10:00',
-      submitNote: 'Replaced the broken parts with new ones',
-      cost: 100,
-      returnedAt: '2021-09-02 10:00',
-      reviewNote: 'The maintenance was done perfectly',
-      reviewedBy: 'John Doe',
-      reviewedAt: '2021-09-03 10:00',
-      startDate: '2021-09-01',
-      endDate: '2021-09-02',
-      status: 'Completed',
-    },
-    {
-      id: 4,
-      description: 'Replace broken parts',
-      assignedTo: 'John Doe',
-      createdBy: 'Jane Doe',
-      createdAt: '2021-09-01 10:00',
-      submitNote: 'Replaced the broken parts with new ones',
-      cost: 100,
-      returnedAt: '2021-09-02 10:00',
-      reviewNote: 'The maintenance was done perfectly',
-      reviewedBy: 'John Doe',
-      reviewedAt: '2021-09-03 10:00',
-      startDate: '2021-09-01',
-      endDate: '2021-09-02',
-      status: 'Completed',
-    },
-  ]
+  const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
+  useEffect(() => {
+    if (itemId) {
+      setMaintenances([
+        {
+          id: 1,
+          description: 'Replace broken parts',
+          assignedTo: 'John Doe',
+          createdBy: 'Jane Doe',
+          createdAt: '2021-09-01 10:00',
+          submitNote: 'Replaced the broken parts with new ones',
+          cost: 100,
+          returnedAt: '2021-09-02 10:00',
+          reviewNote: 'The maintenance was done perfectly',
+          reviewedBy: 'John Doe',
+          reviewedAt: '2021-09-03 10:00',
+          startDate: '2021-09-01',
+          endDate: '2021-09-02',
+          status: 'Completed',
+        },
+        {
+          id: 2,
+          description: 'Replace broken parts',
+          assignedTo: 'John Doe',
+          createdBy: 'Jane Doe',
+          createdAt: '2021-09-01 10:00',
+          submitNote: 'Replaced the broken parts with new ones',
+          cost: 100,
+          returnedAt: '2021-09-02 10:00',
+          reviewNote: 'The maintenance was done perfectly',
+          reviewedBy: 'John Doe',
+          reviewedAt: '2021-09-03 10:00',
+          startDate: '2021-09-01',
+          endDate: '2021-09-02',
+          status: 'Completed',
+        },
+        {
+          id: 3,
+          description: 'Replace broken parts',
+          assignedTo: 'John Doe',
+          createdBy: 'Jane Doe',
+          createdAt: '2021-09-01 10:00',
+          submitNote: 'Replaced the broken parts with new ones',
+          cost: 100,
+          returnedAt: '2021-09-02 10:00',
+          reviewNote: 'The maintenance was done perfectly',
+          reviewedBy: 'John Doe',
+          reviewedAt: '2021-09-03 10:00',
+          startDate: '2021-09-01',
+          endDate: '2021-09-02',
+          status: 'Completed',
+        },
+        {
+          id: 4,
+          description: 'Replace broken parts',
+          assignedTo: 'John Doe',
+          createdBy: 'Jane Doe',
+          createdAt: '2021-09-01 10:00',
+          submitNote: 'Replaced the broken parts with new ones',
+          cost: 100,
+          returnedAt: '2021-09-02 10:00',
+          reviewNote: 'The maintenance was done perfectly',
+          reviewedBy: 'John Doe',
+          reviewedAt: '2021-09-03 10:00',
+          startDate: '2021-09-01',
+          endDate: '2021-09-02',
+          status: 'Completed',
+        },
+      ]);
+    } else {
+      throw new Error('Missing itemId');
+    }
+  }, []);
   const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
     <ListItemBackground>
       <Text style={styles.titleText}>

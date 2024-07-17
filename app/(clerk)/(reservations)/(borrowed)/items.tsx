@@ -8,6 +8,7 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Reservation {
   id: number;
@@ -48,40 +49,43 @@ const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
 );
 
 export default function ViewBorrowedItemsScreen() {
-  const reservations: Reservation[] = [
-    {
-      id: 1,
-      name: '4-Port WiFi Router',
-      model: 'Cisco SRP541W',
-      lab: 'Network Lab',
-      user: 'John Doe',
-      dueDate: '2024-08-05',
-    },
-    {
-      id: 2,
-      name: 'Ethernet Cable',
-      model: 'Cat 6',
-      lab: 'Network Lab',
-      user: 'Jane Doe',
-      dueDate: '2024-08-05',
-    },
-    {
-      id: 3,
-      name: '8-Port Ethernet Switch',
-      model: 'Cisco SG350-10P',
-      lab: 'Network Lab',
-      user: 'John Doe',
-      dueDate: '2024-08-05',
-    },
-    {
-      id: 4,
-      name: '4-Port WiFi Router',
-      model: 'Cisco SRP541W',
-      lab: 'Network Lab',
-      user: 'John Doe',
-      dueDate: '2024-08-05',
-    },
-  ];
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  useEffect(() => {
+    setReservations([
+      {
+        id: 1,
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        user: 'John Doe',
+        dueDate: '2024-08-05',
+      },
+      {
+        id: 2,
+        name: 'Ethernet Cable',
+        model: 'Cat 6',
+        lab: 'Network Lab',
+        user: 'Jane Doe',
+        dueDate: '2024-08-05',
+      },
+      {
+        id: 3,
+        name: '8-Port Ethernet Switch',
+        model: 'Cisco SG350-10P',
+        lab: 'Network Lab',
+        user: 'John Doe',
+        dueDate: '2024-08-05',
+      },
+      {
+        id: 4,
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        user: 'John Doe',
+        dueDate: '2024-08-05',
+      },
+  ]);
+  }, []);
   return (
     <BackgroundLayout>
       <MainHeader title="Reservations" />

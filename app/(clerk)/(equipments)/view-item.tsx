@@ -7,36 +7,54 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Item {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  maintenanceInterval: number;
-  serialNumber: string;
-  lastMaintenanceOn: string;
-  lastMaintenanceBy: string;
-  status: string;
+  id: number | null;
+  name: string | null;
+  model: string | null;
+  lab: string | null;
+  maintenanceInterval: number | null;
+  serialNumber: string | null;
+  lastMaintenanceOn: string | null;
+  lastMaintenanceBy: string | null;
+  status: string | null;
   imageURL?: string | null;
 }
 
 export default function ViewItemScreen() {
   const { itemId, equipmentId, labId } = useLocalSearchParams<{ itemId: string, equipmentId: string, labId: string }>();
-  if (!itemId) throw new Error('Missing itemId');
   if (!equipmentId) throw new Error('Missing equipmentId');
   if (!labId) throw new Error('Missing labId');
-  const item: Item = {
-    id: parseInt(itemId),
-    name: '4-Port WiFi Router',
-    model: 'Cisco SRP541W',
-    lab: 'Network Lab',
-    maintenanceInterval: 120,
-    serialNumber: 'FOC1234X56Y',
-    lastMaintenanceOn: '2021-09-01',
-    lastMaintenanceBy: 'John Doe',
-    status: 'Available',
-  };
+  const [item, setItem] = useState<Item>({
+    id: null,
+    name: null,
+    model: null,
+    lab: null,
+    maintenanceInterval: null,
+    serialNumber: null,
+    lastMaintenanceOn: null,
+    lastMaintenanceBy: null,
+    status: null,
+    imageURL: null,
+  });
+  useEffect(() => {
+    if (itemId) {
+      setItem({
+        id: 1,
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        maintenanceInterval: 120,
+        serialNumber: 'FOC1234X56Y',
+        lastMaintenanceOn: '2021-09-01',
+        lastMaintenanceBy: 'John Doe',
+        status: 'Available',
+      });
+    } else {
+      throw new Error('Missing itemId');
+    }
+  }, [itemId]);
   const handleViewReservHistory = ({ item }: { item: Item }) => {
     router.push({ pathname: '/(clerk)/(equipments)/reservations', params: { itemId: item.id } });
   }
@@ -54,7 +72,7 @@ export default function ViewItemScreen() {
       <ContentContainerHeader title="View Item" />
       <SingleItemBackground>
         <ScrollView style={{ width: '100%' }}>
-        <SingleItemWithImage title={item.name} link={item.imageURL ?? 'equipment'}>
+        <SingleItemWithImage title={item.name ?? ''} link={item.imageURL ?? 'equipment'}>
           <Text style={styles.text}>
             Model: {item.model}
           </Text>

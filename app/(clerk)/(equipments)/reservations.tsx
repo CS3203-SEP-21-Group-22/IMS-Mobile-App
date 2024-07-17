@@ -6,6 +6,7 @@ import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
+import { useState, useEffect } from 'react';
 
 interface Reservation {
   id: number;
@@ -22,69 +23,75 @@ interface Reservation {
 
 export default function ViewReservationsScreen() {
   const { itemId } = useLocalSearchParams<{ itemId: string }>();
-  if (!itemId) throw new Error('Missing itemId');
-  const reservations: Reservation[] = [
-    {
-      id: 1,
-      reservedBy: 'John Doe',
-      FromDate: '2021-09-01',
-      ToDate: '2021-09-02',
-      RequestedAt: '2021-08-30 10:00',
-      AcceptedBy: 'Jane Doe',
-      BorrowedFrom: 'John Doe',
-      BorrowedAt: '2021-09-01 10:00',
-      ReturnedTo: 'Jane Doe',
-      ReturnedAt: '2021-09-02 10:00',
-    },
-    {
-      id: 2,
-      reservedBy: 'John Doe',
-      FromDate: '2021-09-01',
-      ToDate: '2021-09-02',
-      RequestedAt: '2021-08-30 10:00',
-      AcceptedBy: 'Jane Doe',
-      BorrowedFrom: 'John Doe',
-      BorrowedAt: '2021-09-01 10:00',
-      ReturnedTo: 'Jane Doe',
-      ReturnedAt: '2021-09-02 10:00',
-    },
-    {
-      id: 3,
-      reservedBy: 'John Doe',
-      FromDate: '2021-09-01',
-      ToDate: '2021-09-02',
-      RequestedAt: '2021-08-30 10:00',
-      AcceptedBy: 'Jane Doe',
-      BorrowedFrom: 'John Doe',
-      BorrowedAt: '2021-09-01 10:00',
-      ReturnedTo: 'Jane Doe',
-      ReturnedAt: '2021-09-02 10:00',
-    },
-    {
-      id: 4,
-      reservedBy: 'John Doe',
-      FromDate: '2021-09-01',
-      ToDate: '2021-09-02',
-      RequestedAt: '2021-08-30 10:00',
-      AcceptedBy: 'Jane Doe',
-      BorrowedFrom: 'John Doe',
-      BorrowedAt: '2021-09-01 10:00',
-      ReturnedTo: 'Jane Doe',
-      ReturnedAt: '2021-09-02 10:00',
-    },
-    {
-      id: 5,
-      reservedBy: 'John Doe',
-      FromDate: '2021-09-01',
-      ToDate: '2021-09-02',
-      RequestedAt: '2021-08-30 10:00',
-      AcceptedBy: 'Jane Doe',
-      BorrowedFrom: 'John Doe',
-      BorrowedAt: '2021-09-01 10:00',
-      ReturnedTo: 'Jane Doe',
-      ReturnedAt: '2021-09-02 10:00',
-    },
-  ]
+  const [reservations, setReservations] = useState<Reservation[]>([]);
+  useEffect(() => {
+    if (itemId) {
+      setReservations([
+        {
+          id: 1,
+          reservedBy: 'John Doe',
+          FromDate: '2021-09-01',
+          ToDate: '2021-09-02',
+          RequestedAt: '2021-08-30 10:00',
+          AcceptedBy: 'Jane Doe',
+          BorrowedFrom: 'John Doe',
+          BorrowedAt: '2021-09-01 10:00',
+          ReturnedTo: 'Jane Doe',
+          ReturnedAt: '2021-09-02 10:00',
+        },
+        {
+          id: 2,
+          reservedBy: 'John Doe',
+          FromDate: '2021-09-01',
+          ToDate: '2021-09-02',
+          RequestedAt: '2021-08-30 10:00',
+          AcceptedBy: 'Jane Doe',
+          BorrowedFrom: 'John Doe',
+          BorrowedAt: '2021-09-01 10:00',
+          ReturnedTo: 'Jane Doe',
+          ReturnedAt: '2021-09-02 10:00',
+        },
+        {
+          id: 3,
+          reservedBy: 'John Doe',
+          FromDate: '2021-09-01',
+          ToDate: '2021-09-02',
+          RequestedAt: '2021-08-30 10:00',
+          AcceptedBy: 'Jane Doe',
+          BorrowedFrom: 'John Doe',
+          BorrowedAt: '2021-09-01 10:00',
+          ReturnedTo: 'Jane Doe',
+          ReturnedAt: '2021-09-02 10:00',
+        },
+        {
+          id: 4,
+          reservedBy: 'John Doe',
+          FromDate: '2021-09-01',
+          ToDate: '2021-09-02',
+          RequestedAt: '2021-08-30 10:00',
+          AcceptedBy: 'Jane Doe',
+          BorrowedFrom: 'John Doe',
+          BorrowedAt: '2021-09-01 10:00',
+          ReturnedTo: 'Jane Doe',
+          ReturnedAt: '2021-09-02 10:00',
+        },
+        {
+          id: 5,
+          reservedBy: 'John Doe',
+          FromDate: '2021-09-01',
+          ToDate: '2021-09-02',
+          RequestedAt: '2021-08-30 10:00',
+          AcceptedBy: 'Jane Doe',
+          BorrowedFrom: 'John Doe',
+          BorrowedAt: '2021-09-01 10:00',
+          ReturnedTo: 'Jane Doe',
+          ReturnedAt: '2021-09-02 10:00',
+        },
+      ]);
+    } else {
+      throw new Error('Missing itemId');
+    }
+  }, []);
   const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
     <ListItemBackground>
       <Text style={styles.text}>

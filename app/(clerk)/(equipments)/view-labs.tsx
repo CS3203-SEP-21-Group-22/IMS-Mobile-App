@@ -7,6 +7,7 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Lab {
   id: number;
@@ -39,38 +40,41 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
 );
 
 export default function ViewLabsScreen() {
-  const labs: Lab[] = [
-    {
-      id: 1,
-      name: 'Network Lab',
-      code: 'NET',
-      equipmentCount: 12,
-    },
-    {
-      id: 2,
-      name: 'Computer Lab',
-      code: 'CSE',
-      equipmentCount: 15,
-    },
-    {
-      id: 3,
-      name: 'Physics Lab',
-      code: 'PHY',
-      equipmentCount: 9,
-    },
-    {
-      id: 4,
-      name: 'Chemistry Lab',
-      code: 'CHE',
-      equipmentCount: 7,
-    },
-    {
-      id: 5,
-      name: 'Biology Lab',
-      code: 'BIO',
-      equipmentCount: 5,
-    },
-  ];
+  const [labs, setLabs] = useState<Lab[]>([]);
+  useEffect(() => {
+    setLabs([
+      {
+        id: 1,
+        name: 'Network Lab',
+        code: 'NET',
+        equipmentCount: 12,
+      },
+      {
+        id: 2,
+        name: 'Computer Lab',
+        code: 'CSE',
+        equipmentCount: 15,
+      },
+      {
+        id: 3,
+        name: 'Physics Lab',
+        code: 'PHY',
+        equipmentCount: 9,
+      },
+      {
+        id: 4,
+        name: 'Chemistry Lab',
+        code: 'CHE',
+        equipmentCount: 7,
+      },
+      {
+        id: 5,
+        name: 'Biology Lab',
+        code: 'BIO',
+        equipmentCount: 5,
+      },
+    ]);
+  }, []);
   return (
     <BackgroundLayout>
       <MainHeader title="Equipments" />

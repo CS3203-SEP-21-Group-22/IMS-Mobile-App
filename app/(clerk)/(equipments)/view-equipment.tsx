@@ -7,33 +7,50 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Equipment {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  maintenanceInterval: number;
-  totalItems: number;
-  reservedItems: number;
-  availableItems: number;
+  id: number | null;
+  name: string | null;
+  model: string | null;
+  lab: string | null;
+  maintenanceInterval: number | null;
+  totalItems: number | null;
+  reservedItems: number | null;
+  availableItems: number | null;
   imageURL?: string | null;
 }
 
 export default function ViewEquipmentScreen() {
   const { equipmentId, labId } = useLocalSearchParams<{ equipmentId: string, labId: string }>();
-  if (!equipmentId) throw new Error('Missing equipmentId');
   if (!labId) throw new Error('Missing labId');
-  const equipment: Equipment = {
-    id: parseInt(equipmentId),
-    name: '4-Port WiFi Router',
-    model: 'Cisco SRP541W',
-    lab: 'Network Lab',
-    maintenanceInterval: 120,
-    totalItems: 10,
-    reservedItems: 2,
-    availableItems: 8,
-  };
+  const [equipment, setEquipment] = useState<Equipment>({
+    id: null,
+    name: null,
+    model: null,
+    lab: null,
+    maintenanceInterval: null,
+    totalItems: null,
+    reservedItems: null,
+    availableItems: null,
+    imageURL: null,
+  });
+  useEffect(() => {
+    if (equipmentId) {
+      setEquipment({
+        id: 1,
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        maintenanceInterval: 120,
+        totalItems: 10,
+        reservedItems: 2,
+        availableItems: 8,
+      });
+    } else {
+      throw new Error('Missing equipmentId');
+    }
+  }, [equipmentId]);
   const handleViewItems = ({ item }: { item: Equipment }) => {
     router.push({ pathname: '/(clerk)/(equipments)/view-items', params: { equipmentId: item.id, labId } });
   }
@@ -51,7 +68,7 @@ export default function ViewEquipmentScreen() {
       <ContentContainerHeader title="View Equipment" />
       <SingleItemBackground>
         <ScrollView style={{ width: '100%' }}>
-        <SingleItemWithImage title={equipment.name} link={equipment.imageURL ?? 'equipment'}>
+        <SingleItemWithImage title={equipment.name ?? ''} link={equipment.imageURL ?? 'equipment'}>
           <Text style={styles.text}>
             Model: {equipment.model}
           </Text>

@@ -6,25 +6,37 @@ import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Equipment {
-  name: string;
-  model: string;
-  lab: string;
-  maintenanceInterval: number;
+  name: string | null;
+  model: string | null;
+  lab: string | null;
+  maintenanceInterval: number | null;
   imageURL?: string | null;
 }
 
 export default function AddItemScreen() {
   const { equipmentId } = useLocalSearchParams<{ equipmentId: string }>();
-  if (!equipmentId) throw new Error('Missing equipmentId');
-  const equipment: Equipment = {
-    name: '4-Port WiFi Router',
-    model: 'Cisco SRP541W',
-    lab: 'Network Lab',
-    maintenanceInterval: 120,
-  };
+  const [equipment, setEquipment] = useState<Equipment>({
+    name: null,
+    model: null,
+    lab: null,
+    maintenanceInterval: null,
+    imageURL: null,
+  });
+  useEffect(() => {
+    if (equipmentId) {
+      setEquipment({
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        maintenanceInterval: 120,
+      });
+    } else {
+      throw new Error('Missing equipmentId');
+    }
+  }, [equipmentId]);
   const [serialNumber, setSerialNumber] = useState<string | null>(null);
   const handleButtonPress = () => {
     router.back();

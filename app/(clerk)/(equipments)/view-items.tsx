@@ -8,6 +8,7 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Item {
   id: number;
@@ -19,39 +20,45 @@ interface Item {
 export default function ViewItemsScreen() {
   const { labId, equipmentId } = useLocalSearchParams<{ labId: string, equipmentId: string }>();
   if (!labId) throw new Error('Missing labId');
-  if (!equipmentId) throw new Error('Missing equipmentId');
-  const items: Item[] = [
-    {
-      id: 1,
-      serialNumber: 'FOC1234X56Y',
-      status: 'Available',
-    },
-    {
-      id: 2,
-      serialNumber: 'FOC1234X56Z',
-      status: 'Available',
-    },
-    {
-      id: 3,
-      serialNumber: 'FOC1234X56A',
-      status: 'Available',
-    },
-    {
-      id: 4,
-      serialNumber: 'FOC1234X56B',
-      status: 'Available',
-    },
-    {
-      id: 5,
-      serialNumber: 'HOC1234X56B',
-      status: 'Available',
-    },
-    {
-      id: 6,
-      serialNumber: 'HOC1234X56C',
-      status: 'Available',
-    },
-  ]
+  const [items, setItems] = useState<Item[]>([]);
+  useEffect(() => {
+    if (equipmentId) {
+      setItems([
+        {
+          id: 1,
+          serialNumber: 'FOC1234X56Y',
+          status: 'Available',
+        },
+        {
+          id: 2,
+          serialNumber: 'FOC1234X56Z',
+          status: 'Available',
+        },
+        {
+          id: 3,
+          serialNumber: 'FOC1234X56A',
+          status: 'Available',
+        },
+        {
+          id: 4,
+          serialNumber: 'FOC1234X56B',
+          status: 'Available',
+        },
+        {
+          id: 5,
+          serialNumber: 'HOC1234X56B',
+          status: 'Available',
+        },
+        {
+          id: 6,
+          serialNumber: 'HOC1234X56C',
+          status: 'Available',
+        },
+      ]);
+    } else {
+      throw new Error('Missing equipmentId');
+    }
+  }, []);
   const handleButtonClick = () => {
     router.push({ pathname: '/(clerk)/(equipments)/add-item', params: { equipmentId: equipmentId } });
   }

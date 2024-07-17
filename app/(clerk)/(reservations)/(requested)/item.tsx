@@ -9,17 +9,17 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { Dropdown } from 'react-native-element-dropdown';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Reservation {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  user: string;
-  fromDate: string;
-  toDate: string;
-  requestedAt: string;
+  id: number | null;
+  name: string | null;
+  model: string | null;
+  lab: string | null;
+  user: string | null;
+  fromDate: string | null;
+  toDate: string | null;
+  requestedAt: string | null;
   imageURL?: string | null;
 }
 
@@ -38,23 +38,41 @@ const handleReject = () => {
 
 export default function ViewRequestedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
-  if (!reservationId) throw new Error('Missing equipmentId');
-  const reservation: Reservation = {
-    id: parseInt(reservationId),
-    name: '4-Port WiFi Router',
-    model: 'Cisco SRP541W',
-    lab: 'Network Lab',
-    user: 'John Doe',
-    fromDate: '2024-08-02 12:03',
-    toDate: '2024-08-02 12:03',
-    requestedAt: '2024-08-02 12:03',
+  const [reservation, setReservation] = useState<Reservation>({
+    id: null,
+    name: null,
+    model: null,
+    lab: null,
+    user: null,
+    fromDate: null,
+    toDate: null,
+    requestedAt: null,
     imageURL: null,
-  };
-  const itemsList: Item[] = [
-    { id: 1, serialNumber: 'FOC1234X56Y' },
-    { id: 2, serialNumber: 'FOC1234X56Z' },
-    { id: 3, serialNumber: 'FOC1234X56A' },
-  ];
+  });
+  const [itemsList, setItemsList] = useState<Item[]>([]);
+  useEffect(() => {
+    if (reservationId) {
+      setReservation({
+        id: parseInt(reservationId),
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        user: 'John Doe',
+        fromDate: '2024-08-02',
+        toDate: '2024-08-02',
+        requestedAt: '2024-08-02 12:03',
+        imageURL: null,
+      })
+      setItemsList([
+        { id: 1, serialNumber: 'FOC1234X56Y' },
+        { id: 2, serialNumber: 'FOC1234X56Z' },
+        { id: 3, serialNumber: 'FOC1234X56A' },
+      ]);
+    } else {
+      throw new Error('Reservation ID is required');
+    }
+  }, [reservationId]);
+  
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   return (
     <BackgroundLayout>
@@ -65,7 +83,7 @@ export default function ViewRequestedItemScreen() {
       <ContentContainerHeader title="Item Request" />
       <SingleItemBackground>
         <ScrollView>
-        <SingleItemWithImage title={reservation.name} link={reservation.imageURL ?? 'equipment'}>
+        <SingleItemWithImage title={reservation.name ?? ''} link={reservation.imageURL ?? 'equipment'}>
           <Text style={styles.text}>
             Model: {reservation.model}
           </Text>

@@ -6,8 +6,8 @@ import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
-import React, { useState } from 'react';
 import * as ImagePicker from 'expo-image-picker';
+import { useState, useEffect } from 'react';
 
 interface Equipment {
   name: string | null;

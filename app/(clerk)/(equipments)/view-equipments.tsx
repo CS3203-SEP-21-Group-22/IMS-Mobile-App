@@ -8,6 +8,7 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Equipment {
   id: number;
@@ -19,44 +20,47 @@ interface Equipment {
 
 export default function ViewEquipmentsScreen() {
   const { labId } = useLocalSearchParams<{ labId: string }>();
-  const equipments: Equipment[] = [
-    {
-      id: 1,
-      name: '4-Port WiFi Router',
-      model: 'Cisco SRP541W',
-      lab: 'Network Lab',
-    },
-    {
-      id: 2,
-      name: '8-Port Ethernet Switch',
-      model: 'Cisco SG350-10P',
-      lab: 'Network Lab',
-    },
-    {
-      id: 3,
-      name: '24-Port Ethernet Switch',
-      model: 'Cisco SG350-28P',
-      lab: 'Network Lab',
-    },
-    {
-      id: 4,
-      name: '16-Port Ethernet Switch',
-      model: 'Cisco SG350-16P',
-      lab: 'Network Lab',
-    },
-    {
-      id: 5,
-      name: '24-Port PoE Switch',
-      model: 'Cisco SG350-28P',
-      lab: 'Network Lab',
-    },
-    {
-      id: 6,
-      name: '8-Port PoE Switch',
-      model: 'Cisco SG350-10P',
-      lab: 'Network Lab',
-    },
-  ];
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  useEffect(() => {
+    setEquipments([
+      {
+        id: 1,
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+      },
+      {
+        id: 2,
+        name: '8-Port Ethernet Switch',
+        model: 'Cisco SG350-10P',
+        lab: 'Network Lab',
+      },
+      {
+        id: 3,
+        name: '24-Port Ethernet Switch',
+        model: 'Cisco SG350-28P',
+        lab: 'Network Lab',
+      },
+      {
+        id: 4,
+        name: '16-Port Ethernet Switch',
+        model: 'Cisco SG350-16P',
+        lab: 'Network Lab',
+      },
+      {
+        id: 5,
+        name: '24-Port PoE Switch',
+        model: 'Cisco SG350-28P',
+        lab: 'Network Lab',
+      },
+      {
+        id: 6,
+        name: '8-Port PoE Switch',
+        model: 'Cisco SG350-10P',
+        lab: 'Network Lab',
+      },
+    ]);
+  }, []);
   const handleButtonClick = () => {
     router.push({ pathname: '/(clerk)/(equipments)/add-equipment', params: { labId: labId } });
   }

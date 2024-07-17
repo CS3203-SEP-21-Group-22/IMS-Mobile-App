@@ -8,22 +8,23 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
+import { useState, useEffect } from 'react';
 
 interface Reservation {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  user: string;
-  fromDate: string;
-  toDate: string;
-  requestedAt: string;
+  id: number | null;
+  name: string | null;
+  model: string | null;
+  lab: string | null;
+  user: string | null;
+  fromDate: string | null;
+  toDate: string | null;
+  requestedAt: string | null;
   imageURL?: string | null;
-  assignedItem: string;
-  assignedBy: string;
-  assignedAt: string;
-  borrowedFrom: string;
-  borrowedAt: string;
+  assignedItem: string | null;
+  assignedBy: string | null;
+  assignedAt: string | null;
+  borrowedFrom: string | null;
+  borrowedAt: string | null;
 }
 
 const handleVerify = ({ item }: { item: Reservation }) => {
@@ -32,23 +33,44 @@ const handleVerify = ({ item }: { item: Reservation }) => {
 
 export default function ViewBorrowedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
-  if (!reservationId) throw new Error('Missing equipmentId');
-  const reservation: Reservation = {
-    id: parseInt(reservationId),
-    name: '4-Port WiFi Router',
-    model: 'Cisco SRP541W',
-    lab: 'Network Lab',
-    user: 'John Doe',
-    fromDate: '2024-08-02',
-    toDate: '2024-08-02',
-    requestedAt: '2024-08-02 12:03',
+  const [reservation, setReservation] = useState<Reservation>({
+    id: null,
+    name: null,
+    model: null,
+    lab: null,
+    user: null,
+    fromDate: null,
+    toDate: null,
+    requestedAt: null,
     imageURL: null,
-    assignedItem: 'FOC1234X56Y',
-    assignedBy: 'Jane Doe',
-    assignedAt: '2024-08-02 12:03',
-    borrowedFrom: 'John Doe',
-    borrowedAt: '2024-08-02 12:03',
-  };
+    assignedItem: null,
+    assignedBy: null,
+    assignedAt: null,
+    borrowedFrom: null,
+    borrowedAt: null,
+  });
+  useEffect(() => {
+    if (reservationId) {
+      setReservation({
+        id: parseInt(reservationId),
+        name: '4-Port WiFi Router',
+        model: 'Cisco SRP541W',
+        lab: 'Network Lab',
+        user: 'John Doe',
+        fromDate: '2024-08-02',
+        toDate: '2024-08-02',
+        requestedAt: '2024-08-02 12:03',
+        imageURL: null,
+        assignedItem: 'FOC1234X56Y',
+        assignedBy: 'Jane Doe',
+        assignedAt: '2024-08-02 12:03',
+        borrowedFrom: 'John Doe',
+        borrowedAt: '2024-08-02 12:03',
+      });
+    } else {
+      throw new Error('Missing reservationId');
+    }
+  }, [reservationId]);
   return (
     <BackgroundLayout>
     <MainHeader title="Reservations" />
@@ -58,7 +80,7 @@ export default function ViewBorrowedItemScreen() {
       <ContentContainerHeader title="Item Request" />
       <SingleItemBackground>
         <ScrollView>
-        <SingleItemWithImage title={reservation.name} link={reservation.imageURL ?? 'equipment'}>
+        <SingleItemWithImage title={reservation.name ?? ''} link={reservation.imageURL ?? 'equipment'}>
           <Text style={styles.text}>
             Model: {reservation.model}
           </Text>
