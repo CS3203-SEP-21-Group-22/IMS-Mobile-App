@@ -19,9 +19,10 @@ interface Equipment {
 }
 
 export default function ViewEquipmentsScreen() {
-  const { labId } = useLocalSearchParams<{ labId: string }>();
+  const { labId, labName } = useLocalSearchParams<{ labId: string, labName: string }>();
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   useEffect(() => {
+    if (!labId || !labName) throw new Error('Lab parameters are required');
     setEquipments([
       {
         id: 1,
@@ -90,7 +91,7 @@ export default function ViewEquipmentsScreen() {
       <MainHeader title="Equipments" />
       <ContentContainer>
       <View style={styles.container}>
-        <ContentContainerHeader title="View Equipments" />
+        <ContentContainerHeader title={`${labName} - Equipments`} />
         <FlatList
             data={equipments}
             renderItem={({ item }) => <ItemComponent item={item} />}

@@ -18,7 +18,7 @@ interface Lab {
 }
 
 const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
-  <Link href={{ pathname: `/(clerk)/(equipments)/view-equipments`, params: { labId: item.id } }} asChild>
+  <Link href={{ pathname: `/(clerk)/(equipments)/view-equipments`, params: { labId: item.id, labName: item.name } }} asChild>
           <Pressable>
             {({ pressed }) => (
               <ListItemBackground>
