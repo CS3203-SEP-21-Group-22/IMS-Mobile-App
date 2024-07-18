@@ -56,8 +56,8 @@ const styles = StyleSheet.create({
   rowText: {
     color: 'white',
     fontSize: 15,
-    paddingHorizontal: '3%',
-    paddingRight: '4%',
+    paddingHorizontal: '8%',
+    paddingRight: '10%',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'center',

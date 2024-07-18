@@ -103,9 +103,6 @@ export default function ViewMaintenancesScreen() {
   const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
     <ListItemBackground>
       <Text style={styles.titleText}>
-        Maintenance ID: {item.id}
-      </Text>
-      <Text style={styles.text}>
         Description: {item.description}
       </Text>
       <Text style={styles.text}>

@@ -35,6 +35,7 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
                 <Text style={styles.titleText}>
                   {item.name}
                 </Text>
+                <View style={styles.separator} />
                 <Text style={styles.text}>
                   Model: {item.model}
                 </Text>
@@ -75,7 +76,7 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
                   Start Date: {item.startDate}
                 </Text>
                 <Text style={styles.text}>
-                  Due Date: {item.endDate}
+                  End Date: {item.endDate}
                 </Text>
               </ListItemBackground>
               )}
@@ -165,6 +166,10 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 10,
+  },
+  separator: {
+    marginVertical: '1%',
+    width: '80%',
   },
 });
 

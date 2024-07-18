@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable, TextInput, ImageBackground, Image } from 'react-native';
+import { StyleSheet, Pressable, TextInput, ImageBackground, Image, ScrollView } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -70,6 +70,7 @@ export default function UpdateMaintenanceScreen() {
     <View style={styles.container}>
       <ContentContainerHeader title="Update Maintenance" />
       <EditSingleItemBackground>
+      <ScrollView style={{ width: '95%' }} contentContainerStyle={{ alignItems: 'center' }}>
         <Text style={styles.title}>Maintenance Details</Text>
         <Text style={styles.text}>{maintenance.name}</Text>
         <Text style={styles.text}>Model: {maintenance.model}</Text>
@@ -80,7 +81,7 @@ export default function UpdateMaintenanceScreen() {
         <Text style={styles.text}>Start Date: {maintenance.startDate}</Text>
         <Text style={styles.text}>End Date: {maintenance.endDate}</Text>
         <View style={styles.separator} />
-        <Text style={styles.text}>Task Description: {maintenance.taskDescription}</Text>
+        <Text style={styles.descriptionText}>Task Description: {maintenance.taskDescription}</Text>
         <View style={styles.separator} />
         <Text style={styles.text}>Status: {maintenance.status}</Text>
         <View style={styles.separator} />
@@ -94,15 +95,16 @@ export default function UpdateMaintenanceScreen() {
           <Text style={styles.text}>Reviewed At: {maintenance.reviewedAt}</Text>
         )}
         {maintenance.reviewNote && (<View style={styles.separator} />)}
-        <Text style={styles.title}>Submit Note</Text>
+        <Text style={styles.text}>Submit Note</Text>
         <TextInput
           style={styles.textInput}
           multiline
-          numberOfLines={2}
+          numberOfLines={3}
           value={maintenance.submitNote ?? ''}
           onChange={e => setMaintenance({ ...maintenance, submitNote: e.nativeEvent.text })}
           placeholder="Enter Submit Note"
         />
+        </ScrollView>
       </EditSingleItemBackground>
       <View style={styles.button}>
           <ImageBackground
@@ -143,18 +145,26 @@ const styles = StyleSheet.create({
     width: '80%',
   },
   text: {
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: 'bold',
     color: '#202652',
-    marginTop: '2%',
-    marginBottom: '1%',
+    marginTop: '0.5%',
+  },
+  descriptionText: {
+    fontSize: 14,
+    marginHorizontal: '8%',
+    color: '#202652',
+    fontWeight: 'bold',
   },
   textInput: {
     width: '80%',
     padding: '1%',
+    marginTop: '2%',
+    marginBottom: '2%',
     backgroundColor: 'white',
     borderRadius: 10,
     paddingLeft: 15,
+    height: 60,
   },
   image: {
     marginTop: '4%',

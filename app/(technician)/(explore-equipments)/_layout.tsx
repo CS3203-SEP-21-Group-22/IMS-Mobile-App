@@ -49,13 +49,13 @@ function EquipmentsLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="view-labs" options={{ title: 'View Labs' }} />
-        <Stack.Screen name="view-equipments" options={{ title: 'View Equipments' }} />
-        <Stack.Screen name="view-equipment" options={{ title: 'View Equipments' }} />
-        <Stack.Screen name="view-items" options={{ title: 'View Items' }} />
-        <Stack.Screen name="view-item" options={{ title: 'View Items' }} />
-        <Stack.Screen name="reservations" options={{ title: 'Reservations' }} />
-        <Stack.Screen name="maintenances" options={{ title: 'Maintenances' }} />
+        <Stack.Screen name="view-labs" options={{ title: 'View Labs', headerShown: false }} />
+        <Stack.Screen name="view-equipments" options={{ title: 'View Equipments', headerShown: false }} />
+        <Stack.Screen name="view-equipment" options={{ title: 'View Equipments', headerShown: false }} />
+        <Stack.Screen name="view-items" options={{ title: 'View Items', headerShown: false }} />
+        <Stack.Screen name="view-item" options={{ title: 'View Items', headerShown: false }} />
+        <Stack.Screen name="reservations" options={{ title: 'Reservations', headerShown: false }} />
+        <Stack.Screen name="maintenances" options={{ title: 'Maintenances', headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

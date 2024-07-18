@@ -33,7 +33,7 @@ export default function LoginLayout() {
               )}
           </Pressable>
         </Link>
-        <Link href="/(student)/(reservations)/reserved-items" asChild>
+        <Link href="/(student)/(explore-equipments)/view-labs" asChild>
           <Pressable>
             {({ pressed }) => (
               <Text style={{ color: Colors[colorScheme ?? 'light'].text, opacity: pressed ? 0.5 : 1 }}>
@@ -42,7 +42,7 @@ export default function LoginLayout() {
               )}
           </Pressable>
         </Link>
-        <Link href="/(technician)/(maintenances)/(assigned)/assigned-maintenances" asChild>
+        <Link href="/(technician)/(maintenances)/(assigned)/maintenances" asChild>
           <Pressable>
             {({ pressed }) => (
               <Text style={{ color: Colors[colorScheme ?? 'light'].text, opacity: pressed ? 0.5 : 1 }}>

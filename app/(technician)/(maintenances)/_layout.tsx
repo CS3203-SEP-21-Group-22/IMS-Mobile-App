@@ -49,8 +49,8 @@ function MaintenancesLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(assigned)" options={{ title: 'Assigned' }} />
-        <Stack.Screen name="(completed)" options={{ title: 'Completed' }} />
+        <Stack.Screen name="(assigned)" options={{ title: 'Assigned', headerShown: false }} />
+        <Stack.Screen name="(completed)" options={{ title: 'Completed', headerShown: false }} />
       </Stack>
     </ThemeProvider>
   );

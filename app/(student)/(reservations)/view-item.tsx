@@ -22,7 +22,7 @@ interface Reservation {
 }
 
 const handleBorrow = ({ item }: { item: Reservation }) => {
-  router.replace({ pathname: '/(student)/(reservations)/(reserved)/borrow-item', params: { reservationId: item.id } })
+  router.replace({ pathname: '/(student)/(reservations)/borrow-item', params: { reservationId: item.id } })
 }
 
 export default function ViewReservedItemScreen() {
@@ -90,20 +90,22 @@ export default function ViewReservedItemScreen() {
         </SingleItemWithImage>
         </ScrollView>
       </SingleItemBackground>
-      <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
-              >
-                <Pressable onPress={() => handleBorrow({ item: reservation })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Borrow Item
-                  </Text>
-                </Pressable>
-              </ImageBackground>
+      { reservation.status === 'Accepted' && (
+        <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable onPress={() => handleBorrow({ item: reservation })} style={{ width: '100%', alignItems: 'center' }}>
+                <Text style={styles.buttonText}>
+                  Borrow Item
+                </Text>
+              </Pressable>
+            </ImageBackground>
           </View>
-    </View>
+      )}
+      </View>
     </ContentContainer>
     </BackgroundLayout>
   );
