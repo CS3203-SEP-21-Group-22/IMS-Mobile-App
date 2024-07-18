@@ -1,60 +1,89 @@
-import { StyleSheet, Pressable, FlatList, ImageBackground } from 'react-native';
-import { Link, router } from 'expo-router';
+import { StyleSheet, Pressable, FlatList } from 'react-native';
+import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
+import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
 
-interface User {
+interface Lab {
   id: number;
-  email: string;
-  firstName: string;
-  lastName: string;
-  role: string;
+  name: string;
+  code: string;
+  equipmentCount: number;
+  imageURL?: string | null;
 }
 
-const ItemComponent: React.FC<{ item: User }> = ({ item }) => (
-  <Link href={{ pathname: `/(admin)/(user-management)/update-user`, params: { userId: item.id } }} asChild>
+const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
+  <Link href={{ pathname: `/(admin)/(explore-equipments)/view-equipments`, params: { labId: item.id, labName: item.name } }} asChild>
           <Pressable>
             {({ pressed }) => (
               <ListItemBackground>
+                <ListItemWithImage link={item.imageURL ?? 'lab'}>
                 <Text style={styles.titleText}>
-                  {item.firstName} {item.lastName}
+                  {item.name}
                 </Text>
                 <Text style={styles.text}>
-                  {item.email}
+                  Code: {item.code}
                 </Text>
                 <Text style={styles.text}>
-                  {item.role}
+                  Equipment Count: {item.equipmentCount}
                 </Text>
+                </ListItemWithImage>
               </ListItemBackground>
               )}
           </Pressable>
   </Link>
 );
 
-export default function ViewUsersScreen() {
-  const [users, setUsers] = useState<User[]>([]);
+
+export default function ViewLabsScreen() {
+  const [labs, setLabs] = useState<Lab[]>([]);
   useEffect(() => {
-    setUsers([
-      { id: 1, email: 'JohnDoe@uok.uk', firstName: 'John', lastName: 'Doe', role: 'Student/Academic Staff' },
-      { id: 2, email: 'JaneDoe@uok.uk', firstName: 'Jane', lastName: 'Doe', role: 'Student/Academic Staff' },
-      { id: 3, email: 'CarlDoe@uok.uk', firstName: 'Carl', lastName: 'Doe', role: 'Office Clerk' },
-      { id: 4, email: 'RayDoe@uok.uk', firstName: 'Ray', lastName: 'Doe', role: 'Technician' },
-      { id: 5, email: 'EarlDoe@uok.uk', firstName: 'Earl', lastName: 'Doe', role: 'Technician' },
+    setLabs([
+      {
+        id: 1,
+        name: 'Network Lab',
+        code: 'NET',
+        equipmentCount: 12,
+      },
+      {
+        id: 2,
+        name: 'Computer Lab',
+        code: 'CSE',
+        equipmentCount: 15,
+      },
+      {
+        id: 3,
+        name: 'Physics Lab',
+        code: 'PHY',
+        equipmentCount: 9,
+      },
+      {
+        id: 4,
+        name: 'Chemistry Lab',
+        code: 'CHE',
+        equipmentCount: 7,
+      },
+      {
+        id: 5,
+        name: 'Biology Lab',
+        code: 'BIO',
+        equipmentCount: 5,
+      },
     ]);
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="User Management" />
+      <MainHeader title="Explore Equipments" />
       <ContentContainer>
       <View style={styles.container}>
-        <ContentContainerHeader title="View Users" />
+        <ContentContainerHeader title="View Labs" />
         <FlatList
-            data={users}
+            data={labs}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
@@ -86,22 +115,5 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 10,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    marginTop: '4%',
-  },
-  buttonBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
   },
 });
