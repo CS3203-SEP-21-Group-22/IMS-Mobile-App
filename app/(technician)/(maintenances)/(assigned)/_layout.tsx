@@ -49,7 +49,7 @@ function AssignedMaintenancesLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="assigned-maintenances" options={{ title: 'Assigned Maintenances' }} />
+        <Stack.Screen name="maintenances" options={{ title: 'Assigned Maintenances' }} />
         <Stack.Screen name="update-maintenance" options={{ title: 'Update Maintenance' }} />
       </Stack>
     </ThemeProvider>
