@@ -68,7 +68,7 @@ export default function ReserveEquipmentScreen() {
         {equipment.imageURL ? (
           <Image source={{ uri: equipment.imageURL }} style={styles.image} />
             ) : (
-              <Image source={require('@/assets/images/equipmentSample.webp')} style={styles.image} />
+              <Image source={require('@/assets/images/equipmentSample.png')} style={styles.image} />
             )
         }
         <Text style={styles.text}>Name: {equipment.name}</Text>

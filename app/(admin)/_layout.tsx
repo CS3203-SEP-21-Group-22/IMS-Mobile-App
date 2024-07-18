@@ -32,6 +32,7 @@ export default function TabLayout() {
         name="(user-management)"
         options={{
           title: 'User Management',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
@@ -39,6 +40,7 @@ export default function TabLayout() {
         name="(lab-management)"
         options={{
           title: 'Lab Management',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />
@@ -46,6 +48,7 @@ export default function TabLayout() {
         name="(explore-equipments)"
         options={{
           title: 'Explore Equipments',
+          headerShown: false,
           tabBarIcon: ({ color }) => <TabBarIcon name="code" color={color} />,
         }}
       />

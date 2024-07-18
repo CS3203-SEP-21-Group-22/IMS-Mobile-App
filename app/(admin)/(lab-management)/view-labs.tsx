@@ -84,7 +84,6 @@ export default function ViewLabsScreen() {
             contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
           />
       </View>
-      </ContentContainer>
       <View style={styles.button}>
           <ImageBackground
                 source={require('@/assets/images/blueBtn.webp')}
@@ -98,6 +97,7 @@ export default function ViewLabsScreen() {
                 </Pressable>
           </ImageBackground>
       </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }

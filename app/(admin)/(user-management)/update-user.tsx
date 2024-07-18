@@ -69,10 +69,12 @@ export default function UpdateUserScreen() {
       <ContentContainerHeader title="Update User Role" />
       <EditSingleItemBackground>
         <Text style={styles.title}>User Details</Text>
+        <View style={styles.separator}/>
         <Text style={styles.text}>Name: {user.firstName} {user.lastName}</Text>
         <Text style={styles.text}>Email: {user.email}</Text>
         <Text style={styles.text}>Current Role: {user.role}</Text>
         <Text style={styles.text}>Contact Number: {user.contactNumber}</Text>
+        <View style={styles.separator}/>
         <Text style={styles.text}>Change User Role to:</Text>
         <Dropdown
             data={userRoles}
@@ -87,6 +89,7 @@ export default function UpdateUserScreen() {
             placeholderStyle={styles.dropdownText}
             selectedTextStyle={styles.dropdownText}
           />
+          <View style={styles.separator}/>
       </EditSingleItemBackground>
       <View style={styles.button}>
           <ImageBackground
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     color: '#202652'
   },
   separator: {
-    marginVertical: '1%',
+    marginVertical: '2%',
     width: '80%',
   },
   text: {
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#202652',
     marginTop: '2%',
-    marginBottom: '1%',
+    // marginBottom: '1%',
   },
   textInput: {
     width: '80%',
@@ -147,7 +150,7 @@ const styles = StyleSheet.create({
     height: 100
   },
   dropdown: {
-    marginTop: '1%',
+    marginTop: '2%',
     marginBottom: '2%',
     backgroundColor: 'white',
     borderRadius: 8,
@@ -164,7 +167,8 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    marginTop: '1%'
+    marginTop: '1%',
+    backgroundColor: 'transparent',
   },
   buttonBackground: {
     width: '100%',

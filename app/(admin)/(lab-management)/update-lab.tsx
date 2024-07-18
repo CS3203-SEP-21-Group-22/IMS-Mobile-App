@@ -29,6 +29,7 @@ export default function UpdateLabScreen() {
     }
   }, [labId]);
   const handleUpdateButtonPress = () => {
+    router.back();
     router.replace({ pathname: '/(admin)/(lab-management)/view-labs' });
   }
   const handleDeleteButtonPress = () => {
@@ -69,7 +70,7 @@ export default function UpdateLabScreen() {
           >
           <Pressable onPress={handleUpdateButtonPress} style={{ width: '100%', alignItems: 'center' }}>
             <Text style={styles.buttonText}>
-              Add Lab
+              Update Lab
             </Text>
           </Pressable>
           </ImageBackground>
@@ -134,7 +135,9 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    marginTop: '1%'
+    marginTop: '1%',
+    backgroundColor: 'transparent',
+    marginBottom: '1%',
   },
   buttonBackground: {
     width: '100%',
