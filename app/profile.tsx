@@ -6,7 +6,6 @@ import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
-import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
 
 interface UserProfile {
@@ -47,12 +46,18 @@ export default function ProfileScreen() {
     <View style={styles.container}>
       <ContentContainerHeader title="User Details" />
       <SingleItemBackground>
-          <Text style={styles.text}>Name: {user.firstName} {user.lastName}</Text>
+          <View style={styles.textSeparator} />
+          <View style={styles.textSeparator} />
+          <Text style={styles.titleText}>Name: {user.firstName} {user.lastName}</Text>
+          <View style={styles.textSeparator} />
           <Text style={styles.text}>Email: {user.email}</Text>
-          <Text style={styles.text}>Role: {user.role}</Text>
           <Text style={styles.text}>Contact Number: {user.contactNumber}</Text>
           <View style={styles.textSeparator} />
-        <View style={styles.button}>
+          <Text style={styles.text}>Role: {user.role}</Text>
+          <View style={styles.textSeparator} />
+          <View style={styles.textSeparator} />
+      </SingleItemBackground>
+      <View style={styles.button}>
               <ImageBackground
                 source={require('@/assets/images/blueBtn.webp')}
                 style={styles.buttonBackground}
@@ -60,13 +65,11 @@ export default function ProfileScreen() {
               >
                 <Pressable onPress={handleLogout} style={{ width: '100%', alignItems: 'center' }}>
                   <Text style={styles.buttonText}>
-                    ↩️Logout
+                    Logout
                   </Text>
                 </Pressable>
               </ImageBackground>
-          </View>
-          <View style={styles.textSeparator} />
-      </SingleItemBackground>
+        </View>
     </View>
     </ContentContainer>
     </BackgroundLayout>
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   button: {
-    width: '90%',
+    width: '100%',
     marginHorizontal: '5%',
     backgroundColor: 'transparent',
     justifyContent: 'center',
