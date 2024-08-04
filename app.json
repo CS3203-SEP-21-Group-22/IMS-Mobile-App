@@ -35,6 +35,8 @@
     },
     "androidStatusBar": {
       "backgroundColor": "#000000"
-    }
+    },
+    "authServerUrl": "https://auth-server-g6hmcdavbgayb3fe.eastus-01.azurewebsites.net",
+    "authClientId": "group22-client-id"
   }
 }

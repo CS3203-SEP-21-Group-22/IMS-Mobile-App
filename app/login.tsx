@@ -1,19 +1,26 @@
 import React from 'react';
 import { Pressable, Text, StyleSheet,ImageBackground, Dimensions, Button } from 'react-native';
 import { Link } from 'expo-router';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
 import { View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import * as AuthSession from 'expo-auth-session';
 import { jwtDecode } from "jwt-decode";
+import Constants from 'expo-constants';
 
+// @ts-ignore
+const authServerUrl = Constants.expoConfig?.authServerUrl?.toString();
+// @ts-ignore
+const authClientId = Constants.expoConfig?.authClientId?.toString();
+if (!authServerUrl || !authClientId) {
+  throw new Error('Please configure the authServerUrl and authClientId in app.json');
+}
+
+// @ts-ignore
 const redirectUri = AuthSession.makeRedirectUri({ useProxy: true });
-const authUrl = `http://192.168.1.3:3000/login?redirectUri=${encodeURIComponent(redirectUri)}&clientId=group22-client-id`;
-
+const authUrl = `${authServerUrl}/login?redirectUri=${encodeURIComponent(redirectUri)}&clientId=${authClientId}`;
+console.log('authUrl', authUrl);
 
 export default function LoginLayout() {
-  const colorScheme = useColorScheme();
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId: 'group22-client-id',
@@ -23,12 +30,21 @@ export default function LoginLayout() {
       authorizationEndpoint: authUrl,
     },
   );
-  // React.useEffect(() => {
-  //   console.log('response', response);
-  //   if (response?.type === 'success') {
-  //     console.log('response', response);
-  //   }
-  // }, [response]);
+  React.useEffect(() => {
+    if (response) {
+      if (response.type === 'success') {
+        const { access_token, id_token, refresh_token } = response.params;
+        const decoded = jwtDecode(id_token);
+        console.log(decoded);
+      } else if (response.type === 'error') {
+        if (response.params && response.params['id_token'] !== undefined) {
+          const { access_token, id_token, refresh_token } = response.params;
+          const decoded = jwtDecode(id_token);
+          console.log(decoded);
+        }
+      }
+    }
+  }, [response]);
 
   return (
     <BackgroundLayout>
@@ -75,28 +91,8 @@ export default function LoginLayout() {
         <Button
           disabled={!request}
           title="Login"
-          onPress={async () => {
-            const result = await promptAsync();
-            if (result.type === 'success') {
-              if (result.params && result.params['id_token'] !== undefined) {
-                const decoded = jwtDecode(result.params['id_token']);
-                console.log(decoded);
-              }
-              else {
-                console.log('Authentication failed or was cancelled');
-              }
-            } else if (result.type === 'error') {
-              if (result.params && result.params['id_token'] !== undefined) {
-                const decoded = jwtDecode(result.params['id_token']);
-                console.log(decoded);
-              }
-              else {
-                console.log('Authentication failed or was cancelled');
-              }
-            }
-            else {
-              console.log('Authentication failed or was cancelled');
-            }
+          onPress={() => {
+            promptAsync();
           }}
         />
     </View>
