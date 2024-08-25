@@ -1,4 +1,12 @@
-import { StyleSheet, Pressable, TextInput, ImageBackground, Image, Button, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  TextInput,
+  ImageBackground,
+  Image,
+  Button,
+  ScrollView,
+} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -24,13 +32,16 @@ interface Equipment {
 }
 
 export default function ReserveEquipmentScreen() {
-  const { equipmentId, labId } = useLocalSearchParams<{ equipmentId: string, labId: string }>();
+  const { equipmentId, labId } = useLocalSearchParams<{
+    equipmentId: string;
+    labId: string;
+  }>();
   const [startDatePickerVisible, setStartDatePickerVisible] = useState(false);
   const [endDatePickerVisible, setEndDatePickerVisible] = useState(false);
   const [reservation, setReservation] = useState<Reservation>({
     equipmentId: null,
-    startDate: (new Date()).toISOString().split('T')[0],
-    endDate: (new Date()).toISOString().split('T')[0],
+    startDate: new Date().toISOString().split('T')[0],
+    endDate: new Date().toISOString().split('T')[0],
   });
   const [equipment, setEquipment] = useState<Equipment>({
     id: null,
@@ -54,81 +65,167 @@ export default function ReserveEquipmentScreen() {
   }, [equipmentId]);
   const handleButtonPress = () => {
     router.back();
-  }
+  };
   return (
     <BackgroundLayout>
-    <MainHeader title="Explore Equipments" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Reserve Equipment" />
-      <EditSingleItemBackground>
-      <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
-        <Text style={styles.title}>Reservation Details</Text>
-        <Text style={styles.text}>Equipment</Text>
-        {equipment.imageURL ? (
-          <Image source={{ uri: equipment.imageURL }} style={styles.image} />
-            ) : (
-              <Image source={require('@/assets/images/equipmentSample.png')} style={styles.image} />
-            )
-        }
-        <Text style={styles.text}>Name: {equipment.name}</Text>
-        <Text style={styles.text}>Model: {equipment.model}</Text>
-        <Text style={styles.text}>Lab: {equipment.lab}</Text>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', width: '80%', backgroundColor: 'transparent' }}>
-          <View style={{ width: '50%', backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={[styles.text, { marginBottom: '1%' }]}>Start Date :</Text>
-        <Button title={reservation.startDate ? reservation.startDate : "Start Date"} onPress={() => setStartDatePickerVisible(!startDatePickerVisible)} />
-        {startDatePickerVisible && (
-          <DateTimePicker
-            value={ reservation.startDate ? new Date(reservation.startDate) : new Date() }
-            maximumDate={new Date(
-              new Date().getFullYear() + 1,
-              new Date().getMonth(),
-              new Date().getDate()
-            )}
-            mode='date'
-            display='calendar'
-            // hide datetime picker before setting the date/time
-            onChange={(event, date) => { setStartDatePickerVisible(false); if(date && date.toISOString().split('T')[0] !== reservation.startDate) { setReservation({ ...reservation, startDate: date.toISOString().split('T')[0] }); } }}
-          />
-        )}
+      <MainHeader title='Explore Equipments' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Reserve Equipment' />
+          <EditSingleItemBackground>
+            <ScrollView
+              style={{ width: '100%' }}
+              contentContainerStyle={{ alignItems: 'center' }}
+            >
+              <Text style={styles.title}>Reservation Details</Text>
+              <Text style={styles.text}>Equipment</Text>
+              {equipment.imageURL ? (
+                <Image
+                  source={{ uri: equipment.imageURL }}
+                  style={styles.image}
+                />
+              ) : (
+                <Image
+                  source={require('@/assets/images/equipmentSample.png')}
+                  style={styles.image}
+                />
+              )}
+              <Text style={styles.text}>Name: {equipment.name}</Text>
+              <Text style={styles.text}>Model: {equipment.model}</Text>
+              <Text style={styles.text}>Lab: {equipment.lab}</Text>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  width: '80%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <View
+                  style={{
+                    width: '50%',
+                    backgroundColor: 'transparent',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={[styles.text, { marginBottom: '1%' }]}>
+                    Start Date :
+                  </Text>
+                  <Button
+                    title={
+                      reservation.startDate
+                        ? reservation.startDate
+                        : 'Start Date'
+                    }
+                    onPress={() =>
+                      setStartDatePickerVisible(!startDatePickerVisible)
+                    }
+                  />
+                  {startDatePickerVisible && (
+                    <DateTimePicker
+                      value={
+                        reservation.startDate
+                          ? new Date(reservation.startDate)
+                          : new Date()
+                      }
+                      maximumDate={
+                        new Date(
+                          new Date().getFullYear() + 1,
+                          new Date().getMonth(),
+                          new Date().getDate(),
+                        )
+                      }
+                      mode='date'
+                      display='calendar'
+                      // hide datetime picker before setting the date/time
+                      onChange={(event, date) => {
+                        setStartDatePickerVisible(false);
+                        if (
+                          date &&
+                          date.toISOString().split('T')[0] !==
+                            reservation.startDate
+                        ) {
+                          setReservation({
+                            ...reservation,
+                            startDate: date.toISOString().split('T')[0],
+                          });
+                        }
+                      }}
+                    />
+                  )}
+                </View>
+                <View
+                  style={{
+                    width: '50%',
+                    backgroundColor: 'transparent',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <Text style={[styles.text, { marginBottom: '1%' }]}>
+                    End Date :
+                  </Text>
+                  <Button
+                    title={
+                      reservation.endDate ? reservation.endDate : 'End Date'
+                    }
+                    onPress={() =>
+                      setEndDatePickerVisible(!endDatePickerVisible)
+                    }
+                  />
+                  {endDatePickerVisible && (
+                    <DateTimePicker
+                      value={
+                        reservation.endDate
+                          ? new Date(reservation.endDate)
+                          : new Date()
+                      }
+                      maximumDate={
+                        new Date(
+                          new Date().getFullYear() + 1,
+                          new Date().getMonth(),
+                          new Date().getDate(),
+                        )
+                      }
+                      mode='date'
+                      display='calendar'
+                      onChange={(event, date) => {
+                        setEndDatePickerVisible(false);
+                        if (
+                          date &&
+                          date.toISOString().split('T')[0] !==
+                            reservation.endDate
+                        ) {
+                          setReservation({
+                            ...reservation,
+                            endDate: date.toISOString().split('T')[0],
+                          });
+                        }
+                      }}
+                    />
+                  )}
+                </View>
+              </View>
+              <View style={styles.separator} />
+            </ScrollView>
+          </EditSingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleButtonPress}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Request</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
         </View>
-        <View style={{ width: '50%', backgroundColor: 'transparent', alignItems: 'center', justifyContent: 'center' }}>
-        <Text style={[styles.text, { marginBottom: '1%' }]}>End Date :</Text>
-        <Button title={reservation.endDate ? reservation.endDate : "End Date"} onPress={() => setEndDatePickerVisible(!endDatePickerVisible)} />
-        {endDatePickerVisible && (
-          <DateTimePicker
-            value={ reservation.endDate ? new Date(reservation.endDate) : new Date() }
-            maximumDate={new Date(
-              new Date().getFullYear() + 1,
-              new Date().getMonth(),
-              new Date().getDate()
-            )}
-            mode='date'
-            display='calendar'
-            onChange={(event, date) => { setEndDatePickerVisible(false); if(date && date.toISOString().split('T')[0] !== reservation.endDate) { setReservation({ ...reservation, endDate: date.toISOString().split('T')[0] }); } }}
-          />
-        )}
-        </View>
-        </View>
-        <View style={styles.separator} />
-      </ScrollView>
-      </EditSingleItemBackground>
-      <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-          <Pressable onPress={handleButtonPress} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Request
-            </Text>
-          </Pressable>
-          </ImageBackground>
-      </View>
-    </View>
-    </ContentContainer>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -146,7 +243,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652'
+    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -169,7 +266,7 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     marginBottom: '3%',
     width: 100,
-    height: 100
+    height: 100,
   },
   dropdown: {
     marginTop: '1%',

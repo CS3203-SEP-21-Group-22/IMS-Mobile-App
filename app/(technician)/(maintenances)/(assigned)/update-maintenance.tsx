@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, TextInput, ImageBackground, Image, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  TextInput,
+  ImageBackground,
+  Image,
+  ScrollView,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -40,7 +47,7 @@ export default function UpdateMaintenanceScreen() {
     submitNote: null,
     reviewNote: null,
     reviewedBy: null,
-    reviewedAt: null
+    reviewedAt: null,
   });
   useEffect(() => {
     if (maintenanceId) {
@@ -61,66 +68,87 @@ export default function UpdateMaintenanceScreen() {
   }, [maintenanceId]);
   const handleButtonPress = () => {
     router.back();
-  }
+  };
   return (
     <BackgroundLayout>
-    <MainHeader title="Maintenances" />
-    <TechnicianMaintHorizontalBar selectedIndex={0} />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Update Maintenance" />
-      <EditSingleItemBackground>
-      <ScrollView style={{ width: '95%' }} contentContainerStyle={{ alignItems: 'center' }}>
-        <Text style={styles.title}>Maintenance Details</Text>
-        <Text style={styles.text}>{maintenance.name}</Text>
-        <Text style={styles.text}>Model: {maintenance.model}</Text>
-        <View style={styles.separator} />
-        <Text style={styles.text}>Serial Number: {maintenance.serialNumber}</Text>
-        <Text style={styles.text}>Lab: {maintenance.lab}</Text>
-        <View style={styles.separator} />
-        <Text style={styles.text}>Start Date: {maintenance.startDate}</Text>
-        <Text style={styles.text}>End Date: {maintenance.endDate}</Text>
-        <View style={styles.separator} />
-        <Text style={styles.descriptionText}>Task Description: {maintenance.taskDescription}</Text>
-        <View style={styles.separator} />
-        <Text style={styles.text}>Status: {maintenance.status}</Text>
-        <View style={styles.separator} />
-        {maintenance.reviewNote && (
-          <Text style={styles.text}>Review Note: {maintenance.reviewNote}</Text>
-        )}
-        {maintenance.reviewedBy && (
-          <Text style={styles.text}>Reviewed By: {maintenance.reviewedBy}</Text>
-        )}
-        {maintenance.reviewedAt && (
-          <Text style={styles.text}>Reviewed At: {maintenance.reviewedAt}</Text>
-        )}
-        {maintenance.reviewNote && (<View style={styles.separator} />)}
-        <Text style={styles.text}>Submit Note</Text>
-        <TextInput
-          style={styles.textInput}
-          multiline
-          numberOfLines={3}
-          value={maintenance.submitNote ?? ''}
-          onChange={e => setMaintenance({ ...maintenance, submitNote: e.nativeEvent.text })}
-          placeholder="Enter Submit Note"
-        />
-        </ScrollView>
-      </EditSingleItemBackground>
-      <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-          <Pressable onPress={handleButtonPress} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Submit for Review
-            </Text>
-          </Pressable>
-          </ImageBackground>
-      </View>
-    </View>
-    </ContentContainer>
+      <MainHeader title='Maintenances' />
+      <TechnicianMaintHorizontalBar selectedIndex={0} />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Update Maintenance' />
+          <EditSingleItemBackground>
+            <ScrollView
+              style={{ width: '95%' }}
+              contentContainerStyle={{ alignItems: 'center' }}
+            >
+              <Text style={styles.title}>Maintenance Details</Text>
+              <Text style={styles.text}>{maintenance.name}</Text>
+              <Text style={styles.text}>Model: {maintenance.model}</Text>
+              <View style={styles.separator} />
+              <Text style={styles.text}>
+                Serial Number: {maintenance.serialNumber}
+              </Text>
+              <Text style={styles.text}>Lab: {maintenance.lab}</Text>
+              <View style={styles.separator} />
+              <Text style={styles.text}>
+                Start Date: {maintenance.startDate}
+              </Text>
+              <Text style={styles.text}>End Date: {maintenance.endDate}</Text>
+              <View style={styles.separator} />
+              <Text style={styles.descriptionText}>
+                Task Description: {maintenance.taskDescription}
+              </Text>
+              <View style={styles.separator} />
+              <Text style={styles.text}>Status: {maintenance.status}</Text>
+              <View style={styles.separator} />
+              {maintenance.reviewNote && (
+                <Text style={styles.text}>
+                  Review Note: {maintenance.reviewNote}
+                </Text>
+              )}
+              {maintenance.reviewedBy && (
+                <Text style={styles.text}>
+                  Reviewed By: {maintenance.reviewedBy}
+                </Text>
+              )}
+              {maintenance.reviewedAt && (
+                <Text style={styles.text}>
+                  Reviewed At: {maintenance.reviewedAt}
+                </Text>
+              )}
+              {maintenance.reviewNote && <View style={styles.separator} />}
+              <Text style={styles.text}>Submit Note</Text>
+              <TextInput
+                style={styles.textInput}
+                multiline
+                numberOfLines={3}
+                value={maintenance.submitNote ?? ''}
+                onChange={(e) =>
+                  setMaintenance({
+                    ...maintenance,
+                    submitNote: e.nativeEvent.text,
+                  })
+                }
+                placeholder='Enter Submit Note'
+              />
+            </ScrollView>
+          </EditSingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleButtonPress}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Submit for Review</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -138,7 +166,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652'
+    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -170,20 +198,20 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     marginBottom: '3%',
     width: 100,
-    height: 100
+    height: 100,
   },
   button: {
     width: '100%',
-    marginTop: '1%'
+    marginTop: '1%',
   },
   buttonBackground: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: '2.5%'
+    paddingVertical: '2.5%',
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
   },
 });

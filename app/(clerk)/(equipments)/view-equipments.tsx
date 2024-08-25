@@ -19,7 +19,10 @@ interface Equipment {
 }
 
 export default function ViewEquipmentsScreen() {
-  const { labId, labName } = useLocalSearchParams<{ labId: string, labName: string }>();
+  const { labId, labName } = useLocalSearchParams<{
+    labId: string;
+    labName: string;
+  }>();
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   useEffect(() => {
     if (!labId || !labName) throw new Error('Lab parameters are required');
@@ -63,57 +66,65 @@ export default function ViewEquipmentsScreen() {
     ]);
   }, []);
   const handleButtonClick = () => {
-    router.push({ pathname: '/(clerk)/(equipments)/add-equipment', params: { labId: labId } });
-  }
+    router.push({
+      pathname: '/(clerk)/(equipments)/add-equipment',
+      params: { labId: labId },
+    });
+  };
   const ItemComponent: React.FC<{ item: Equipment }> = ({ item }) => (
-    <Link href={{ pathname: `/(clerk)/(equipments)/view-equipment`, params: { equipmentId: item.id, labId: labId } }} asChild>
-            <Pressable>
-              {({ pressed }) => (
-                <ListItemBackground>
-                  <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                  <Text style={styles.titleText}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.text}>
-                    Model: {item.model}
-                  </Text>
-                  <Text style={styles.text}>
-                    Lab: {item.lab}
-                  </Text>
-                  </ListItemWithImage>
-                </ListItemBackground>
-                )}
-            </Pressable>
+    <Link
+      href={{
+        pathname: `/(clerk)/(equipments)/view-equipment`,
+        params: { equipmentId: item.id, labId: labId },
+      }}
+      asChild
+    >
+      <Pressable>
+        {({ pressed }) => (
+          <ListItemBackground>
+            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+              <Text style={styles.titleText}>{item.name}</Text>
+              <Text style={styles.text}>Model: {item.model}</Text>
+              <Text style={styles.text}>Lab: {item.lab}</Text>
+            </ListItemWithImage>
+          </ListItemBackground>
+        )}
+      </Pressable>
     </Link>
   );
   return (
     <BackgroundLayout>
-      <MainHeader title="Equipments" />
+      <MainHeader title='Equipments' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title={`${labName} - Equipments`} />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title={`${labName} - Equipments`} />
+          <FlatList
             data={equipments}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
-            
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
           <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleButtonClick}
+                style={{ width: '100%', alignItems: 'center' }}
               >
-                <Pressable onPress={handleButtonClick} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Add New Equipment
-                  </Text>
-                </Pressable>
-              </ImageBackground>
+                <Text style={styles.buttonText}>Add New Equipment</Text>
+              </Pressable>
+            </ImageBackground>
           </View>
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

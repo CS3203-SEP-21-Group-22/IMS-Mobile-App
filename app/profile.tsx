@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, ScrollView, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -38,40 +43,45 @@ export default function ProfileScreen() {
   }, []);
   const handleLogout = () => {
     router.replace('/login');
-  }
+  };
   return (
     <BackgroundLayout>
-    <MainHeader title="User Profile" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="User Details" />
-      <SingleItemBackground>
-          <View style={styles.textSeparator} />
-          <View style={styles.textSeparator} />
-          <Text style={styles.titleText}>Name: {user.firstName} {user.lastName}</Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>Email: {user.email}</Text>
-          <Text style={styles.text}>Contact Number: {user.contactNumber}</Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>Role: {user.role}</Text>
-          <View style={styles.textSeparator} />
-          <View style={styles.textSeparator} />
-      </SingleItemBackground>
-      <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
+      <MainHeader title='User Profile' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='User Details' />
+          <SingleItemBackground>
+            <View style={styles.textSeparator} />
+            <View style={styles.textSeparator} />
+            <Text style={styles.titleText}>
+              Name: {user.firstName} {user.lastName}
+            </Text>
+            <View style={styles.textSeparator} />
+            <Text style={styles.text}>Email: {user.email}</Text>
+            <Text style={styles.text}>
+              Contact Number: {user.contactNumber}
+            </Text>
+            <View style={styles.textSeparator} />
+            <Text style={styles.text}>Role: {user.role}</Text>
+            <View style={styles.textSeparator} />
+            <View style={styles.textSeparator} />
+          </SingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleLogout}
+                style={{ width: '100%', alignItems: 'center' }}
               >
-                <Pressable onPress={handleLogout} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Logout
-                  </Text>
-                </Pressable>
-              </ImageBackground>
+                <Text style={styles.buttonText}>Logout</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
         </View>
-    </View>
-    </ContentContainer>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -85,7 +95,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
@@ -149,4 +159,3 @@ const styles = StyleSheet.create({
     paddingBottom: '2.5%',
   },
 });
-

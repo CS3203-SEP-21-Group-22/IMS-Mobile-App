@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, ScrollView, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -23,7 +28,11 @@ interface Item {
 }
 
 export default function ViewItemScreen() {
-  const { itemId, equipmentId, labId } = useLocalSearchParams<{ itemId: string, equipmentId: string, labId: string }>();
+  const { itemId, equipmentId, labId } = useLocalSearchParams<{
+    itemId: string;
+    equipmentId: string;
+    labId: string;
+  }>();
   if (!equipmentId) throw new Error('Missing equipmentId');
   if (!labId) throw new Error('Missing labId');
   const [item, setItem] = useState<Item>({
@@ -56,91 +65,101 @@ export default function ViewItemScreen() {
     }
   }, [itemId]);
   const handleViewReservHistory = ({ item }: { item: Item }) => {
-    router.push({ pathname: '/(clerk)/(equipments)/reservations', params: { itemId: item.id } });
-  }
+    router.push({
+      pathname: '/(clerk)/(equipments)/reservations',
+      params: { itemId: item.id },
+    });
+  };
   const handleViewMaintHistory = ({ item }: { item: Item }) => {
-    router.push({ pathname: '/(clerk)/(equipments)/maintenances', params: { itemId: item.id } });
-  }
+    router.push({
+      pathname: '/(clerk)/(equipments)/maintenances',
+      params: { itemId: item.id },
+    });
+  };
   const handleDeleteItem = ({ item }: { item: Item }) => {
     router.back();
-  }
+  };
   return (
     <BackgroundLayout>
-    <MainHeader title="Equipments" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="View Item" />
-      <SingleItemBackground>
-        <ScrollView style={{ width: '100%' }}>
-        <SingleItemWithImage title={item.name ?? ''} link={item.imageURL ?? 'equipment'}>
-          <Text style={styles.text}>
-            Model: {item.model}
-          </Text>
-          <Text style={styles.text}>
-            Lab: {item.lab}
-          </Text>
-          <Text style={styles.text}>
-            Maintenance Interval: {item.maintenanceInterval} days
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Serial Number: {item.serialNumber}
-          </Text>
-          <Text style={styles.text}>
-            Last Maintenance On: {item.lastMaintenanceOn}
-          </Text>
-          <Text style={styles.text}>
-            Last Maintenance By: {item.lastMaintenanceBy}
-          </Text>
-          <Text style={styles.text}>
-            Status: {item.status}
-          </Text>
-          <View style={styles.textSeparator} />
-        </SingleItemWithImage>
-        <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
+      <MainHeader title='Equipments' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Item' />
+          <SingleItemBackground>
+            <ScrollView style={{ width: '100%' }}>
+              <SingleItemWithImage
+                title={item.name ?? ''}
+                link={item.imageURL ?? 'equipment'}
               >
-                <Pressable onPress={() => handleViewReservHistory({ item: item })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    View Reservations History
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-          </View>
-          <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
-              >
-                <Pressable onPress={() => handleViewMaintHistory({ item: item })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    View Maintenance History
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-          </View>
-          <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/redBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
-              >
-                <Pressable onPress={() => handleDeleteItem({ item: item })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Remove Item
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-          </View>
-          <View style={styles.textSeparator} />
-        </ScrollView>
-      </SingleItemBackground>
-    </View>
-    </ContentContainer>
+                <Text style={styles.text}>Model: {item.model}</Text>
+                <Text style={styles.text}>Lab: {item.lab}</Text>
+                <Text style={styles.text}>
+                  Maintenance Interval: {item.maintenanceInterval} days
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Serial Number: {item.serialNumber}
+                </Text>
+                <Text style={styles.text}>
+                  Last Maintenance On: {item.lastMaintenanceOn}
+                </Text>
+                <Text style={styles.text}>
+                  Last Maintenance By: {item.lastMaintenanceBy}
+                </Text>
+                <Text style={styles.text}>Status: {item.status}</Text>
+                <View style={styles.textSeparator} />
+              </SingleItemWithImage>
+              <View style={styles.button}>
+                <ImageBackground
+                  source={require('@/assets/images/blueBtn.webp')}
+                  style={styles.buttonBackground}
+                  borderRadius={10}
+                >
+                  <Pressable
+                    onPress={() => handleViewReservHistory({ item: item })}
+                    style={{ width: '100%', alignItems: 'center' }}
+                  >
+                    <Text style={styles.buttonText}>
+                      View Reservations History
+                    </Text>
+                  </Pressable>
+                </ImageBackground>
+              </View>
+              <View style={styles.button}>
+                <ImageBackground
+                  source={require('@/assets/images/blueBtn.webp')}
+                  style={styles.buttonBackground}
+                  borderRadius={10}
+                >
+                  <Pressable
+                    onPress={() => handleViewMaintHistory({ item: item })}
+                    style={{ width: '100%', alignItems: 'center' }}
+                  >
+                    <Text style={styles.buttonText}>
+                      View Maintenance History
+                    </Text>
+                  </Pressable>
+                </ImageBackground>
+              </View>
+              <View style={styles.button}>
+                <ImageBackground
+                  source={require('@/assets/images/redBtn.webp')}
+                  style={styles.buttonBackground}
+                  borderRadius={10}
+                >
+                  <Pressable
+                    onPress={() => handleDeleteItem({ item: item })}
+                    style={{ width: '100%', alignItems: 'center' }}
+                  >
+                    <Text style={styles.buttonText}>Remove Item</Text>
+                  </Pressable>
+                </ImageBackground>
+              </View>
+              <View style={styles.textSeparator} />
+            </ScrollView>
+          </SingleItemBackground>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -154,7 +173,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
@@ -218,4 +237,3 @@ const styles = StyleSheet.create({
     paddingBottom: '2.5%',
   },
 });
-

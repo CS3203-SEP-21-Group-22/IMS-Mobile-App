@@ -14,7 +14,7 @@ function TabBarIcon(props: {
 }
 
 export const unstable_settings = {
-  initialRouteName: '(explore-equipments)'
+  initialRouteName: '(explore-equipments)',
 };
 
 export default function TabLayout() {
@@ -27,29 +27,36 @@ export default function TabLayout() {
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="(explore-equipments)"
+        name='(explore-equipments)'
         options={{
           title: 'Explore Equipments',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="computer" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name='computer' color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="(reservations)"
+        name='(reservations)'
         options={{
           title: 'Reservations',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="calendar-check" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name='calendar-check' color={color} />
+          ),
         }}
       />
       <Tabs.Screen
-        name="(borrowed-items)"
+        name='(borrowed-items)'
         options={{
           title: 'Borrowed Items',
           headerShown: false,
-          tabBarIcon: ({ color }) => <TabBarIcon name="cart-shopping" color={color} />,
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name='cart-shopping' color={color} />
+          ),
         }}
       />
     </Tabs>

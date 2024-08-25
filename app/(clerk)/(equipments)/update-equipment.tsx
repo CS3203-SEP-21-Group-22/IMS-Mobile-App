@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, TextInput, Image, Button, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  TextInput,
+  Image,
+  Button,
+  ImageBackground,
+} from 'react-native';
 import Colors from '@/constants/Colors';
 import { useColorScheme } from '@/components/useColorScheme';
 import { Text, View } from '@/components/Themed';
@@ -21,7 +28,10 @@ interface Equipment {
 }
 
 export default function UpdateEquipmentScreen() {
-  const { equipmentId, labId } = useLocalSearchParams<{ equipmentId: string, labId: string }>();
+  const { equipmentId, labId } = useLocalSearchParams<{
+    equipmentId: string;
+    labId: string;
+  }>();
   if (!labId) throw new Error('Missing labId');
   const [equipment, setEquipment] = useState<Equipment>({
     id: null,
@@ -45,8 +55,11 @@ export default function UpdateEquipmentScreen() {
     }
   }, [equipmentId]);
   const handleUpdateEquipment = () => {
-    router.replace({ pathname: '/(clerk)/(equipments)/view-equipment', params: { equipmentId, labId } });
-  }
+    router.replace({
+      pathname: '/(clerk)/(equipments)/view-equipment',
+      params: { equipmentId, labId },
+    });
+  };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -60,37 +73,69 @@ export default function UpdateEquipmentScreen() {
   };
   return (
     <BackgroundLayout>
-    <MainHeader title="Equipments" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Update Equipment" />
-      <EditSingleItemBackground>
-        <Text style={styles.title}>Equipment Details</Text>
-        <Text style={styles.text}>Name</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Equipment Name' value={equipment.name ?? ''} onChangeText={(text) => setEquipment({ ...equipment, name: text })} />
-        <Text style={styles.text}>Model</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Equipment Model' value={equipment.model ?? ''} onChangeText={(text) => setEquipment({ ...equipment, model: text })} />
-        <Text style={styles.text}>Maintenance Interval (Days)</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Maintenance Interval' value={equipment.maintenanceInterval?.toString()} onChangeText={(text) => setEquipment({ ...equipment, maintenanceInterval: parseInt(text) })} />
-        <Image source={equipment.imageURL ? { uri: equipment.imageURL } : require('@/assets/images/equipmentSample.png')} style={styles.image} />
-        <Button title="Pick an Image" onPress={pickImage} />
-        <View style={styles.separator} />
-      </EditSingleItemBackground>
-      <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-          <Pressable onPress={handleUpdateEquipment} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Update Equipment
-            </Text>
-          </Pressable>
-          </ImageBackground>
-      </View>
-    </View>
-    </ContentContainer>
+      <MainHeader title='Equipments' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Update Equipment' />
+          <EditSingleItemBackground>
+            <Text style={styles.title}>Equipment Details</Text>
+            <Text style={styles.text}>Name</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Equipment Name'
+              value={equipment.name ?? ''}
+              onChangeText={(text) =>
+                setEquipment({ ...equipment, name: text })
+              }
+            />
+            <Text style={styles.text}>Model</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Equipment Model'
+              value={equipment.model ?? ''}
+              onChangeText={(text) =>
+                setEquipment({ ...equipment, model: text })
+              }
+            />
+            <Text style={styles.text}>Maintenance Interval (Days)</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Maintenance Interval'
+              value={equipment.maintenanceInterval?.toString()}
+              onChangeText={(text) =>
+                setEquipment({
+                  ...equipment,
+                  maintenanceInterval: parseInt(text),
+                })
+              }
+            />
+            <Image
+              source={
+                equipment.imageURL
+                  ? { uri: equipment.imageURL }
+                  : require('@/assets/images/equipmentSample.png')
+              }
+              style={styles.image}
+            />
+            <Button title='Pick an Image' onPress={pickImage} />
+            <View style={styles.separator} />
+          </EditSingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleUpdateEquipment}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Update Equipment</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -108,7 +153,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652'
+    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -132,20 +177,20 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     marginBottom: '3%',
     width: 100,
-    height: 100
+    height: 100,
   },
   button: {
     width: '100%',
-    marginTop: '1%'
+    marginTop: '1%',
   },
   buttonBackground: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: '2.5%'
+    paddingVertical: '2.5%',
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
   },
 });

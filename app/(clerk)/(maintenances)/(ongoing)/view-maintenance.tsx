@@ -1,4 +1,10 @@
-import { StyleSheet, Pressable, FlatList, ScrollView,ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -64,83 +70,80 @@ export default function viewOngoingMaintenancesScreen() {
     }
   }, [maintenanceId]);
   const handleUpdateButtonPress = ({ item }: { item: Maintenance }) => {
-    router.replace({ pathname: '/(clerk)/(maintenances)/(ongoing)/update-maintenance', params: { maintenanceId: item.id } });
+    router.replace({
+      pathname: '/(clerk)/(maintenances)/(ongoing)/update-maintenance',
+      params: { maintenanceId: item.id },
+    });
   };
   return (
     <BackgroundLayout>
-    <MainHeader title="Maintenances" />
-    <ClerkMaintenancesHorizontalBar selectedIndex={1} />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="View Maintenance" />
-      <SingleItemBackground>
-        <ScrollView style={{ width: '100%' }} contentContainerStyle={{ alignItems: 'center' }}>
-          <Text style={styles.titleText}>
-            Maintenance Details
-          </Text>
-            <Text style={styles.text}>
-              Name: {maintenance.name}
-            </Text>
-            <Text style={styles.text}>
-              Model: {maintenance.model}
-            </Text>
-            <Text style={styles.text}>
-              Serial Number: {maintenance.serialNumber}
-            </Text>
-            <Text style={styles.text}>
-              Lab: {maintenance.lab}
-            </Text>
-            <View style={styles.textSeparator} />
-            <Text style={styles.text}>
-              Task Description: {maintenance.taskDescription}
-            </Text>
-            <Text style={styles.text}>
-              Assigned To: {maintenance.assignedTo}
-            </Text>
-            <Text style={styles.text}>
-              Start Date: {maintenance.startDate}
-            </Text>
-            <Text style={styles.text}>
-              End Date: {maintenance.endDate}
-            </Text>
-            <View style={styles.textSeparator} />
-            <Text style={styles.text}>
-              Status: {maintenance.status}
-            </Text>
-            { maintenance.submitNote && (
+      <MainHeader title='Maintenances' />
+      <ClerkMaintenancesHorizontalBar selectedIndex={1} />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Maintenance' />
+          <SingleItemBackground>
+            <ScrollView
+              style={{ width: '100%' }}
+              contentContainerStyle={{ alignItems: 'center' }}
+            >
+              <Text style={styles.titleText}>Maintenance Details</Text>
+              <Text style={styles.text}>Name: {maintenance.name}</Text>
+              <Text style={styles.text}>Model: {maintenance.model}</Text>
               <Text style={styles.text}>
-                Submit Note: {maintenance.submitNote}
+                Serial Number: {maintenance.serialNumber}
               </Text>
-            )}
-            <View style={styles.textSeparator} />
-            { maintenance.reviewNote && (
+              <Text style={styles.text}>Lab: {maintenance.lab}</Text>
+              <View style={styles.textSeparator} />
               <Text style={styles.text}>
-                Review Note: {maintenance.reviewNote}
+                Task Description: {maintenance.taskDescription}
               </Text>
-            )}
-            { maintenance.reviewedBy && (
               <Text style={styles.text}>
-                Reviewed By: {maintenance.reviewedBy}
+                Assigned To: {maintenance.assignedTo}
               </Text>
-            )}
-          <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
-              >
-                <Pressable onPress={() => handleUpdateButtonPress({ item: maintenance })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Review Maintenance
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-          </View>
-          <View style={styles.textSeparator} />
-        </ScrollView>
-      </SingleItemBackground>
-    </View>
-    </ContentContainer>
+              <Text style={styles.text}>
+                Start Date: {maintenance.startDate}
+              </Text>
+              <Text style={styles.text}>End Date: {maintenance.endDate}</Text>
+              <View style={styles.textSeparator} />
+              <Text style={styles.text}>Status: {maintenance.status}</Text>
+              {maintenance.submitNote && (
+                <Text style={styles.text}>
+                  Submit Note: {maintenance.submitNote}
+                </Text>
+              )}
+              <View style={styles.textSeparator} />
+              {maintenance.reviewNote && (
+                <Text style={styles.text}>
+                  Review Note: {maintenance.reviewNote}
+                </Text>
+              )}
+              {maintenance.reviewedBy && (
+                <Text style={styles.text}>
+                  Reviewed By: {maintenance.reviewedBy}
+                </Text>
+              )}
+              <View style={styles.button}>
+                <ImageBackground
+                  source={require('@/assets/images/blueBtn.webp')}
+                  style={styles.buttonBackground}
+                  borderRadius={10}
+                >
+                  <Pressable
+                    onPress={() =>
+                      handleUpdateButtonPress({ item: maintenance })
+                    }
+                    style={{ width: '100%', alignItems: 'center' }}
+                  >
+                    <Text style={styles.buttonText}>Review Maintenance</Text>
+                  </Pressable>
+                </ImageBackground>
+              </View>
+              <View style={styles.textSeparator} />
+            </ScrollView>
+          </SingleItemBackground>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -154,7 +157,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: '2%',
@@ -219,4 +222,3 @@ const styles = StyleSheet.create({
     paddingBottom: '2.5%',
   },
 });
-

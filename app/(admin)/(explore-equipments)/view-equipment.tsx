@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, ScrollView, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -22,7 +27,10 @@ interface Equipment {
 }
 
 export default function ViewEquipmentScreen() {
-  const { equipmentId, labId } = useLocalSearchParams<{ equipmentId: string, labId: string }>();
+  const { equipmentId, labId } = useLocalSearchParams<{
+    equipmentId: string;
+    labId: string;
+  }>();
   if (!labId) throw new Error('Missing labId');
   const [equipment, setEquipment] = useState<Equipment>({
     id: null,
@@ -52,56 +60,59 @@ export default function ViewEquipmentScreen() {
     }
   }, [equipmentId]);
   const handleViewItems = ({ item }: { item: Equipment }) => {
-    router.push({ pathname: '/(admin)/(explore-equipments)/view-items', params: { equipmentId: item.id, labId } });
-  }
+    router.push({
+      pathname: '/(admin)/(explore-equipments)/view-items',
+      params: { equipmentId: item.id, labId },
+    });
+  };
   return (
     <BackgroundLayout>
-    <MainHeader title="Explore Equipments" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="View Equipment" />
-      <SingleItemBackground>
-        <ScrollView style={{ width: '100%' }}>
-        <SingleItemWithImage title={equipment.name ?? ''} link={equipment.imageURL ?? 'equipment'}>
-          <Text style={styles.text}>
-            Model: {equipment.model}
-          </Text>
-          <Text style={styles.text}>
-            Lab: {equipment.lab}
-          </Text>
-          <Text style={styles.text}>
-            Maintenance Interval: {equipment.maintenanceInterval} days
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Total Items: {equipment.totalItems}
-          </Text>
-          <Text style={styles.text}>
-            Reserved Items: {equipment.reservedItems}
-          </Text>
-          <Text style={styles.text}>
-            Available Items: {equipment.availableItems}
-          </Text>
-          <View style={styles.textSeparator} />
-        </SingleItemWithImage>
-        <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
+      <MainHeader title='Explore Equipments' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Equipment' />
+          <SingleItemBackground>
+            <ScrollView style={{ width: '100%' }}>
+              <SingleItemWithImage
+                title={equipment.name ?? ''}
+                link={equipment.imageURL ?? 'equipment'}
               >
-                <Pressable onPress={() => handleViewItems({ item: equipment })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    View Items
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-          </View>
-          <View style={styles.textSeparator} />
-        </ScrollView>
-      </SingleItemBackground>
-    </View>
-    </ContentContainer>
+                <Text style={styles.text}>Model: {equipment.model}</Text>
+                <Text style={styles.text}>Lab: {equipment.lab}</Text>
+                <Text style={styles.text}>
+                  Maintenance Interval: {equipment.maintenanceInterval} days
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Total Items: {equipment.totalItems}
+                </Text>
+                <Text style={styles.text}>
+                  Reserved Items: {equipment.reservedItems}
+                </Text>
+                <Text style={styles.text}>
+                  Available Items: {equipment.availableItems}
+                </Text>
+                <View style={styles.textSeparator} />
+              </SingleItemWithImage>
+              <View style={styles.button}>
+                <ImageBackground
+                  source={require('@/assets/images/blueBtn.webp')}
+                  style={styles.buttonBackground}
+                  borderRadius={10}
+                >
+                  <Pressable
+                    onPress={() => handleViewItems({ item: equipment })}
+                    style={{ width: '100%', alignItems: 'center' }}
+                  >
+                    <Text style={styles.buttonText}>View Items</Text>
+                  </Pressable>
+                </ImageBackground>
+              </View>
+              <View style={styles.textSeparator} />
+            </ScrollView>
+          </SingleItemBackground>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -115,7 +126,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
@@ -179,4 +190,3 @@ const styles = StyleSheet.create({
     paddingBottom: '2.5%',
   },
 });
-

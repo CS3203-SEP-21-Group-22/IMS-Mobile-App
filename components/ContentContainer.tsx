@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet,ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, ImageBackground, Dimensions } from 'react-native';
 import { View } from './Themed';
 
 interface BackgroundProps {

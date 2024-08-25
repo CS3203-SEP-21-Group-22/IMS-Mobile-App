@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, Image, TextInput, ImageBackground, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  Image,
+  TextInput,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 import { Link, useLocalSearchParams, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -30,11 +37,11 @@ interface Item {
 
 const handleAccept = () => {
   router.replace('/(clerk)/(reservations)/(requested)/items');
-}
+};
 
 const handleReject = () => {
   router.replace('/(clerk)/(reservations)/(requested)/items');
-}
+};
 
 export default function ViewRequestedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
@@ -62,7 +69,7 @@ export default function ViewRequestedItemScreen() {
         toDate: '2024-08-02',
         requestedAt: '2024-08-02 12:03',
         imageURL: null,
-      })
+      });
       setItemsList([
         { id: 1, serialNumber: 'FOC1234X56Y' },
         { id: 2, serialNumber: 'FOC1234X56Z' },
@@ -72,94 +79,85 @@ export default function ViewRequestedItemScreen() {
       throw new Error('Reservation ID is required');
     }
   }, [reservationId]);
-  
+
   const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   return (
     <BackgroundLayout>
-    <MainHeader title="Reservations" />
-    <ClerkReservationsHorizontalBar selectedIndex = {0} />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Item Request" />
-      <SingleItemBackground>
-        <ScrollView>
-        <SingleItemWithImage title={reservation.name ?? ''} link={reservation.imageURL ?? 'equipment'}>
-          <Text style={styles.text}>
-            Model: {reservation.model}
-          </Text>
-          <Text style={styles.text}>
-            Lab: {reservation.lab}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Requested By: {reservation.user}
-          </Text>
-          <Text style={styles.text}>
-            From: {reservation.fromDate}
-          </Text>
-          <Text style={styles.text}>
-            To: {reservation.toDate}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Requested At: {reservation.requestedAt}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Assigned Item:
-          </Text>
-          <Dropdown
-            data={itemsList}
-            mode='modal'
-            search
-            searchPlaceholder='Search Item'
-            labelField="serialNumber"
-            valueField="id"
-            onChange={(item) => setSelectedItem(item)}
-            style={styles.dropdown}
-            placeholder={ selectedItem ? selectedItem.serialNumber : 'Select Item' }
-            placeholderStyle={styles.dropdownText}
-            selectedTextStyle={styles.dropdownText}
-          />
-          <TextInput
-            style={styles.multilineInput}
-            placeholder="Notes"
-            multiline
-          />
-          <View style={styles.textSeparator} />
-          <View style={styles.buttonsContainer}>
-            <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/redBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={12}
+      <MainHeader title='Reservations' />
+      <ClerkReservationsHorizontalBar selectedIndex={0} />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Item Request' />
+          <SingleItemBackground>
+            <ScrollView>
+              <SingleItemWithImage
+                title={reservation.name ?? ''}
+                link={reservation.imageURL ?? 'equipment'}
               >
-                <Pressable onPress={handleReject}>
-                  <Text style={styles.buttonText}>
-                    Reject
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-            </View>
-            <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={12}
-              >
-                <Pressable onPress={handleAccept}>
-                  <Text style={styles.buttonText}>
-                    Assign
-                  </Text>
-                </Pressable>
-              </ImageBackground>
-            </View>
-          </View>
-        </SingleItemWithImage>
-        </ScrollView>
-      </SingleItemBackground>
-    </View>
-    </ContentContainer>
+                <Text style={styles.text}>Model: {reservation.model}</Text>
+                <Text style={styles.text}>Lab: {reservation.lab}</Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Requested By: {reservation.user}
+                </Text>
+                <Text style={styles.text}>From: {reservation.fromDate}</Text>
+                <Text style={styles.text}>To: {reservation.toDate}</Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Requested At: {reservation.requestedAt}
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>Assigned Item:</Text>
+                <Dropdown
+                  data={itemsList}
+                  mode='modal'
+                  search
+                  searchPlaceholder='Search Item'
+                  labelField='serialNumber'
+                  valueField='id'
+                  onChange={(item) => setSelectedItem(item)}
+                  style={styles.dropdown}
+                  placeholder={
+                    selectedItem ? selectedItem.serialNumber : 'Select Item'
+                  }
+                  placeholderStyle={styles.dropdownText}
+                  selectedTextStyle={styles.dropdownText}
+                />
+                <TextInput
+                  style={styles.multilineInput}
+                  placeholder='Notes'
+                  multiline
+                />
+                <View style={styles.textSeparator} />
+                <View style={styles.buttonsContainer}>
+                  <View style={styles.button}>
+                    <ImageBackground
+                      source={require('@/assets/images/redBtn.webp')}
+                      style={styles.buttonBackground}
+                      borderRadius={12}
+                    >
+                      <Pressable onPress={handleReject}>
+                        <Text style={styles.buttonText}>Reject</Text>
+                      </Pressable>
+                    </ImageBackground>
+                  </View>
+                  <View style={styles.button}>
+                    <ImageBackground
+                      source={require('@/assets/images/blueBtn.webp')}
+                      style={styles.buttonBackground}
+                      borderRadius={12}
+                    >
+                      <Pressable onPress={handleAccept}>
+                        <Text style={styles.buttonText}>Assign</Text>
+                      </Pressable>
+                    </ImageBackground>
+                  </View>
+                </View>
+              </SingleItemWithImage>
+            </ScrollView>
+          </SingleItemBackground>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -173,7 +171,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

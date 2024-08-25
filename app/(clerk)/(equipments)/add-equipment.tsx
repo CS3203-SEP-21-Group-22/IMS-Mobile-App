@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, TextInput, ImageBackground, Image, Button } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  TextInput,
+  ImageBackground,
+  Image,
+  Button,
+} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -29,7 +36,7 @@ export default function AddEquipmentScreen() {
   });
   const handleButtonPress = () => {
     router.back();
-  }
+  };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -43,37 +50,73 @@ export default function AddEquipmentScreen() {
   };
   return (
     <BackgroundLayout>
-    <MainHeader title="Equipments" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Add New Equipment" />
-      <EditSingleItemBackground>
-        <Text style={styles.title}>Equipment Details</Text>
-        <Text style={styles.text}>Name</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Equipment Name' value={equipment.name ?? ''} onChangeText={(text) => setEquipment({ ...equipment, name: text })} />
-        <Text style={styles.text}>Model</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Equipment Model' value={equipment.model ?? ''} onChangeText={(text) => setEquipment({ ...equipment, model: text })} />
-        <Text style={styles.text}>Maintenance Interval (Days)</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Maintenance Interval' value={equipment.maintenanceInterval ? equipment.maintenanceInterval.toString() : ''} onChangeText={(text) => setEquipment({ ...equipment, maintenanceInterval: parseInt(text) })} />
-        <Image source={equipment.imageURL ? { uri: equipment.imageURL } : require('@/assets/images/equipmentSample.png')} style={styles.image} />
-        <Button title="Pick an Image" onPress={pickImage} />
-        <View style={styles.separator} />
-      </EditSingleItemBackground>
-      <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-          <Pressable onPress={handleButtonPress} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Add Equipment
-            </Text>
-          </Pressable>
-          </ImageBackground>
-      </View>
-    </View>
-    </ContentContainer>
+      <MainHeader title='Equipments' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Add New Equipment' />
+          <EditSingleItemBackground>
+            <Text style={styles.title}>Equipment Details</Text>
+            <Text style={styles.text}>Name</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Equipment Name'
+              value={equipment.name ?? ''}
+              onChangeText={(text) =>
+                setEquipment({ ...equipment, name: text })
+              }
+            />
+            <Text style={styles.text}>Model</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Equipment Model'
+              value={equipment.model ?? ''}
+              onChangeText={(text) =>
+                setEquipment({ ...equipment, model: text })
+              }
+            />
+            <Text style={styles.text}>Maintenance Interval (Days)</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Maintenance Interval'
+              value={
+                equipment.maintenanceInterval
+                  ? equipment.maintenanceInterval.toString()
+                  : ''
+              }
+              onChangeText={(text) =>
+                setEquipment({
+                  ...equipment,
+                  maintenanceInterval: parseInt(text),
+                })
+              }
+            />
+            <Image
+              source={
+                equipment.imageURL
+                  ? { uri: equipment.imageURL }
+                  : require('@/assets/images/equipmentSample.png')
+              }
+              style={styles.image}
+            />
+            <Button title='Pick an Image' onPress={pickImage} />
+            <View style={styles.separator} />
+          </EditSingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleButtonPress}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Add Equipment</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -91,7 +134,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652'
+    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -115,20 +158,20 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     marginBottom: '3%',
     width: 100,
-    height: 100
+    height: 100,
   },
   button: {
     width: '100%',
-    marginTop: '1%'
+    marginTop: '1%',
   },
   buttonBackground: {
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: '2.5%'
+    paddingVertical: '2.5%',
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
   },
 });

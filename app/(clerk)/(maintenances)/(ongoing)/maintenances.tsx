@@ -23,36 +23,30 @@ interface Maintenance {
 
 const handleButtonPress = () => {
   router.push('/(clerk)/(maintenances)/(ongoing)/add-maintenance');
-}
+};
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
-  <Link href={{ pathname: '/(clerk)/(maintenances)/(ongoing)/view-maintenance', params: { maintenanceId: item.id } }} asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <ListItemBackground>
-                <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                <Text style={styles.titleText}>
-                  {item.name}
-                </Text>
-                <Text style={styles.text}>
-                  Model: {item.model}
-                </Text>
-                <Text style={styles.text}>
-                  Serial Number: {item.serialNumber}
-                </Text>
-                <Text style={styles.text}>
-                  Lab: {item.lab}
-                </Text>
-                <Text style={styles.text}>
-                  End Date: {item.endDate}
-                </Text>
-                <Text style={styles.text}>
-                  Status: {item.status}
-                </Text>
-                </ListItemWithImage>
-              </ListItemBackground>
-              )}
-          </Pressable>
+  <Link
+    href={{
+      pathname: '/(clerk)/(maintenances)/(ongoing)/view-maintenance',
+      params: { maintenanceId: item.id },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+            <Text style={styles.titleText}>{item.name}</Text>
+            <Text style={styles.text}>Model: {item.model}</Text>
+            <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
+            <Text style={styles.text}>Lab: {item.lab}</Text>
+            <Text style={styles.text}>End Date: {item.endDate}</Text>
+            <Text style={styles.text}>Status: {item.status}</Text>
+          </ListItemWithImage>
+        </ListItemBackground>
+      )}
+    </Pressable>
   </Link>
 );
 
@@ -100,33 +94,39 @@ export default function viewOngoingMaintenancesScreen() {
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="Maintenances" />
-      <ClerkMaintenancesHorizontalBar selectedIndex = {1} />
+      <MainHeader title='Maintenances' />
+      <ClerkMaintenancesHorizontalBar selectedIndex={1} />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Ongoing Maintenances" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Ongoing Maintenances' />
+          <FlatList
             data={maintenances}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
-      <View style={styles.button}>
+        </View>
+        <View style={styles.button}>
           <ImageBackground
             source={require('@/assets/images/blueBtn.webp')}
             style={styles.buttonBackground}
             borderRadius={10}
           >
-          <Pressable onPress={handleButtonPress} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Create New Maintenance
-            </Text>
-          </Pressable>
+            <Pressable
+              onPress={handleButtonPress}
+              style={{ width: '100%', alignItems: 'center' }}
+            >
+              <Text style={styles.buttonText}>Create New Maintenance</Text>
+            </Pressable>
           </ImageBackground>
-      </View>
-      </ContentContainer> 
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    marginTop: '4%'
+    marginTop: '4%',
   },
   buttonBackground: {
     width: '100%',
@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
   },
 });
-

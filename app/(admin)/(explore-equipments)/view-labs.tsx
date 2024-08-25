@@ -18,27 +18,28 @@ interface Lab {
 }
 
 const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
-  <Link href={{ pathname: `/(admin)/(explore-equipments)/view-equipments`, params: { labId: item.id, labName: item.name } }} asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <ListItemBackground>
-                <ListItemWithImage link={item.imageURL ?? 'lab'}>
-                <Text style={styles.titleText}>
-                  {item.name}
-                </Text>
-                <Text style={styles.text}>
-                  Code: {item.code}
-                </Text>
-                <Text style={styles.text}>
-                  Equipment Count: {item.equipmentCount}
-                </Text>
-                </ListItemWithImage>
-              </ListItemBackground>
-              )}
-          </Pressable>
+  <Link
+    href={{
+      pathname: `/(admin)/(explore-equipments)/view-equipments`,
+      params: { labId: item.id, labName: item.name },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <ListItemWithImage link={item.imageURL ?? 'lab'}>
+            <Text style={styles.titleText}>{item.name}</Text>
+            <Text style={styles.text}>Code: {item.code}</Text>
+            <Text style={styles.text}>
+              Equipment Count: {item.equipmentCount}
+            </Text>
+          </ListItemWithImage>
+        </ListItemBackground>
+      )}
+    </Pressable>
   </Link>
 );
-
 
 export default function ViewLabsScreen() {
   const [labs, setLabs] = useState<Lab[]>([]);
@@ -78,18 +79,23 @@ export default function ViewLabsScreen() {
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="Explore Equipments" />
+      <MainHeader title='Explore Equipments' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="View Labs" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Labs' />
+          <FlatList
             data={labs}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -108,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

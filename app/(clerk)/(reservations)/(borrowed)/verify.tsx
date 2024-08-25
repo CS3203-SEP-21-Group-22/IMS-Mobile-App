@@ -21,15 +21,15 @@ export default function VerifyReturningItemScreen() {
   }, [reservationId]);
   return (
     <BackgroundLayout>
-    <MainHeader title="Reservations" />
-    <ClerkReservationsHorizontalBar selectedIndex = {2} />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Verify Returning Item" />
-      <Text style={styles.text}>Scan QR code to verify item return</Text>
-      <QRCode value={qrValue} size={200} />
-    </View>
-    </ContentContainer>
+      <MainHeader title='Reservations' />
+      <ClerkReservationsHorizontalBar selectedIndex={2} />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Verify Returning Item' />
+          <Text style={styles.text}>Scan QR code to verify item return</Text>
+          <QRCode value={qrValue} size={200} />
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }

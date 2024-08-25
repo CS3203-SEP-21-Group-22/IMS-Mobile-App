@@ -18,7 +18,10 @@ interface Equipment {
 }
 
 export default function ViewEquipmentsScreen() {
-  const { labId, labName } = useLocalSearchParams<{ labId: string, labName: string }>();
+  const { labId, labName } = useLocalSearchParams<{
+    labId: string;
+    labName: string;
+  }>();
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   useEffect(() => {
     if (!labId || !labName) throw new Error('Lab parameters are required');
@@ -62,40 +65,45 @@ export default function ViewEquipmentsScreen() {
     ]);
   }, [labId]);
   const ItemComponent: React.FC<{ item: Equipment }> = ({ item }) => (
-    <Link href={{ pathname: `/(technician)/(explore-equipments)/view-equipment`, params: { equipmentId: item.id, labId: labId } }} asChild>
-            <Pressable>
-              {({ pressed }) => (
-                <ListItemBackground>
-                  <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                  <Text style={styles.titleText}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.text}>
-                    Model: {item.model}
-                  </Text>
-                  <Text style={styles.text}>
-                    Lab: {item.lab}
-                  </Text>
-                  </ListItemWithImage>
-                </ListItemBackground>
-                )}
-            </Pressable>
+    <Link
+      href={{
+        pathname: `/(technician)/(explore-equipments)/view-equipment`,
+        params: { equipmentId: item.id, labId: labId },
+      }}
+      asChild
+    >
+      <Pressable>
+        {({ pressed }) => (
+          <ListItemBackground>
+            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+              <Text style={styles.titleText}>{item.name}</Text>
+              <Text style={styles.text}>Model: {item.model}</Text>
+              <Text style={styles.text}>Lab: {item.lab}</Text>
+            </ListItemWithImage>
+          </ListItemBackground>
+        )}
+      </Pressable>
     </Link>
   );
   return (
     <BackgroundLayout>
-      <MainHeader title="Explore Equipments" />
+      <MainHeader title='Explore Equipments' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title={`${labName} - Equipments`} />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title={`${labName} - Equipments`} />
+          <FlatList
             data={equipments}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -114,7 +122,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

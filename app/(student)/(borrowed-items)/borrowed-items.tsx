@@ -74,46 +74,49 @@ export default function BorrowedItemsScreen() {
     ]);
   }, []);
   const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
-    <Link href={{ pathname: `/(student)/(borrowed-items)/view-item`, params: { reservationId: item.id } }} asChild>
-            <Pressable>
-              {({ pressed }) => (
-                <ListItemBackground>
-                  <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                  <Text style={styles.titleText}>
-                    {item.name}
-                  </Text>
-                  <Text style={styles.text}>
-                    Model: {item.model}
-                  </Text>
-                  <Text style={styles.text}>
-                    Serial Number: {item.serialNumber}
-                  </Text>
-                  <Text style={styles.text}>
-                    Lab: {item.lab}
-                  </Text>
-                  <Text style={styles.text}>
-                    Due Date: {item.endDate}
-                  </Text>
-                  </ListItemWithImage>
-                </ListItemBackground>
-                )}
-            </Pressable>
+    <Link
+      href={{
+        pathname: `/(student)/(borrowed-items)/view-item`,
+        params: { reservationId: item.id },
+      }}
+      asChild
+    >
+      <Pressable>
+        {({ pressed }) => (
+          <ListItemBackground>
+            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+              <Text style={styles.titleText}>{item.name}</Text>
+              <Text style={styles.text}>Model: {item.model}</Text>
+              <Text style={styles.text}>
+                Serial Number: {item.serialNumber}
+              </Text>
+              <Text style={styles.text}>Lab: {item.lab}</Text>
+              <Text style={styles.text}>Due Date: {item.endDate}</Text>
+            </ListItemWithImage>
+          </ListItemBackground>
+        )}
+      </Pressable>
     </Link>
   );
   return (
     <BackgroundLayout>
-      <MainHeader title="Borrowed Items" />
+      <MainHeader title='Borrowed Items' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Items to be returned" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Items to be returned' />
+          <FlatList
             data={reservations}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -132,7 +135,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

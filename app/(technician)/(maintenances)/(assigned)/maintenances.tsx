@@ -22,33 +22,27 @@ interface Maintenance {
 }
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
-  <Link href={{ pathname: '/(technician)/(maintenances)/update-maintenance', params: { maintenanceId: item.id } }} asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <ListItemBackground>
-                <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                <Text style={styles.titleText}>
-                  {item.name}
-                </Text>
-                <Text style={styles.text}>
-                  Model: {item.model}
-                </Text>
-                <Text style={styles.text}>
-                  Serial Number: {item.serialNumber}
-                </Text>
-                <Text style={styles.text}>
-                  Lab: {item.lab}
-                </Text>
-                <Text style={styles.text}>
-                  Due Date: {item.endDate}
-                </Text>
-                <Text style={styles.text}>
-                  Status: {item.status}
-                </Text>
-                </ListItemWithImage>
-              </ListItemBackground>
-              )}
-          </Pressable>
+  <Link
+    href={{
+      pathname: '/(technician)/(maintenances)/update-maintenance',
+      params: { maintenanceId: item.id },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+            <Text style={styles.titleText}>{item.name}</Text>
+            <Text style={styles.text}>Model: {item.model}</Text>
+            <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
+            <Text style={styles.text}>Lab: {item.lab}</Text>
+            <Text style={styles.text}>Due Date: {item.endDate}</Text>
+            <Text style={styles.text}>Status: {item.status}</Text>
+          </ListItemWithImage>
+        </ListItemBackground>
+      )}
+    </Pressable>
   </Link>
 );
 
@@ -106,19 +100,24 @@ export default function AssignedMaintenancesScreen() {
 
   return (
     <BackgroundLayout>
-      <MainHeader title="Maintenances" />
+      <MainHeader title='Maintenances' />
       <TechnicianMaintHorizontalBar selectedIndex={0} />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Assigned Maintenances" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Assigned Maintenances' />
+          <FlatList
             data={maintenances}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -137,7 +136,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
@@ -146,4 +145,3 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-

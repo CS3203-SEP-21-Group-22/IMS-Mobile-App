@@ -102,64 +102,41 @@ export default function ViewMaintenancesScreen() {
   }, []);
   const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
     <ListItemBackground>
-      <Text style={styles.titleText}>
-        Maintenance ID: {item.id}
-      </Text>
-      <Text style={styles.text}>
-        Description: {item.description}
-      </Text>
-      <Text style={styles.text}>
-        Assigned To: {item.assignedTo}
-      </Text>
-      <Text style={styles.text}>
-        Created By: {item.createdBy}
-      </Text>
-      <Text style={styles.text}>
-        Created At: {item.createdAt}
-      </Text>
-      <Text style={styles.text}>
-        Submit Note: {item.submitNote}
-      </Text>
-      <Text style={styles.text}>
-        Cost: {item.cost}
-      </Text>
-      <Text style={styles.text}>
-        Returned At: {item.returnedAt}
-      </Text>
-      <Text style={styles.text}>
-        Review Note: {item.reviewNote}
-      </Text>
-      <Text style={styles.text}>
-        Reviewed By: {item.reviewedBy}
-      </Text>
-      <Text style={styles.text}>
-        Reviewed At: {item.reviewedAt}
-      </Text>
-      <Text style={styles.text}>
-        Start Date: {item.startDate}
-      </Text>
-      <Text style={styles.text}>
-        End Date: {item.endDate}
-      </Text>
-      <Text style={styles.text}>
-        Status: {item.status}
-      </Text>
+      <Text style={styles.titleText}>Maintenance ID: {item.id}</Text>
+      <Text style={styles.text}>Description: {item.description}</Text>
+      <Text style={styles.text}>Assigned To: {item.assignedTo}</Text>
+      <Text style={styles.text}>Created By: {item.createdBy}</Text>
+      <Text style={styles.text}>Created At: {item.createdAt}</Text>
+      <Text style={styles.text}>Submit Note: {item.submitNote}</Text>
+      <Text style={styles.text}>Cost: {item.cost}</Text>
+      <Text style={styles.text}>Returned At: {item.returnedAt}</Text>
+      <Text style={styles.text}>Review Note: {item.reviewNote}</Text>
+      <Text style={styles.text}>Reviewed By: {item.reviewedBy}</Text>
+      <Text style={styles.text}>Reviewed At: {item.reviewedAt}</Text>
+      <Text style={styles.text}>Start Date: {item.startDate}</Text>
+      <Text style={styles.text}>End Date: {item.endDate}</Text>
+      <Text style={styles.text}>Status: {item.status}</Text>
     </ListItemBackground>
   );
   return (
     <BackgroundLayout>
-      <MainHeader title="Equipments" />
+      <MainHeader title='Equipments' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Maintenances History" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Maintenances History' />
+          <FlatList
             data={maintenances}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -178,7 +155,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

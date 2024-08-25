@@ -8,13 +8,13 @@ interface BackgroundProps {
 
 const ListItemBackground: React.FC<BackgroundProps> = ({ children }) => (
   <View style={styles.container}>
-  <ImageBackground
-    source={require('@/assets/images/greenMini.webp')}
-    style={styles.background}
-    borderRadius={10}
-  >
-    {children}
-  </ImageBackground>
+    <ImageBackground
+      source={require('@/assets/images/greenMini.webp')}
+      style={styles.background}
+      borderRadius={10}
+    >
+      {children}
+    </ImageBackground>
   </View>
 );
 
@@ -32,7 +32,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     paddingVertical: '4%',
-  }
+  },
 });
 
 export default ListItemBackground;

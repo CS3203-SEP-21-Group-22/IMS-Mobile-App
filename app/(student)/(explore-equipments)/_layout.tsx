@@ -1,5 +1,9 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -49,11 +53,19 @@ function ExploreEquipmentsLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="view-labs" options={{ title: 'View Labs', headerShown: false }} />
-        <Stack.Screen name="view-equipments" options={{ title: 'View Equipments', headerShown: false }} />
-        <Stack.Screen name="reserve-equipment" options={{ title: 'Reserve Equipment', headerShown: false }} />
+        <Stack.Screen
+          name='view-labs'
+          options={{ title: 'View Labs', headerShown: false }}
+        />
+        <Stack.Screen
+          name='view-equipments'
+          options={{ title: 'View Equipments', headerShown: false }}
+        />
+        <Stack.Screen
+          name='reserve-equipment'
+          options={{ title: 'Reserve Equipment', headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );
 }
-

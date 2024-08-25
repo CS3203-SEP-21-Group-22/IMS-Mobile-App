@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, ImageBackground, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -22,8 +27,11 @@ interface Reservation {
 }
 
 const handleReturn = ({ item }: { item: Reservation }) => {
-  router.replace({ pathname: '/(student)/(borrowed-items)/return-item', params: { reservationId: item.id } })
-}
+  router.replace({
+    pathname: '/(student)/(borrowed-items)/return-item',
+    params: { reservationId: item.id },
+  });
+};
 
 export default function ViewBorrowedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
@@ -56,52 +64,50 @@ export default function ViewBorrowedItemScreen() {
   }, [reservationId]);
   return (
     <BackgroundLayout>
-    <MainHeader title="Borrowed Items" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="View Reservation" />
-      <SingleItemBackground>
-        <ScrollView>
-        <SingleItemWithImage title={reservation.name ?? ''} link={reservation.imageURL ?? 'equipment'}>
-          <Text style={styles.text}>
-            Model: {reservation.model}
-          </Text>
-          <Text style={styles.text}>
-            Serial Number: {reservation.serialNumber}
-          </Text>
-          <Text style={styles.text}>
-            Lab: {reservation.lab}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Reserved From: {reservation.startDate}
-          </Text>
-          <Text style={styles.text}>
-            Reserved Until: {reservation.endDate}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Status: {reservation.status}
-          </Text>
-          <View style={styles.textSeparator} />
-        </SingleItemWithImage>
-        </ScrollView>
-      </SingleItemBackground>
-      <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
+      <MainHeader title='Borrowed Items' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Reservation' />
+          <SingleItemBackground>
+            <ScrollView>
+              <SingleItemWithImage
+                title={reservation.name ?? ''}
+                link={reservation.imageURL ?? 'equipment'}
               >
-                <Pressable onPress={() => handleReturn({ item: reservation })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Return Item
-                  </Text>
-                </Pressable>
-              </ImageBackground>
+                <Text style={styles.text}>Model: {reservation.model}</Text>
+                <Text style={styles.text}>
+                  Serial Number: {reservation.serialNumber}
+                </Text>
+                <Text style={styles.text}>Lab: {reservation.lab}</Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Reserved From: {reservation.startDate}
+                </Text>
+                <Text style={styles.text}>
+                  Reserved Until: {reservation.endDate}
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>Status: {reservation.status}</Text>
+                <View style={styles.textSeparator} />
+              </SingleItemWithImage>
+            </ScrollView>
+          </SingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={() => handleReturn({ item: reservation })}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Return Item</Text>
+              </Pressable>
+            </ImageBackground>
           </View>
-    </View>
-    </ContentContainer>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -115,7 +121,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

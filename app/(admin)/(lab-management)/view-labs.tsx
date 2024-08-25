@@ -17,27 +17,29 @@ interface Lab {
 }
 
 const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
-  <Link href={{ pathname: `/(admin)/(lab-management)/update-lab`, params: { labId: item.id } }} asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <ListItemBackground>
-                <ListItemWithImage link={item.imageURL ?? 'lab'}>
-                <Text style={styles.titleText}>
-                  {item.name}
-                </Text>
-                <Text style={styles.text}>
-                  Code: {item.code}
-                </Text>
-                </ListItemWithImage>
-              </ListItemBackground>
-              )}
-          </Pressable>
+  <Link
+    href={{
+      pathname: `/(admin)/(lab-management)/update-lab`,
+      params: { labId: item.id },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <ListItemWithImage link={item.imageURL ?? 'lab'}>
+            <Text style={styles.titleText}>{item.name}</Text>
+            <Text style={styles.text}>Code: {item.code}</Text>
+          </ListItemWithImage>
+        </ListItemBackground>
+      )}
+    </Pressable>
   </Link>
 );
 
 const handleButtonClick = () => {
   router.push({ pathname: '/(admin)/(lab-management)/add-lab' });
-}
+};
 
 export default function ViewLabsScreen() {
   const [labs, setLabs] = useState<Lab[]>([]);
@@ -72,31 +74,37 @@ export default function ViewLabsScreen() {
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="Lab Management" />
+      <MainHeader title='Lab Management' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="View Labs" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Labs' />
+          <FlatList
             data={labs}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
-      <View style={styles.button}>
+        </View>
+        <View style={styles.button}>
           <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
-              >
-                <Pressable onPress={handleButtonClick} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Add New Lab
-                  </Text>
-                </Pressable>
+            source={require('@/assets/images/blueBtn.webp')}
+            style={styles.buttonBackground}
+            borderRadius={10}
+          >
+            <Pressable
+              onPress={handleButtonClick}
+              style={{ width: '100%', alignItems: 'center' }}
+            >
+              <Text style={styles.buttonText}>Add New Lab</Text>
+            </Pressable>
           </ImageBackground>
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -115,7 +123,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

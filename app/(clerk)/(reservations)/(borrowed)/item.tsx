@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, ImageBackground, ScrollView } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  ImageBackground,
+  ScrollView,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -28,8 +33,11 @@ interface Reservation {
 }
 
 const handleVerify = ({ item }: { item: Reservation }) => {
-  router.replace({ pathname: '/(clerk)/(reservations)/(borrowed)/verify', params: { reservationId: item.id } })
-}
+  router.replace({
+    pathname: '/(clerk)/(reservations)/(borrowed)/verify',
+    params: { reservationId: item.id },
+  });
+};
 
 export default function ViewBorrowedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
@@ -73,70 +81,66 @@ export default function ViewBorrowedItemScreen() {
   }, [reservationId]);
   return (
     <BackgroundLayout>
-    <MainHeader title="Reservations" />
-    <ClerkReservationsHorizontalBar selectedIndex = {2} />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Item Request" />
-      <SingleItemBackground>
-        <ScrollView>
-        <SingleItemWithImage title={reservation.name ?? ''} link={reservation.imageURL ?? 'equipment'}>
-          <Text style={styles.text}>
-            Model: {reservation.model}
-          </Text>
-          <Text style={styles.text}>
-            Lab: {reservation.lab}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Requested By: {reservation.user}
-          </Text>
-          <Text style={styles.text}>
-            From: {reservation.fromDate}
-          </Text>
-          <Text style={styles.text}>
-            To: {reservation.toDate}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Requested At: {reservation.requestedAt}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Assigned Item: {reservation.assignedItem}
-          </Text>
-          <Text style={styles.text}>
-            Assigned By: {reservation.assignedBy}
-          </Text>
-          <Text style={styles.text}>
-            Assigned At: {reservation.assignedAt}
-          </Text>
-          <View style={styles.textSeparator} />
-          <Text style={styles.text}>
-            Borrowed From: {reservation.borrowedFrom}
-          </Text>
-          <Text style={styles.text}>
-            Borrowed At: {reservation.borrowedAt}
-          </Text>
-          <View style={styles.textSeparator} />
-        </SingleItemWithImage>
-        </ScrollView>
-      </SingleItemBackground>
-      <View style={styles.button}>
-              <ImageBackground
-                source={require('@/assets/images/blueBtn.webp')}
-                style={styles.buttonBackground}
-                borderRadius={10}
+      <MainHeader title='Reservations' />
+      <ClerkReservationsHorizontalBar selectedIndex={2} />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Item Request' />
+          <SingleItemBackground>
+            <ScrollView>
+              <SingleItemWithImage
+                title={reservation.name ?? ''}
+                link={reservation.imageURL ?? 'equipment'}
               >
-                <Pressable onPress={() => handleVerify({ item: reservation })} style={{ width: '100%', alignItems: 'center' }}>
-                  <Text style={styles.buttonText}>
-                    Verify
-                  </Text>
-                </Pressable>
-              </ImageBackground>
+                <Text style={styles.text}>Model: {reservation.model}</Text>
+                <Text style={styles.text}>Lab: {reservation.lab}</Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Requested By: {reservation.user}
+                </Text>
+                <Text style={styles.text}>From: {reservation.fromDate}</Text>
+                <Text style={styles.text}>To: {reservation.toDate}</Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Requested At: {reservation.requestedAt}
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Assigned Item: {reservation.assignedItem}
+                </Text>
+                <Text style={styles.text}>
+                  Assigned By: {reservation.assignedBy}
+                </Text>
+                <Text style={styles.text}>
+                  Assigned At: {reservation.assignedAt}
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>
+                  Borrowed From: {reservation.borrowedFrom}
+                </Text>
+                <Text style={styles.text}>
+                  Borrowed At: {reservation.borrowedAt}
+                </Text>
+                <View style={styles.textSeparator} />
+              </SingleItemWithImage>
+            </ScrollView>
+          </SingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={() => handleVerify({ item: reservation })}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Verify</Text>
+              </Pressable>
+            </ImageBackground>
           </View>
-    </View>
-    </ContentContainer>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -150,7 +154,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

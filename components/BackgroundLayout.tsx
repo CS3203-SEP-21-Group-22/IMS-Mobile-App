@@ -1,9 +1,9 @@
 import React from 'react';
-import { StyleSheet,ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet, ImageBackground, Dimensions } from 'react-native';
 import { View } from './Themed';
 
-const screenHeight = Dimensions.get('window').height; 
-const screenWidth = Dimensions.get('window').width; 
+const screenHeight = Dimensions.get('window').height;
+const screenWidth = Dimensions.get('window').width;
 
 interface BackgroundProps {
   children: React.ReactNode;
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     height: screenHeight,
     width: screenWidth,
     alignItems: 'center',
-  }
+  },
 });
 
 export default BackgroundLayout;

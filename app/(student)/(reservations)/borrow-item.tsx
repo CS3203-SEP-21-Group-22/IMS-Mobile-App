@@ -20,14 +20,14 @@ export default function ReservedItemsScreen() {
   }, [reservationId]);
   return (
     <BackgroundLayout>
-    <MainHeader title="Reservations" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Borrow Item" />
-      <Text style={styles.text}>Scan QR code to verify borrowing</Text>
-      <QRCode value={qrValue} size={200} />
-    </View>
-    </ContentContainer>
+      <MainHeader title='Reservations' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Borrow Item' />
+          <Text style={styles.text}>Scan QR code to verify borrowing</Text>
+          <QRCode value={qrValue} size={200} />
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }

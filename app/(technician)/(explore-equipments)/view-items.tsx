@@ -17,7 +17,10 @@ interface Item {
 }
 
 export default function ViewItemsScreen() {
-  const { labId, equipmentId } = useLocalSearchParams<{ labId: string, equipmentId: string }>();
+  const { labId, equipmentId } = useLocalSearchParams<{
+    labId: string;
+    equipmentId: string;
+  }>();
   if (!labId) throw new Error('Missing labId');
   const [items, setItems] = useState<Item[]>([]);
   useEffect(() => {
@@ -59,37 +62,46 @@ export default function ViewItemsScreen() {
     }
   }, []);
   const ItemComponent: React.FC<{ item: Item }> = ({ item }) => (
-    <Link href={{ pathname: `/(technician)/(explore-equipments)/view-item`, params: { equipmentId: item.id, labId: labId, itemId: item.id } }} asChild>
-            <Pressable>
-              {({ pressed }) => (
-                <ListItemBackground>
-                  <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                  <Text style={styles.text}>
-                    Serial Number: {item.serialNumber}
-                  </Text>
-                  <Text style={styles.text}>
-                    Status: {item.status}
-                  </Text>
-                  </ListItemWithImage>
-                </ListItemBackground>
-                )}
-            </Pressable>
+    <Link
+      href={{
+        pathname: `/(technician)/(explore-equipments)/view-item`,
+        params: { equipmentId: item.id, labId: labId, itemId: item.id },
+      }}
+      asChild
+    >
+      <Pressable>
+        {({ pressed }) => (
+          <ListItemBackground>
+            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+              <Text style={styles.text}>
+                Serial Number: {item.serialNumber}
+              </Text>
+              <Text style={styles.text}>Status: {item.status}</Text>
+            </ListItemWithImage>
+          </ListItemBackground>
+        )}
+      </Pressable>
     </Link>
   );
   return (
     <BackgroundLayout>
-      <MainHeader title="Explore Equipments" />
+      <MainHeader title='Explore Equipments' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="View Items" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Items' />
+          <FlatList
             data={items}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -108,7 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

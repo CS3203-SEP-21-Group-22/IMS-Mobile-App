@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, TextInput, ImageBackground, Image, Button } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  TextInput,
+  ImageBackground,
+  Image,
+  Button,
+} from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -23,7 +30,7 @@ export default function UpdateLabScreen() {
       setLab({
         name: 'Network Lab',
         code: 'NET',
-      })
+      });
     } else {
       throw new Error('Lab ID is required');
     }
@@ -31,10 +38,10 @@ export default function UpdateLabScreen() {
   const handleUpdateButtonPress = () => {
     router.back();
     router.replace({ pathname: '/(admin)/(lab-management)/view-labs' });
-  }
+  };
   const handleDeleteButtonPress = () => {
     router.back();
-  }
+  };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -48,48 +55,67 @@ export default function UpdateLabScreen() {
   };
   return (
     <BackgroundLayout>
-    <MainHeader title="Lab Management" />
-    <ContentContainer>
-    <View style={styles.container}>
-      <ContentContainerHeader title="Update Lab" />
-      <EditSingleItemBackground>
-        <Text style={styles.title}>Lab Details</Text>
-        <Text style={styles.text}>Lab Name</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Lab Name' value={lab.name ?? ''} onChangeText={(text) => setLab({ ...lab, name: text })} />
-        <Text style={styles.text}>Lab Code</Text>
-        <TextInput style={styles.textInput} placeholder='Enter Lab Code' value={lab.code ?? ''} onChangeText={(text) => setLab({ ...lab, code: text })} />
-        <Image source={lab.imageURL ? { uri: lab.imageURL } : require('@/assets/images/labSample.png')} style={styles.image} />
-        <Button title="Pick an Image" onPress={pickImage} />
-        <View style={styles.separator} />
-      </EditSingleItemBackground>
-      <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-          <Pressable onPress={handleUpdateButtonPress} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Update Lab
-            </Text>
-          </Pressable>
-          </ImageBackground>
-      </View>
-      <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/redBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-          <Pressable onPress={handleDeleteButtonPress} style={{ width: '100%', alignItems: 'center' }}>
-            <Text style={styles.buttonText}>
-              Remove Lab
-            </Text>
-          </Pressable>
-          </ImageBackground>
-      </View>
-    </View>
-    </ContentContainer>
+      <MainHeader title='Lab Management' />
+      <ContentContainer>
+        <View style={styles.container}>
+          <ContentContainerHeader title='Update Lab' />
+          <EditSingleItemBackground>
+            <Text style={styles.title}>Lab Details</Text>
+            <Text style={styles.text}>Lab Name</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Lab Name'
+              value={lab.name ?? ''}
+              onChangeText={(text) => setLab({ ...lab, name: text })}
+            />
+            <Text style={styles.text}>Lab Code</Text>
+            <TextInput
+              style={styles.textInput}
+              placeholder='Enter Lab Code'
+              value={lab.code ?? ''}
+              onChangeText={(text) => setLab({ ...lab, code: text })}
+            />
+            <Image
+              source={
+                lab.imageURL
+                  ? { uri: lab.imageURL }
+                  : require('@/assets/images/labSample.png')
+              }
+              style={styles.image}
+            />
+            <Button title='Pick an Image' onPress={pickImage} />
+            <View style={styles.separator} />
+          </EditSingleItemBackground>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/blueBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleUpdateButtonPress}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Update Lab</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
+          <View style={styles.button}>
+            <ImageBackground
+              source={require('@/assets/images/redBtn.webp')}
+              style={styles.buttonBackground}
+              borderRadius={10}
+            >
+              <Pressable
+                onPress={handleDeleteButtonPress}
+                style={{ width: '100%', alignItems: 'center' }}
+              >
+                <Text style={styles.buttonText}>Remove Lab</Text>
+              </Pressable>
+            </ImageBackground>
+          </View>
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -107,7 +133,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652'
+    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -131,7 +157,7 @@ const styles = StyleSheet.create({
     marginTop: '4%',
     marginBottom: '3%',
     width: 100,
-    height: 100
+    height: 100,
   },
   button: {
     width: '100%',
@@ -143,10 +169,10 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: '2.5%'
+    paddingVertical: '2.5%',
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
   },
 });

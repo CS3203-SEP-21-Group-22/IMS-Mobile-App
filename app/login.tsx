@@ -1,10 +1,17 @@
 import React from 'react';
-import { Pressable, Text, StyleSheet,ImageBackground, Dimensions, Button } from 'react-native';
+import {
+  Pressable,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  Dimensions,
+  Button,
+} from 'react-native';
 import { Link } from 'expo-router';
 import { View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import * as AuthSession from 'expo-auth-session';
-import { jwtDecode } from "jwt-decode";
+import { jwtDecode } from 'jwt-decode';
 import Constants from 'expo-constants';
 
 // @ts-ignore
@@ -12,7 +19,9 @@ const authServerUrl = Constants.expoConfig?.authServerUrl?.toString();
 // @ts-ignore
 const authClientId = Constants.expoConfig?.authClientId?.toString();
 if (!authServerUrl || !authClientId) {
-  throw new Error('Please configure the authServerUrl and authClientId in app.json');
+  throw new Error(
+    'Please configure the authServerUrl and authClientId in app.json',
+  );
 }
 
 // @ts-ignore
@@ -48,54 +57,39 @@ export default function LoginLayout() {
 
   return (
     <BackgroundLayout>
-    <View style={styles.container}>
-      <Text style={styles.title}>
-        Login Page
-      </Text>
-        <Link href="/(admin)/(user-management)/view-users" asChild>
+      <View style={styles.container}>
+        <Text style={styles.title}>Login Page</Text>
+        <Link href='/(admin)/(user-management)/view-users' asChild>
           <Pressable>
-            {({ pressed }) => (
-              <Text style={styles.text}>
-                Admin
-              </Text>
-              )}
+            {({ pressed }) => <Text style={styles.text}>Admin</Text>}
           </Pressable>
         </Link>
-        <Link href="/(clerk)/(reservations)/(requested)/items" asChild>
+        <Link href='/(clerk)/(reservations)/(requested)/items' asChild>
           <Pressable>
-            {({ pressed }) => (
-              <Text style={styles.text}>
-                Office Clerk
-              </Text>
-              )}
+            {({ pressed }) => <Text style={styles.text}>Office Clerk</Text>}
           </Pressable>
         </Link>
-        <Link href="/(student)/(explore-equipments)/view-labs" asChild>
+        <Link href='/(student)/(explore-equipments)/view-labs' asChild>
           <Pressable>
-            {({ pressed }) => (
-              <Text style={styles.text}>
-                Student
-              </Text>
-              )}
+            {({ pressed }) => <Text style={styles.text}>Student</Text>}
           </Pressable>
         </Link>
-        <Link href="/(technician)/(maintenances)/(assigned)/maintenances" asChild>
+        <Link
+          href='/(technician)/(maintenances)/(assigned)/maintenances'
+          asChild
+        >
           <Pressable>
-            {({ pressed }) => (
-              <Text style={styles.text}>
-                Technician
-              </Text>
-              )}
+            {({ pressed }) => <Text style={styles.text}>Technician</Text>}
           </Pressable>
         </Link>
         <Button
           disabled={!request}
-          title="Login"
+          title='Login'
           onPress={() => {
             promptAsync();
           }}
         />
-    </View>
+      </View>
     </BackgroundLayout>
   );
 }

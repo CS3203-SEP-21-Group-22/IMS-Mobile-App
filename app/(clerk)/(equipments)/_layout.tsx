@@ -1,5 +1,9 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -49,18 +53,47 @@ function EquipmentsLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="view-labs" options={{ title: 'View Labs', headerShown: false }} />
-        <Stack.Screen name="view-equipments" options={{ title: 'View Equipments', headerShown: false }} />
-        <Stack.Screen name="add-equipment" options={{ title: 'Add New Equipment', headerShown: false }} />
-        <Stack.Screen name="view-equipment" options={{ title: 'View Equipments', headerShown: false }} />
-        <Stack.Screen name="update-equipment" options={{ title: 'Update Equipment', headerShown: false }} />
-        <Stack.Screen name="view-items" options={{ title: 'View Items', headerShown: false }} />
-        <Stack.Screen name="add-item" options={{ title: 'Add New Item', headerShown: false }} />
-        <Stack.Screen name="view-item" options={{ title: 'View Items', headerShown: false }} />
-        <Stack.Screen name="reservations" options={{ title: 'Reservations', headerShown: false }} />
-        <Stack.Screen name="maintenances" options={{ title: 'Maintenances', headerShown: false }} />
+        <Stack.Screen
+          name='view-labs'
+          options={{ title: 'View Labs', headerShown: false }}
+        />
+        <Stack.Screen
+          name='view-equipments'
+          options={{ title: 'View Equipments', headerShown: false }}
+        />
+        <Stack.Screen
+          name='add-equipment'
+          options={{ title: 'Add New Equipment', headerShown: false }}
+        />
+        <Stack.Screen
+          name='view-equipment'
+          options={{ title: 'View Equipments', headerShown: false }}
+        />
+        <Stack.Screen
+          name='update-equipment'
+          options={{ title: 'Update Equipment', headerShown: false }}
+        />
+        <Stack.Screen
+          name='view-items'
+          options={{ title: 'View Items', headerShown: false }}
+        />
+        <Stack.Screen
+          name='add-item'
+          options={{ title: 'Add New Item', headerShown: false }}
+        />
+        <Stack.Screen
+          name='view-item'
+          options={{ title: 'View Items', headerShown: false }}
+        />
+        <Stack.Screen
+          name='reservations'
+          options={{ title: 'Reservations', headerShown: false }}
+        />
+        <Stack.Screen
+          name='maintenances'
+          options={{ title: 'Maintenances', headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );
 }
-

@@ -17,22 +17,24 @@ interface User {
 }
 
 const ItemComponent: React.FC<{ item: User }> = ({ item }) => (
-  <Link href={{ pathname: `/(admin)/(user-management)/update-user`, params: { userId: item.id } }} asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <ListItemBackground>
-                <Text style={styles.titleText}>
-                  {item.firstName} {item.lastName}
-                </Text>
-                <Text style={styles.text}>
-                  {item.email}
-                </Text>
-                <Text style={styles.text}>
-                  {item.role}
-                </Text>
-              </ListItemBackground>
-              )}
-          </Pressable>
+  <Link
+    href={{
+      pathname: `/(admin)/(user-management)/update-user`,
+      params: { userId: item.id },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <Text style={styles.titleText}>
+            {item.firstName} {item.lastName}
+          </Text>
+          <Text style={styles.text}>{item.email}</Text>
+          <Text style={styles.text}>{item.role}</Text>
+        </ListItemBackground>
+      )}
+    </Pressable>
   </Link>
 );
 
@@ -40,27 +42,62 @@ export default function ViewUsersScreen() {
   const [users, setUsers] = useState<User[]>([]);
   useEffect(() => {
     setUsers([
-      { id: 1, email: 'JohnDoe@uok.uk', firstName: 'John', lastName: 'Doe', role: 'Student/Academic Staff' },
-      { id: 2, email: 'JaneDoe@uok.uk', firstName: 'Jane', lastName: 'Doe', role: 'Student/Academic Staff' },
-      { id: 3, email: 'CarlDoe@uok.uk', firstName: 'Carl', lastName: 'Doe', role: 'Office Clerk' },
-      { id: 4, email: 'RayDoe@uok.uk', firstName: 'Ray', lastName: 'Doe', role: 'Technician' },
-      { id: 5, email: 'EarlDoe@uok.uk', firstName: 'Earl', lastName: 'Doe', role: 'Technician' },
+      {
+        id: 1,
+        email: 'JohnDoe@uok.uk',
+        firstName: 'John',
+        lastName: 'Doe',
+        role: 'Student/Academic Staff',
+      },
+      {
+        id: 2,
+        email: 'JaneDoe@uok.uk',
+        firstName: 'Jane',
+        lastName: 'Doe',
+        role: 'Student/Academic Staff',
+      },
+      {
+        id: 3,
+        email: 'CarlDoe@uok.uk',
+        firstName: 'Carl',
+        lastName: 'Doe',
+        role: 'Office Clerk',
+      },
+      {
+        id: 4,
+        email: 'RayDoe@uok.uk',
+        firstName: 'Ray',
+        lastName: 'Doe',
+        role: 'Technician',
+      },
+      {
+        id: 5,
+        email: 'EarlDoe@uok.uk',
+        firstName: 'Earl',
+        lastName: 'Doe',
+        role: 'Technician',
+      },
     ]);
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="User Management" />
+      <MainHeader title='User Management' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="View Users" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='View Users' />
+          <FlatList
             data={users}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -79,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

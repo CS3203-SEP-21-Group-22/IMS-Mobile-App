@@ -1,5 +1,9 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -49,11 +53,19 @@ function BorrowedItemsLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="borrowed-items" options={{ title: 'Borrowed Items', headerShown: false }} />
-        <Stack.Screen name="view-item" options={{ title: 'View Item', headerShown: false }} />
-        <Stack.Screen name="return-item" options={{ title: 'Return Item', headerShown: false }} />
+        <Stack.Screen
+          name='borrowed-items'
+          options={{ title: 'Borrowed Items', headerShown: false }}
+        />
+        <Stack.Screen
+          name='view-item'
+          options={{ title: 'View Item', headerShown: false }}
+        />
+        <Stack.Screen
+          name='return-item'
+          options={{ title: 'Return Item', headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );
 }
-

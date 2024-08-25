@@ -94,49 +94,36 @@ export default function ViewReservationsScreen() {
   }, []);
   const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
     <ListItemBackground>
-      <Text style={styles.text}>
-        Reserved By: {item.reservedBy}
-      </Text>
-      <Text style={styles.text}>
-        From Date: {item.FromDate}
-      </Text>
-      <Text style={styles.text}>
-        To Date: {item.ToDate}
-      </Text>
-      <Text style={styles.text}>
-        Requested At: {item.RequestedAt}
-      </Text>
-      <Text style={styles.text}>
-        Accepted By: {item.AcceptedBy}
-      </Text>
-      <Text style={styles.text}>
-        Borrowed From: {item.BorrowedFrom}
-      </Text>
-      <Text style={styles.text}>
-        Borrowed At: {item.BorrowedAt}
-      </Text>
-      <Text style={styles.text}>
-        Returned To: {item.ReturnedTo}
-      </Text>
-      <Text style={styles.text}>
-        Returned At: {item.ReturnedAt}
-      </Text>
+      <Text style={styles.text}>Reserved By: {item.reservedBy}</Text>
+      <Text style={styles.text}>From Date: {item.FromDate}</Text>
+      <Text style={styles.text}>To Date: {item.ToDate}</Text>
+      <Text style={styles.text}>Requested At: {item.RequestedAt}</Text>
+      <Text style={styles.text}>Accepted By: {item.AcceptedBy}</Text>
+      <Text style={styles.text}>Borrowed From: {item.BorrowedFrom}</Text>
+      <Text style={styles.text}>Borrowed At: {item.BorrowedAt}</Text>
+      <Text style={styles.text}>Returned To: {item.ReturnedTo}</Text>
+      <Text style={styles.text}>Returned At: {item.ReturnedAt}</Text>
     </ListItemBackground>
   );
   return (
     <BackgroundLayout>
-      <MainHeader title="Explore Equipments" />
+      <MainHeader title='Explore Equipments' />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Reservations History" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Reservations History' />
+          <FlatList
             data={reservations}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -155,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },

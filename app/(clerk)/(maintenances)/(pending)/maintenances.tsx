@@ -20,27 +20,25 @@ interface Maintenance {
 }
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
-  <Link href={{ pathname: '/(clerk)/(maintenances)/(ongoing)/add-maintenance', params: { maintenanceId: item.id } }} asChild>
-          <Pressable>
-            {({ pressed }) => (
-              <ListItemBackground>
-                <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-                <Text style={styles.titleText}>
-                  {item.name}
-                </Text>
-                <Text style={styles.text}>
-                  Model: {item.model}
-                </Text>
-                <Text style={styles.text}>
-                  Lab: {item.lab}
-                </Text>
-                <Text style={styles.text}>
-                  Serial Number: {item.serialNumber}
-                </Text>
-                </ListItemWithImage>
-              </ListItemBackground>
-              )}
-          </Pressable>
+  <Link
+    href={{
+      pathname: '/(clerk)/(maintenances)/(ongoing)/add-maintenance',
+      params: { maintenanceId: item.id },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+            <Text style={styles.titleText}>{item.name}</Text>
+            <Text style={styles.text}>Model: {item.model}</Text>
+            <Text style={styles.text}>Lab: {item.lab}</Text>
+            <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
+          </ListItemWithImage>
+        </ListItemBackground>
+      )}
+    </Pressable>
   </Link>
 );
 
@@ -80,19 +78,24 @@ export default function ViewPendingMaintenancesScreen() {
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="Maintenances" />
-      <ClerkMaintenancesHorizontalBar selectedIndex = {0} />
+      <MainHeader title='Maintenances' />
+      <ClerkMaintenancesHorizontalBar selectedIndex={0} />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Pending Maintenances" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Pending Maintenances' />
+          <FlatList
             data={maintenances}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
+        </View>
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -111,7 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
@@ -120,4 +123,3 @@ const styles = StyleSheet.create({
     fontSize: 10,
   },
 });
-

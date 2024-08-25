@@ -33,63 +33,29 @@ interface Maintenance {
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
   <ListItemBackground>
-    <Text style={styles.titleText}>
-      {item.name}
-    </Text>
+    <Text style={styles.titleText}>{item.name}</Text>
     <View style={styles.separator} />
-    <Text style={styles.text}>
-      Model: {item.model}
-    </Text>
-    <Text style={styles.text}>
-      Serial Number: {item.serialNumber}
-    </Text>
-    <Text style={styles.text}>
-      Lab: {item.lab}
-    </Text>
+    <Text style={styles.text}>Model: {item.model}</Text>
+    <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
+    <Text style={styles.text}>Lab: {item.lab}</Text>
     <View style={styles.separator} />
-    <Text style={styles.text}>
-      Description: {item.description}
-    </Text>
-    <Text style={styles.text}>
-      Assigned To: {item.assignedTo}
-    </Text>
-    <Text style={styles.text}>
-      Created By: {item.createdBy}
-    </Text>
-    <Text style={styles.text}>
-      Created At: {item.createdAt}
-    </Text>
+    <Text style={styles.text}>Description: {item.description}</Text>
+    <Text style={styles.text}>Assigned To: {item.assignedTo}</Text>
+    <Text style={styles.text}>Created By: {item.createdBy}</Text>
+    <Text style={styles.text}>Created At: {item.createdAt}</Text>
     <View style={styles.separator} />
-    <Text style={styles.text}>
-      Submit Note: {item.submitNote}
-    </Text>
-    <Text style={styles.text}>
-      Cost: {item.cost}
-    </Text>
-    <Text style={styles.text}>
-      Returned At: {item.returnedAt}
-    </Text>
+    <Text style={styles.text}>Submit Note: {item.submitNote}</Text>
+    <Text style={styles.text}>Cost: {item.cost}</Text>
+    <Text style={styles.text}>Returned At: {item.returnedAt}</Text>
     <View style={styles.separator} />
-    <Text style={styles.text}>
-      Review Note: {item.reviewNote}
-    </Text>
-    <Text style={styles.text}>
-      Reviewed By: {item.reviewedBy}
-    </Text>
-    <Text style={styles.text}>
-      Reviewed At: {item.reviewedAt}
-    </Text>
+    <Text style={styles.text}>Review Note: {item.reviewNote}</Text>
+    <Text style={styles.text}>Reviewed By: {item.reviewedBy}</Text>
+    <Text style={styles.text}>Reviewed At: {item.reviewedAt}</Text>
     <View style={styles.separator} />
-    <Text style={styles.text}>
-      Start Date: {item.startDate}
-    </Text>
-    <Text style={styles.text}>
-      End Date: {item.endDate}
-    </Text>
+    <Text style={styles.text}>Start Date: {item.startDate}</Text>
+    <Text style={styles.text}>End Date: {item.endDate}</Text>
     <View style={styles.separator} />
-    <Text style={styles.text}>
-      Status: {item.status}
-    </Text>
+    <Text style={styles.text}>Status: {item.status}</Text>
   </ListItemBackground>
 );
 
@@ -181,20 +147,25 @@ export default function ViewCompletedMaintenancesScreen() {
   }, []);
   return (
     <BackgroundLayout>
-      <MainHeader title="Maintenances" />
-      <ClerkMaintenancesHorizontalBar selectedIndex = {2} />
+      <MainHeader title='Maintenances' />
+      <ClerkMaintenancesHorizontalBar selectedIndex={2} />
       <ContentContainer>
-      <View style={styles.container}>
-        <ContentContainerHeader title="Completed Maintenances" />
-        <FlatList
+        <View style={styles.container}>
+          <ContentContainerHeader title='Completed Maintenances' />
+          <FlatList
             data={maintenances}
             renderItem={({ item }) => <ItemComponent item={item} />}
             keyExtractor={(item) => item.id.toString()}
             style={styles.flatList}
-            contentContainerStyle={{ alignItems: 'stretch', justifyContent: 'center', width: '100%', backgroundColor: 'transparent' }}
+            contentContainerStyle={{
+              alignItems: 'stretch',
+              justifyContent: 'center',
+              width: '100%',
+              backgroundColor: 'transparent',
+            }}
           />
-      </View>
-      </ContentContainer> 
+        </View>
+      </ContentContainer>
     </BackgroundLayout>
   );
 }
@@ -212,7 +183,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   titleText: {
-    color:'white',
+    color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
@@ -226,7 +197,7 @@ const styles = StyleSheet.create({
   },
   button: {
     width: '100%',
-    marginTop: '4%'
+    marginTop: '4%',
   },
   buttonBackground: {
     width: '100%',
@@ -236,7 +207,6 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: 'white',
-    fontSize: 18
+    fontSize: 18,
   },
 });
-

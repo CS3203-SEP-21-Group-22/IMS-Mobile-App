@@ -1,5 +1,9 @@
 import FontAwesome from '@expo/vector-icons/FontAwesome';
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -49,10 +53,15 @@ function AssignedMaintenancesLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="maintenances" options={{ title: 'Assigned Maintenances', headerShown: false }} />
-        <Stack.Screen name="update-maintenance" options={{ title: 'Update Maintenance', headerShown: false }} />
+        <Stack.Screen
+          name='maintenances'
+          options={{ title: 'Assigned Maintenances', headerShown: false }}
+        />
+        <Stack.Screen
+          name='update-maintenance'
+          options={{ title: 'Update Maintenance', headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );
 }
-
