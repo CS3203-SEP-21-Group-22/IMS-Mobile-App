@@ -1,6 +1,8 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { View } from './Themed';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
 
 interface BackgroundProps {
   children: React.ReactNode;
@@ -8,13 +10,19 @@ interface BackgroundProps {
 
 const ContentContainer: React.FC<BackgroundProps> = ({ children }) => (
   <View style={styles.container}>
-    <ImageBackground
-      source={require('@/assets/images/scrollContainer.webp')}
-      style={styles.background}
-      borderRadius={28}
+    <View
+      style={[
+        styles.background,
+        {
+          backgroundColor:
+            useColorScheme() === 'light'
+              ? Colors.light.secondary.background
+              : Colors.dark.secondary.background,
+        },
+      ]}
     >
       {children}
-    </ImageBackground>
+    </View>
   </View>
 );
 

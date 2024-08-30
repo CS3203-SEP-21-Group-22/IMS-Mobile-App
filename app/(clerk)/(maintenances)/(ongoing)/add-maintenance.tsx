@@ -18,6 +18,7 @@ import ClerkMaintenancesHorizontalBar from '@/components/ClerkMaintHorizontalBar
 import React, { useState, useEffect } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import WideButton from '@/components/WideButton';
 
 interface Maintenance {
   equipmentId: number | null;
@@ -336,20 +337,10 @@ export default function AddMaintenanceScreen() {
               <View style={styles.separator} />
             </ScrollView>
           </EditSingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleButtonPress}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Create Maintenance</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Create Maintenance'
+            buttonClickHandler={handleButtonPress}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -369,7 +360,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -378,7 +368,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 13,
     fontWeight: 'bold',
-    color: '#202652',
     marginTop: '1%',
   },
   textInput: {

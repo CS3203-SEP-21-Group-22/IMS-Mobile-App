@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { Link } from 'expo-router';
 import { View } from '@/components/Themed';
-import BackgroundLayout from '@/components/BackgroundLayout';
 import * as AuthSession from 'expo-auth-session';
 import { jwtDecode } from 'jwt-decode';
 import Constants from 'expo-constants';
@@ -56,41 +55,38 @@ export default function LoginLayout() {
   }, [response]);
 
   return (
-    <BackgroundLayout>
-      <View style={styles.container}>
-        <Text style={styles.title}>Login Page</Text>
-        <Link href='/(admin)/(user-management)/view-users' asChild>
-          <Pressable>
-            {({ pressed }) => <Text style={styles.text}>Admin</Text>}
-          </Pressable>
-        </Link>
-        <Link href='/(clerk)/(reservations)/(requested)/items' asChild>
-          <Pressable>
-            {({ pressed }) => <Text style={styles.text}>Office Clerk</Text>}
-          </Pressable>
-        </Link>
-        <Link href='/(student)/(explore-equipments)/view-labs' asChild>
-          <Pressable>
-            {({ pressed }) => <Text style={styles.text}>Student</Text>}
-          </Pressable>
-        </Link>
-        <Link
-          href='/(technician)/(maintenances)/(assigned)/maintenances'
-          asChild
-        >
-          <Pressable>
-            {({ pressed }) => <Text style={styles.text}>Technician</Text>}
-          </Pressable>
-        </Link>
-        <Button
-          disabled={!request}
-          title='Login'
-          onPress={() => {
-            promptAsync();
-          }}
-        />
-      </View>
-    </BackgroundLayout>
+    // <BackgroundLayout>
+    <View style={styles.container}>
+      <Text style={styles.title}>Login Page</Text>
+      <Link href='/(admin)/(user-management)/view-users' asChild>
+        <Pressable>
+          {({ pressed }) => <Text style={styles.text}>Admin</Text>}
+        </Pressable>
+      </Link>
+      <Link href='/(clerk)/(reservations)/(requested)/items' asChild>
+        <Pressable>
+          {({ pressed }) => <Text style={styles.text}>Office Clerk</Text>}
+        </Pressable>
+      </Link>
+      <Link href='/(student)/(explore-equipments)/view-labs' asChild>
+        <Pressable>
+          {({ pressed }) => <Text style={styles.text}>Student</Text>}
+        </Pressable>
+      </Link>
+      <Link href='/(technician)/(maintenances)/(assigned)/maintenances' asChild>
+        <Pressable>
+          {({ pressed }) => <Text style={styles.text}>Technician</Text>}
+        </Pressable>
+      </Link>
+      <Button
+        disabled={!request}
+        title='Login'
+        onPress={() => {
+          promptAsync();
+        }}
+      />
+    </View>
+    // </BackgroundLayout>
   );
 }
 

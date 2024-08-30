@@ -15,6 +15,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Equipment {
   name: string | null;
@@ -101,20 +102,10 @@ export default function AddEquipmentScreen() {
             <Button title='Pick an Image' onPress={pickImage} />
             <View style={styles.separator} />
           </EditSingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleButtonPress}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Add Equipment</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Add Equipment'
+            buttonClickHandler={handleButtonPress}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -134,7 +125,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -143,7 +133,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#202652',
     marginTop: '2%',
     marginBottom: '1%',
   },

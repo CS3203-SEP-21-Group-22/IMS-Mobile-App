@@ -13,6 +13,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Equipment {
   id: number | null;
@@ -94,20 +95,10 @@ export default function ViewEquipmentScreen() {
                 </Text>
                 <View style={styles.textSeparator} />
               </SingleItemWithImage>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/blueBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleViewItems({ item: equipment })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>View Items</Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
+              <WideButton
+                text='View Items'
+                buttonClickHandler={() => handleViewItems({ item: equipment })}
+              />
               <View style={styles.textSeparator} />
             </ScrollView>
           </SingleItemBackground>

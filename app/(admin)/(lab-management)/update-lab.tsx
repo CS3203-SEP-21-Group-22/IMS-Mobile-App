@@ -14,6 +14,7 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
+import WideButton from '@/components/WideButton';
 import { useState, useEffect } from 'react';
 
 interface Lab {
@@ -86,34 +87,15 @@ export default function UpdateLabScreen() {
             <Button title='Pick an Image' onPress={pickImage} />
             <View style={styles.separator} />
           </EditSingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleUpdateButtonPress}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Update Lab</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/redBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleDeleteButtonPress}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Remove Lab</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            buttonClickHandler={handleUpdateButtonPress}
+            text='Update Lab'
+          />
+          <WideButton
+            buttonClickHandler={handleDeleteButtonPress}
+            text='Remove Lab'
+            danger
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -133,7 +115,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -142,7 +123,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#202652',
     marginTop: '2%',
     marginBottom: '1%',
   },
@@ -158,21 +138,5 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
     width: 100,
     height: 100,
-  },
-  button: {
-    width: '100%',
-    marginTop: '1%',
-    backgroundColor: 'transparent',
-    marginBottom: '1%',
-  },
-  buttonBackground: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: '2.5%',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
   },
 });

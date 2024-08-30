@@ -9,7 +9,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
+import Colors from '@/constants/Colors';
 import 'react-native-reanimated';
 
 export {
@@ -53,7 +53,16 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
+      <Stack
+        screenOptions={{
+          contentStyle: {
+            backgroundColor:
+              useColorScheme() === 'light'
+                ? Colors.light.primary.background
+                : Colors.dark.primary.background,
+          },
+        }}
+      >
         <Stack.Screen name='login' options={{ headerShown: false }} />
         <Stack.Screen name='profile' options={{ headerShown: false }} />
         <Stack.Screen name='(admin)' options={{ headerShown: false }} />

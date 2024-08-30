@@ -2,13 +2,13 @@ import { StyleSheet, Pressable, FlatList } from 'react-native';
 import { Link, useLocalSearchParams, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
-import { ImageBackground } from 'react-native';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Equipment {
   id: number;
@@ -110,20 +110,10 @@ export default function ViewEquipmentsScreen() {
               backgroundColor: 'transparent',
             }}
           />
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleButtonClick}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Add New Equipment</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Add New Equipment'
+            buttonClickHandler={handleButtonClick}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>

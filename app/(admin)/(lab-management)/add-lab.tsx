@@ -15,6 +15,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Lab {
   name: string | null;
@@ -71,20 +72,7 @@ export default function AddLabScreen() {
             <Button title='Pick an Image' onPress={pickImage} />
             <View style={styles.separator} />
           </EditSingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleButtonPress}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Add Lab</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton text='Add Lab' buttonClickHandler={handleButtonPress} />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -104,7 +92,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -113,7 +100,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 15,
     fontWeight: 'bold',
-    color: '#202652',
     marginTop: '2%',
     marginBottom: '1%',
   },
@@ -129,19 +115,5 @@ const styles = StyleSheet.create({
     marginBottom: '3%',
     width: 100,
     height: 100,
-  },
-  button: {
-    width: '100%',
-    marginTop: '1%',
-  },
-  buttonBackground: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: '2.5%',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 18,
   },
 });

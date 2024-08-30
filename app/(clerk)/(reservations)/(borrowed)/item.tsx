@@ -4,7 +4,7 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -14,6 +14,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Reservation {
   id: number | null;
@@ -125,20 +126,10 @@ export default function ViewBorrowedItemScreen() {
               </SingleItemWithImage>
             </ScrollView>
           </SingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={() => handleVerify({ item: reservation })}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Verify</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Verify'
+            buttonClickHandler={() => handleVerify({ item: reservation })}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -191,29 +182,5 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     paddingLeft: '3%',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: '3%',
-    backgroundColor: 'transparent',
-  },
-  button: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    marginTop: '4%',
-  },
-  buttonBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
   },
 });

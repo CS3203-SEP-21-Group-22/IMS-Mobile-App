@@ -9,6 +9,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Item {
   id: number;
@@ -108,20 +109,10 @@ export default function ViewItemsScreen() {
               backgroundColor: 'transparent',
             }}
           />
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleButtonClick}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Add New Item</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Add New Item'
+            buttonClickHandler={handleButtonClick}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>

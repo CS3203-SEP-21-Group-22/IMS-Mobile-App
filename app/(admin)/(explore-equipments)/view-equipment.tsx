@@ -1,10 +1,5 @@
-import {
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  ImageBackground,
-} from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { StyleSheet, ScrollView } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -12,6 +7,7 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
+import WideButton from '@/components/WideButton';
 import { useState, useEffect } from 'react';
 
 interface Equipment {
@@ -94,22 +90,12 @@ export default function ViewEquipmentScreen() {
                 </Text>
                 <View style={styles.textSeparator} />
               </SingleItemWithImage>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/blueBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleViewItems({ item: equipment })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>View Items</Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
               <View style={styles.textSeparator} />
             </ScrollView>
+            <WideButton
+              text='View Items'
+              buttonClickHandler={() => handleViewItems({ item: equipment })}
+            />
           </SingleItemBackground>
         </View>
       </ContentContainer>
@@ -163,30 +149,5 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     paddingLeft: '3%',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: '3%',
-    backgroundColor: 'transparent',
-  },
-  button: {
-    width: '90%',
-    marginHorizontal: '5%',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    marginTop: '4%',
-  },
-  buttonBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
   },
 });

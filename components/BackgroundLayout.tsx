@@ -10,12 +10,7 @@ interface BackgroundProps {
 }
 
 const BackgroundLayout: React.FC<BackgroundProps> = ({ children }) => (
-  <ImageBackground
-    source={require('../assets/images/background.webp')}
-    style={styles.background}
-  >
-    {children}
-  </ImageBackground>
+  <View style={styles.background}>{children}</View>
 );
 
 const styles = StyleSheet.create({

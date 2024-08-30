@@ -13,6 +13,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Item {
   id: number | null;
@@ -109,52 +110,23 @@ export default function ViewItemScreen() {
                 <Text style={styles.text}>Status: {item.status}</Text>
                 <View style={styles.textSeparator} />
               </SingleItemWithImage>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/blueBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleViewReservHistory({ item: item })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>
-                      View Reservations History
-                    </Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/blueBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleViewMaintHistory({ item: item })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>
-                      View Maintenance History
-                    </Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/redBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleDeleteItem({ item: item })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>Remove Item</Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
+              <WideButton
+                text='View Reservations History'
+                buttonClickHandler={() =>
+                  handleViewReservHistory({ item: item })
+                }
+              />
+              <WideButton
+                text='View Maintenance History'
+                buttonClickHandler={() =>
+                  handleViewMaintHistory({ item: item })
+                }
+              />
+              <WideButton
+                text='Remove Item'
+                buttonClickHandler={() => handleDeleteItem({ item: item })}
+                danger={true}
+              />
               <View style={styles.textSeparator} />
             </ScrollView>
           </SingleItemBackground>

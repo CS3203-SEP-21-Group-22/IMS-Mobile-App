@@ -9,6 +9,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import React, { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Maintenance {
   id: number;
@@ -112,20 +113,10 @@ export default function viewOngoingMaintenancesScreen() {
             }}
           />
         </View>
-        <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-            <Pressable
-              onPress={handleButtonPress}
-              style={{ width: '100%', alignItems: 'center' }}
-            >
-              <Text style={styles.buttonText}>Create New Maintenance</Text>
-            </Pressable>
-          </ImageBackground>
-        </View>
+        <WideButton
+          text='Create New Maintenance'
+          buttonClickHandler={handleButtonPress}
+        />
       </ContentContainer>
     </BackgroundLayout>
   );

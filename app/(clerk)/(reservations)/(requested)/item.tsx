@@ -1,12 +1,5 @@
-import {
-  StyleSheet,
-  Pressable,
-  Image,
-  TextInput,
-  ImageBackground,
-  ScrollView,
-} from 'react-native';
-import { Link, useLocalSearchParams, router } from 'expo-router';
+import { StyleSheet, TextInput, ScrollView } from 'react-native';
+import { useLocalSearchParams, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -17,6 +10,7 @@ import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { Dropdown } from 'react-native-element-dropdown';
 import { useState, useEffect } from 'react';
+import ShortButtonsBar from '@/components/ShortButtonsBar';
 
 interface Reservation {
   id: number | null;
@@ -129,30 +123,12 @@ export default function ViewRequestedItemScreen() {
                   multiline
                 />
                 <View style={styles.textSeparator} />
-                <View style={styles.buttonsContainer}>
-                  <View style={styles.button}>
-                    <ImageBackground
-                      source={require('@/assets/images/redBtn.webp')}
-                      style={styles.buttonBackground}
-                      borderRadius={12}
-                    >
-                      <Pressable onPress={handleReject}>
-                        <Text style={styles.buttonText}>Reject</Text>
-                      </Pressable>
-                    </ImageBackground>
-                  </View>
-                  <View style={styles.button}>
-                    <ImageBackground
-                      source={require('@/assets/images/blueBtn.webp')}
-                      style={styles.buttonBackground}
-                      borderRadius={12}
-                    >
-                      <Pressable onPress={handleAccept}>
-                        <Text style={styles.buttonText}>Assign</Text>
-                      </Pressable>
-                    </ImageBackground>
-                  </View>
-                </View>
+                <ShortButtonsBar
+                  primaryButtonText='Assign'
+                  secondaryButtonText='Reject'
+                  primaryButtonClickHandler={handleAccept}
+                  secondaryButtonClickHandler={handleReject}
+                />
               </SingleItemWithImage>
             </ScrollView>
           </SingleItemBackground>

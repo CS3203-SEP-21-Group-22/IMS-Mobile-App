@@ -14,6 +14,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import ClerkMaintenancesHorizontalBar from '@/components/ClerkMaintHorizontalBar';
 import React, { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Maintenance {
   id: number | null;
@@ -123,7 +124,7 @@ export default function viewOngoingMaintenancesScreen() {
                   Reviewed By: {maintenance.reviewedBy}
                 </Text>
               )}
-              <View style={styles.button}>
+              {/* <View style={styles.button}>
                 <ImageBackground
                   source={require('@/assets/images/blueBtn.webp')}
                   style={styles.buttonBackground}
@@ -138,7 +139,13 @@ export default function viewOngoingMaintenancesScreen() {
                     <Text style={styles.buttonText}>Review Maintenance</Text>
                   </Pressable>
                 </ImageBackground>
-              </View>
+              </View> */}
+              <WideButton
+                text='Review Maintenance'
+                buttonClickHandler={() =>
+                  handleUpdateButtonPress({ item: maintenance })
+                }
+              />
               <View style={styles.textSeparator} />
             </ScrollView>
           </SingleItemBackground>

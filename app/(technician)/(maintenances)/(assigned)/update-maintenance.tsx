@@ -1,12 +1,5 @@
-import {
-  StyleSheet,
-  Pressable,
-  TextInput,
-  ImageBackground,
-  Image,
-  ScrollView,
-} from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { StyleSheet, TextInput, ScrollView } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -15,6 +8,7 @@ import TechnicianMaintHorizontalBar from '@/components/TechnicianMaintHorizontal
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Maintenance {
   id: number | null;
@@ -133,20 +127,10 @@ export default function UpdateMaintenanceScreen() {
               />
             </ScrollView>
           </EditSingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleButtonPress}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Submit for Review</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Submit for Review'
+            buttonClickHandler={handleButtonPress}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -166,7 +150,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
-    color: '#202652',
   },
   separator: {
     marginVertical: '1%',
@@ -175,13 +158,11 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 14,
     fontWeight: 'bold',
-    color: '#202652',
     marginTop: '0.5%',
   },
   descriptionText: {
     fontSize: 14,
     marginHorizontal: '8%',
-    color: '#202652',
     fontWeight: 'bold',
   },
   textInput: {

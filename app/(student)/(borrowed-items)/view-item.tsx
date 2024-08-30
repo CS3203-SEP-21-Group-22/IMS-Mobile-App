@@ -13,6 +13,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Reservation {
   id: number | null;
@@ -92,20 +93,10 @@ export default function ViewBorrowedItemScreen() {
               </SingleItemWithImage>
             </ScrollView>
           </SingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={() => handleReturn({ item: reservation })}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Return Item</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Return Item'
+            buttonClickHandler={() => handleReturn({ item: reservation })}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>

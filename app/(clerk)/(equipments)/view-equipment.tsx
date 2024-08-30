@@ -13,6 +13,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Equipment {
   id: number | null;
@@ -103,48 +104,23 @@ export default function ViewEquipmentScreen() {
                 </Text>
                 <View style={styles.textSeparator} />
               </SingleItemWithImage>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/blueBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleViewItems({ item: equipment })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>View Items</Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/blueBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleUpdateEquipment({ item: equipment })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>Update Equipment</Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
-              <View style={styles.button}>
-                <ImageBackground
-                  source={require('@/assets/images/redBtn.webp')}
-                  style={styles.buttonBackground}
-                  borderRadius={10}
-                >
-                  <Pressable
-                    onPress={() => handleDeleteEquipment({ item: equipment })}
-                    style={{ width: '100%', alignItems: 'center' }}
-                  >
-                    <Text style={styles.buttonText}>Delete Equipment</Text>
-                  </Pressable>
-                </ImageBackground>
-              </View>
+              <WideButton
+                text='View Items'
+                buttonClickHandler={() => handleViewItems({ item: equipment })}
+              />
+              <WideButton
+                text='Update Equipment'
+                buttonClickHandler={() =>
+                  handleUpdateEquipment({ item: equipment })
+                }
+              />
+              <WideButton
+                text='Delete Equipment'
+                buttonClickHandler={() =>
+                  handleDeleteEquipment({ item: equipment })
+                }
+                danger={true}
+              />
               <View style={styles.textSeparator} />
             </ScrollView>
           </SingleItemBackground>

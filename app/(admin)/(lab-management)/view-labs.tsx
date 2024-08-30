@@ -8,6 +8,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Lab {
   id: number;
@@ -91,20 +92,7 @@ export default function ViewLabsScreen() {
             }}
           />
         </View>
-        <View style={styles.button}>
-          <ImageBackground
-            source={require('@/assets/images/blueBtn.webp')}
-            style={styles.buttonBackground}
-            borderRadius={10}
-          >
-            <Pressable
-              onPress={handleButtonClick}
-              style={{ width: '100%', alignItems: 'center' }}
-            >
-              <Text style={styles.buttonText}>Add New Lab</Text>
-            </Pressable>
-          </ImageBackground>
-        </View>
+        <WideButton text='Add New Lab' buttonClickHandler={handleButtonClick} />
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -130,22 +118,5 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 10,
-  },
-  button: {
-    width: '100%',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    marginTop: '4%',
-  },
-  buttonBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
   },
 });

@@ -1,6 +1,8 @@
 import React from 'react';
 import { StyleSheet, ImageBackground } from 'react-native';
 import { View } from './Themed';
+import Colors from '@/constants/Colors';
+import { useColorScheme } from '@/components/useColorScheme';
 
 interface BackgroundProps {
   children: React.ReactNode;
@@ -8,13 +10,19 @@ interface BackgroundProps {
 
 const SingleItemBackground: React.FC<BackgroundProps> = ({ children }) => (
   <View style={styles.container}>
-    <ImageBackground
-      source={require('@/assets/images/greenLarge.webp')}
-      style={styles.background}
-      borderRadius={10}
+    <View
+      style={[
+        styles.background,
+        {
+          backgroundColor:
+            useColorScheme() === 'light'
+              ? Colors.light.primary.cardBackground
+              : Colors.dark.primary.cardBackground,
+        },
+      ]}
     >
       {children}
-    </ImageBackground>
+    </View>
   </View>
 );
 
@@ -32,6 +40,9 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     width: '100%',
     paddingVertical: '4%',
+    paddingHorizontal: '6%',
+    paddingBottom: '6%',
+    borderRadius: 16,
   },
 });
 
