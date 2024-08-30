@@ -1,10 +1,5 @@
-import {
-  StyleSheet,
-  Pressable,
-  ScrollView,
-  ImageBackground,
-} from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { StyleSheet } from 'react-native';
+import { router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -12,6 +7,7 @@ import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface UserProfile {
   id: number | null;
@@ -66,20 +62,11 @@ export default function ProfileScreen() {
             <View style={styles.textSeparator} />
             <View style={styles.textSeparator} />
           </SingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleLogout}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Logout</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Logout'
+            buttonClickHandler={handleLogout}
+            danger={true}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -95,12 +82,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
   },
   text: {
-    color: 'white',
     fontSize: 12,
     marginBottom: '0.2%',
   },

@@ -17,6 +17,7 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
+import WideButton from '@/components/WideButton';
 
 interface Equipment {
   id: number | null;
@@ -120,20 +121,10 @@ export default function UpdateEquipmentScreen() {
             <Button title='Pick an Image' onPress={pickImage} />
             <View style={styles.separator} />
           </EditSingleItemBackground>
-          <View style={styles.button}>
-            <ImageBackground
-              source={require('@/assets/images/blueBtn.webp')}
-              style={styles.buttonBackground}
-              borderRadius={10}
-            >
-              <Pressable
-                onPress={handleUpdateEquipment}
-                style={{ width: '100%', alignItems: 'center' }}
-              >
-                <Text style={styles.buttonText}>Update Equipment</Text>
-              </Pressable>
-            </ImageBackground>
-          </View>
+          <WideButton
+            text='Update Equipment'
+            buttonClickHandler={handleUpdateEquipment}
+          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
