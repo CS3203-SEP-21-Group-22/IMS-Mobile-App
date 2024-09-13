@@ -23,27 +23,35 @@ interface Equipment {
   imageURL?: string | null;
 }
 
-export default function AddItemScreen() {
+interface AddItemScreenProps {
+  testEquipmentData?: Equipment; // Accept initial data via props for testing
+}
+
+export default function AddItemScreen({
+  testEquipmentData,
+}: AddItemScreenProps) {
   const { equipmentId } = useLocalSearchParams<{ equipmentId: string }>();
-  const [equipment, setEquipment] = useState<Equipment>({
-    name: null,
-    model: null,
-    lab: null,
-    maintenanceInterval: null,
-    imageURL: null,
-  });
+  const [equipment, setEquipment] = useState<Equipment>(
+    testEquipmentData || {
+      name: null,
+      model: null,
+      lab: null,
+      maintenanceInterval: null,
+      imageURL: null,
+    },
+  );
   useEffect(() => {
-    if (equipmentId) {
+    if (equipmentId && !testEquipmentData) {
       setEquipment({
         name: '4-Port WiFi Router',
         model: 'Cisco SRP541W',
         lab: 'Network Lab',
         maintenanceInterval: 120,
       });
-    } else {
+    } else if (!equipmentId) {
       throw new Error('Missing equipmentId');
     }
-  }, [equipmentId]);
+  }, [equipmentId, testEquipmentData]);
   const [serialNumber, setSerialNumber] = useState<string | null>(null);
   const handleButtonPress = () => {
     router.back();

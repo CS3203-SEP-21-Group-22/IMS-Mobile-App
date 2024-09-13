@@ -1,12 +1,9 @@
 import { StyleSheet, Pressable } from 'react-native';
-import { Link, router, usePathname, useSegments } from 'expo-router';
+import { Link, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 
 const MainHeader: React.FC<{ title: string }> = ({ title }) => {
-  const segments = useSegments();
-  const fullPath = '/' + segments.join('/');
-  console.log(fullPath);
   return (
     <View
       style={{
@@ -35,10 +32,13 @@ const MainHeader: React.FC<{ title: string }> = ({ title }) => {
               size={26}
               color='white'
               style={{ opacity: pressed ? 0.5 : 1 }}
+              testID='back-button'
             />
           )}
         </Pressable>
-        <Text style={styles.headerText}>{title}</Text>
+        <Text style={styles.headerText} testID='header-title'>
+          {title}
+        </Text>
         <Link
           href='/profile'
           asChild
@@ -51,6 +51,7 @@ const MainHeader: React.FC<{ title: string }> = ({ title }) => {
                 size={28}
                 color='white'
                 style={{ opacity: pressed ? 0.5 : 1 }}
+                testID='profile-icon'
               />
             )}
           </Pressable>
