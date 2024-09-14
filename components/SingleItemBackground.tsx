@@ -11,6 +11,7 @@ interface BackgroundProps {
 const SingleItemBackground: React.FC<BackgroundProps> = ({ children }) => (
   <View style={styles.container}>
     <View
+      testID='background-container'
       style={[
         styles.background,
         {

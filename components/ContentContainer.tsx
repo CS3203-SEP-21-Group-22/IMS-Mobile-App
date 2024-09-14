@@ -9,8 +9,9 @@ interface BackgroundProps {
 }
 
 const ContentContainer: React.FC<BackgroundProps> = ({ children }) => (
-  <View style={styles.container}>
+  <View testID='container' style={styles.container}>
     <View
+      testID='background'
       style={[
         styles.background,
         {
