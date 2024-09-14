@@ -8,9 +8,10 @@ interface BackgroundProps {
   children: React.ReactNode;
 }
 
-const SingleItemBackground: React.FC<BackgroundProps> = ({ children }) => (
+const EditSingleItemBackground: React.FC<BackgroundProps> = ({ children }) => (
   <View style={styles.container}>
     <View
+      testID='background-container'
       style={[
         styles.background,
         {
@@ -46,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default SingleItemBackground;
+export default EditSingleItemBackground;

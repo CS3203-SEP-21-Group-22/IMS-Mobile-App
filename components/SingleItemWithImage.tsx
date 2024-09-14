@@ -16,6 +16,7 @@ const SingleItemWithImage: React.FC<{
     <View style={styles.container}>
       <Text style={styles.titleText}>{title}</Text>
       <Image
+        testID='single-item-image'
         style={{ width: 100, height: 100, borderRadius: 5, marginBottom: '4%' }}
         source={imageSrc}
       />

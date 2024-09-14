@@ -17,6 +17,7 @@ const TechnicianMaintHorizontalBar: React.FC<{ selectedIndex: number }> = ({
       {items.map((item, index) => (
         <View key={index} style={styles.rowComponent}>
           <View
+            testID={item}
             style={[
               styles.rowComponentBackground,
               {

@@ -29,6 +29,22 @@ describe('ClerkReservationsHorizontalBar', () => {
     expect(getByText('Borrowed')).toBeTruthy();
   });
 
+  it('applies the correct background color based on the selected index for light theme', () => {
+    (useColorScheme as jest.Mock).mockReturnValue('light'); // Mocking light theme
+
+    const { getByTestId } = render(
+      <ClerkReservationsHorizontalBar selectedIndex={1} />,
+    );
+
+    // Check background color for 'Reserved'
+    const reservedBackground = getByTestId('reserved').props.style[1][1];
+
+    expect(reservedBackground).toHaveProperty(
+      'backgroundColor',
+      Colors.light.primary.button,
+    );
+  });
+
   it('applies the correct background color based on the selected index for dark theme', () => {
     (useColorScheme as jest.Mock).mockReturnValue('dark'); // Mocking dark theme
 

@@ -26,6 +26,23 @@ describe('ContentContainer', () => {
     expect(getByText('Test Content')).toBeTruthy();
   });
 
+  it('applies correct background color for light theme', () => {
+    (useColorScheme as jest.Mock).mockReturnValue('light'); // Mock light mode
+
+    const { getByTestId } = render(
+      <ContentContainer>
+        <Text>Test Content</Text>
+      </ContentContainer>,
+    );
+
+    const containerBackground = getByTestId('background').props.style[1][1];
+
+    expect(containerBackground).toHaveProperty(
+      'backgroundColor',
+      Colors.light.secondary.background,
+    );
+  });
+
   it('applies correct background color for dark theme', () => {
     (useColorScheme as jest.Mock).mockReturnValue('dark'); // Mock dark mode
 

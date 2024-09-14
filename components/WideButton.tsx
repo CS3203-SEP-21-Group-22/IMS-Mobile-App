@@ -17,6 +17,7 @@ const WideButton: React.FC<ButtonProps> = ({
 }) => (
   <View style={styles.button}>
     <View
+      testID='buttonBackground'
       style={[
         styles.buttonBackground,
         {

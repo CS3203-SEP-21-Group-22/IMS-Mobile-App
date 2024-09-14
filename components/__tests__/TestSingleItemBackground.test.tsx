@@ -22,6 +22,25 @@ describe('SingleItemBackground', () => {
     expect(getByText('Test Child')).toBeTruthy();
   });
 
+  it('applies correct background color for light mode', () => {
+    // Mock useColorScheme to return 'light'
+    (useColorScheme as jest.Mock).mockReturnValue('light');
+
+    const { getByTestId } = render(
+      <SingleItemBackground>
+        <Text>Test Child</Text>
+      </SingleItemBackground>,
+    );
+
+    const backgroundElement = getByTestId('background-container');
+
+    // Verify that the background color for light mode is applied
+    expect(backgroundElement.props.style[1][1]).toHaveProperty(
+      'backgroundColor',
+      Colors.light.primary.cardBackground,
+    );
+  });
+
   it('applies correct background color for dark mode', () => {
     // Mock useColorScheme to return 'dark'
     (useColorScheme as jest.Mock).mockReturnValue('dark');

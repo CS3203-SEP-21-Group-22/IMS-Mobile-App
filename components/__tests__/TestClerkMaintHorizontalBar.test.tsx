@@ -29,6 +29,22 @@ describe('ClerkMaintenancesHorizontalBar', () => {
     expect(getByText('Completed')).toBeTruthy();
   });
 
+  it('applies the correct background color based on the selected index for light theme', () => {
+    (useColorScheme as jest.Mock).mockReturnValue('light'); // Mocking light theme
+
+    const { getByTestId } = render(
+      <ClerkMaintenancesHorizontalBar selectedIndex={1} />,
+    );
+
+    // Check background color for 'Ongoing'
+    const ongoingBackground = getByTestId('ongoing').props.style[1][1];
+
+    expect(ongoingBackground).toHaveProperty(
+      'backgroundColor',
+      Colors.light.primary.button,
+    );
+  });
+
   it('applies the correct background color based on the selected index for dark theme', () => {
     (useColorScheme as jest.Mock).mockReturnValue('dark'); // Mocking dark theme
 
