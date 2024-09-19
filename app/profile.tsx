@@ -8,15 +8,12 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
-
-interface UserProfile {
-  id: number | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string | null;
-  role: string | null;
-  contactNumber: string | null;
-}
+import { UserProfile } from '@/interfaces/userProfile.interface';
+import {
+  setLoginStatusLoggedOut,
+  removeTokens,
+  clearUserProfile,
+} from '@/utils/AsyncStorage';
 
 export default function ProfileScreen() {
   const [user, setUser] = useState<UserProfile>({
@@ -37,7 +34,10 @@ export default function ProfileScreen() {
       contactNumber: '+4412345673',
     });
   }, []);
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await removeTokens();
+    await clearUserProfile();
+    await setLoginStatusLoggedOut();
     router.replace('/login');
   };
   return (

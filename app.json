@@ -34,6 +34,7 @@
       "backgroundColor": "#000000"
     },
     "authServerUrl": "https://auth-server-g6hmcdavbgayb3fe.eastus-01.azurewebsites.net",
-    "authClientId": "group22-client-id"
+    "authClientId": "group22-client-id",
+    "backendAPIUrl": "https://ims-api-fbf3hheffacqe5ak.westus2-01.azurewebsites.net/api"
   }
 }

@@ -1,9 +1,24 @@
 import { StyleSheet, Pressable } from 'react-native';
-import { Link, router } from 'expo-router';
+import { Link, router, useSegments } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { useEffect, useState } from 'react';
 
 const MainHeader: React.FC<{ title: string }> = ({ title }) => {
+  const [backBtnVisible, setBackBtnVisible] = useState(false);
+  const rootPathParams = [
+    '(admin)/(user-management)/view-users',
+    '(clerk)/(reservations)/(requested)/items',
+    '(student)/(explore-equipments)/view-labs',
+    '(technician)/(maintenances)/(assigned)/maintenances',
+  ];
+  const params = useSegments();
+  const path = params.join('/');
+
+  useEffect(() => {
+    setBackBtnVisible(!rootPathParams.includes(path));
+  }, [params]);
+
   return (
     <View
       style={{
@@ -22,20 +37,22 @@ const MainHeader: React.FC<{ title: string }> = ({ title }) => {
           width: '90%',
         }}
       >
-        <Pressable
-          onPress={() => router.back()}
-          style={{ position: 'absolute', left: 0 }}
-        >
-          {({ pressed }) => (
-            <FontAwesome6
-              name='arrow-left'
-              size={26}
-              color='white'
-              style={{ opacity: pressed ? 0.5 : 1 }}
-              testID='back-button'
-            />
-          )}
-        </Pressable>
+        {backBtnVisible && (
+          <Pressable
+            onPress={() => router.back()}
+            style={{ position: 'absolute', left: 0 }}
+          >
+            {({ pressed }) => (
+              <FontAwesome6
+                name='arrow-left'
+                size={26}
+                color='white'
+                style={{ opacity: pressed ? 0.5 : 1 }}
+                testID='back-button'
+              />
+            )}
+          </Pressable>
+        )}
         <Text style={styles.headerText} testID='header-title'>
           {title}
         </Text>

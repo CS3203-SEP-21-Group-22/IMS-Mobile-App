@@ -16,17 +16,44 @@ import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
+import axios from 'axios';
+import Constants from 'expo-constants';
+import AttemptToRefreshToken from '@/utils/AttemptToRefreshToken';
+import { getAccessToken } from '@/utils/AsyncStorage';
+import { CreateLab } from '@/interfaces/lab.interface';
 
-interface Lab {
-  name: string | null;
-  code: string | null;
-  imageURL?: string | null;
-}
+// @ts-ignore
+const { backendAPIUrl } = Constants.expoConfig || {};
+if (!backendAPIUrl)
+  throw new Error('Please configure backendAPIUrl in app.json');
 
 export default function AddLabScreen() {
-  const [lab, setLab] = useState<Lab>({ name: null, code: null });
-  const handleButtonPress = () => {
-    router.back();
+  const [lab, setLab] = useState<CreateLab>({ name: null, code: null });
+  const handleButtonPress = async () => {
+    try {
+      const token = await getAccessToken();
+      console.log(lab);
+      await axios.post(`${backendAPIUrl}/admin/labs`, lab, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log('Lab added successfully');
+      router.push('/(admin)/(lab-management)/view-labs');
+    } catch (error: any) {
+      console.log(error.response.status);
+      if (error.response.status === 401) {
+        await AttemptToRefreshToken();
+        handleButtonPress();
+      } else if (error.response.status === 400) {
+        console.log(error.response.data.errors);
+        error.response.data.errors.forEach((key: string, value: string) => {
+          console.log('----------');
+          console.log(value);
+        });
+      }
+      console.error('Error adding lab:', error);
+    }
   };
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({

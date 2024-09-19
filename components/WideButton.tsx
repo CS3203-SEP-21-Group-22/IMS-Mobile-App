@@ -78,6 +78,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+    paddingHorizontal: '5%',
   },
 });
 
