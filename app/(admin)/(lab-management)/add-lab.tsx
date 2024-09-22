@@ -1,58 +1,44 @@
 import {
   StyleSheet,
-  Pressable,
   TextInput,
-  ImageBackground,
+  ActivityIndicator,
   Image,
   Button,
 } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import WideButton from '@/components/WideButton';
-import axios from 'axios';
-import Constants from 'expo-constants';
-import AttemptToRefreshToken from '@/utils/AttemptToRefreshToken';
-import { getAccessToken } from '@/utils/AsyncStorage';
 import { CreateLab } from '@/interfaces/lab.interface';
-
-// @ts-ignore
-const { backendAPIUrl } = Constants.expoConfig || {};
-if (!backendAPIUrl)
-  throw new Error('Please configure backendAPIUrl in app.json');
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import { Alert } from 'react-native';
 
 export default function AddLabScreen() {
-  const [lab, setLab] = useState<CreateLab>({ name: null, code: null });
+  const [lab, setLab] = useState<CreateLab>({ labName: null, labCode: null });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<[string, string][]>([]);
   const handleButtonPress = async () => {
     try {
-      const token = await getAccessToken();
-      console.log(lab);
-      await axios.post(`${backendAPIUrl}/admin/labs`, lab, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      console.log('Lab added successfully');
-      router.push('/(admin)/(lab-management)/view-labs');
-    } catch (error: any) {
-      console.log(error.response.status);
-      if (error.response.status === 401) {
-        await AttemptToRefreshToken();
-        handleButtonPress();
-      } else if (error.response.status === 400) {
-        console.log(error.response.data.errors);
-        error.response.data.errors.forEach((key: string, value: string) => {
-          console.log('----------');
-          console.log(value);
-        });
+      setLoading(true);
+      await initializeAxiosApi();
+      const response = await axiosApi.post('/admin/labs', lab);
+      if (response.status === 201) {
+        Alert.alert('Success', 'Lab added successfully');
+        router.push('/(admin)/(lab-management)/view-labs');
+      } else Alert.alert('Error', 'Failed to add lab');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setErrors(Object.entries(err.response.data.errors));
       }
-      console.error('Error adding lab:', error);
+      Alert.alert('Error', 'Failed to add lab');
+    } finally {
+      setLoading(false);
     }
   };
   const pickImage = async () => {
@@ -78,16 +64,30 @@ export default function AddLabScreen() {
             <TextInput
               style={styles.textInput}
               placeholder='Enter Lab Name'
-              value={lab.name ?? ''}
-              onChangeText={(text) => setLab({ ...lab, name: text })}
+              value={lab.labName ?? ''}
+              onChangeText={(text) => setLab({ ...lab, labName: text })}
             />
+            {errors
+              .filter(([key, value]) => key === 'labName')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <Text style={styles.text}>Lab Code</Text>
             <TextInput
               style={styles.textInput}
               placeholder='Enter Lab Code'
-              value={lab.code ?? ''}
-              onChangeText={(text) => setLab({ ...lab, code: text })}
+              value={lab.labCode ?? ''}
+              onChangeText={(text) => setLab({ ...lab, labCode: text })}
             />
+            {errors
+              .filter(([key, value]) => key === 'labCode')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <Image
               source={
                 lab.imageURL
@@ -97,9 +97,22 @@ export default function AddLabScreen() {
               style={styles.image}
             />
             <Button title='Pick an Image' onPress={pickImage} />
+            {errors
+              .filter(([key, value]) => key === 'imageURL')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <View style={styles.separator} />
           </EditSingleItemBackground>
-          <WideButton text='Add Lab' buttonClickHandler={handleButtonPress} />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : errors.length > 0 ? (
+            <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
+          ) : (
+            <WideButton text='Add Lab' buttonClickHandler={handleButtonPress} />
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -129,6 +142,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
   },
   textInput: {
     width: '80%',

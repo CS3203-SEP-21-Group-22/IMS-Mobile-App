@@ -15,23 +15,20 @@ import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
 import { Lab } from '@/interfaces/lab.interface';
-import Constants from 'expo-constants';
 import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
 import { Alert, Button } from 'react-native';
-
-// @ts-ignore
-const { backendAPIUrl } = Constants.expoConfig || {};
-if (!backendAPIUrl)
-  throw new Error(
-    'Configuration error: Please configure backendAPIUrl in app.json',
-  );
 
 const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => {
   return (
     <Link
       href={{
         pathname: `/(admin)/(lab-management)/update-lab`,
-        params: { labId: item.id },
+        params: {
+          labId: item.labId,
+          labName: item.labName,
+          labCode: item.labCode,
+          imageURL: item.imageURL,
+        },
       }}
       asChild
     >
@@ -39,8 +36,8 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => {
         {({ pressed }) => (
           <ListItemBackground>
             <ListItemWithImage link={item.imageURL ?? 'lab'}>
-              <Text style={styles.titleText}>{item.name}</Text>
-              <Text style={styles.text}>Code: {item.code}</Text>
+              <Text style={styles.titleText}>{item.labName}</Text>
+              <Text style={styles.text}>Code: {item.labCode}</Text>
             </ListItemWithImage>
           </ListItemBackground>
         )}
@@ -63,9 +60,9 @@ export default function ViewLabsScreen() {
     try {
       const response = await axiosApi.get('/user/labs');
       setLabs(response.data);
-    } catch (err) {
+    } catch (err: any) {
       setError('Failed to fetch data');
-      Alert.alert('Error', 'Failed to fetch data');
+      Alert.alert('Error', err.message);
     } finally {
       setLoading(false);
     }
@@ -99,7 +96,7 @@ export default function ViewLabsScreen() {
               <FlatList
                 data={labs}
                 renderItem={({ item }) => <ItemComponent item={item} />}
-                keyExtractor={(item) => item.id.toString()}
+                keyExtractor={(item) => item.labId.toString()}
                 style={styles.flatList}
                 contentContainerStyle={{
                   alignItems: 'stretch',

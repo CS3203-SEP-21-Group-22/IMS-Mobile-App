@@ -43,7 +43,6 @@ export const initializeAxiosApi = async () => {
 
         if (status === 401) {
           try {
-            console.log('retry 1');
             // If a 401 status is received, attempt to refresh the token
             const refreshToken = await getRefreshToken();
             const refreshTokenResponse = await axios.post(

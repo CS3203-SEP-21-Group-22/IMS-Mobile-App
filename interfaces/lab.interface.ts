@@ -1,12 +1,18 @@
 export interface Lab {
-  id: number;
-  name: string;
-  code: string;
+  labId: number;
+  labName: string;
+  labCode: string;
   imageURL?: string | null;
 }
 
 export interface CreateLab {
-  name: string | null;
-  code: string | null;
+  labName: string | null;
+  labCode: string | null;
+  imageURL?: string | null;
+}
+
+export interface UpdateLab {
+  labName?: string | null;
+  labCode?: string | null;
   imageURL?: string | null;
 }
