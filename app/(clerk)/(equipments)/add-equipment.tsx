@@ -1,43 +1,57 @@
 import {
   StyleSheet,
-  Pressable,
   TextInput,
-  ImageBackground,
   Image,
   Button,
+  ActivityIndicator,
 } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import * as ImagePicker from 'expo-image-picker';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import WideButton from '@/components/WideButton';
-
-interface Equipment {
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  maintenanceInterval: number | null;
-  imageURL?: string | null;
-}
+import { CreateEquipment } from '@/interfaces/equipment.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import { Alert } from 'react-native';
 
 export default function AddEquipmentScreen() {
   const { labId } = useLocalSearchParams<{ labId: string }>();
   if (!labId) throw new Error('Missing labId');
-  const [equipment, setEquipment] = useState<Equipment>({
+  const [equipment, setEquipment] = useState<CreateEquipment>({
     name: null,
     model: null,
-    lab: null,
-    maintenanceInterval: null,
+    labId: parseInt(labId),
     imageURL: null,
+    specification: null,
+    maintenanceIntervalDays: null,
   });
-  const handleButtonPress = () => {
-    router.back();
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<[string, string][]>([]);
+
+  const handleButtonPress = async () => {
+    try {
+      setLoading(true);
+      await initializeAxiosApi();
+      const response = await axiosApi.post('/clerk/equipments', equipment);
+      if (response.status === 201) {
+        Alert.alert('Success', 'Equipment added successfully');
+        router.back();
+      } else Alert.alert('Error', 'Failed to add equipment');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setErrors(Object.entries(err.response.data.errors));
+      }
+      Alert.alert('Error', 'Failed to add equipment');
+    } finally {
+      setLoading(false);
+    }
   };
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -49,6 +63,7 @@ export default function AddEquipmentScreen() {
       setEquipment({ ...equipment, imageURL: result.assets[0].uri });
     }
   };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Equipments' />
@@ -66,6 +81,13 @@ export default function AddEquipmentScreen() {
                 setEquipment({ ...equipment, name: text })
               }
             />
+            {errors
+              .filter(([key, value]) => key === 'name')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <Text style={styles.text}>Model</Text>
             <TextInput
               style={styles.textInput}
@@ -75,22 +97,37 @@ export default function AddEquipmentScreen() {
                 setEquipment({ ...equipment, model: text })
               }
             />
+            {errors
+              .filter(([key, value]) => key === 'model')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <Text style={styles.text}>Maintenance Interval (Days)</Text>
             <TextInput
               style={styles.textInput}
               placeholder='Enter Maintenance Interval'
+              keyboardType='numeric'
               value={
-                equipment.maintenanceInterval
-                  ? equipment.maintenanceInterval.toString()
+                equipment.maintenanceIntervalDays
+                  ? equipment.maintenanceIntervalDays.toString()
                   : ''
               }
               onChangeText={(text) =>
                 setEquipment({
                   ...equipment,
-                  maintenanceInterval: parseInt(text),
+                  maintenanceIntervalDays: parseInt(text),
                 })
               }
             />
+            {errors
+              .filter(([key, value]) => key === 'maintenanceIntervalDays')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <Image
               source={
                 equipment.imageURL
@@ -100,12 +137,25 @@ export default function AddEquipmentScreen() {
               style={styles.image}
             />
             <Button title='Pick an Image' onPress={pickImage} />
+            {errors
+              .filter(([key, value]) => key === 'imageURL')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
             <View style={styles.separator} />
           </EditSingleItemBackground>
-          <WideButton
-            text='Add Equipment'
-            buttonClickHandler={handleButtonPress}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : errors.length > 0 ? (
+            <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
+          ) : (
+            <WideButton
+              text='Add Equipment'
+              buttonClickHandler={handleButtonPress}
+            />
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -135,6 +185,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
   },
   textInput: {
     width: '80%',

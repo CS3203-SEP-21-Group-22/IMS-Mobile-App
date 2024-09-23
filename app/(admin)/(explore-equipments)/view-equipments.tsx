@@ -63,7 +63,7 @@ export default function ViewEquipmentsScreen() {
             <ListItemWithImage link={item.imageURL ?? 'equipment'}>
               <Text style={styles.titleText}>{item.name}</Text>
               <Text style={styles.text}>Model: {item.model}</Text>
-              <Text style={styles.text}>Lab: {item.lab}</Text>
+              <Text style={styles.text}>Lab: {item.labName}</Text>
             </ListItemWithImage>
           </ListItemBackground>
         )}

@@ -1,10 +1,11 @@
 import {
   StyleSheet,
-  Pressable,
   ScrollView,
-  ImageBackground,
+  ActivityIndicator,
+  Button,
+  Alert,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -14,116 +15,179 @@ import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
-
-interface Equipment {
-  id: number | null;
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  maintenanceInterval: number | null;
-  totalItems: number | null;
-  reservedItems: number | null;
-  availableItems: number | null;
-  imageURL?: string | null;
-}
+import { EquipmentDetailed } from '@/interfaces/equipment.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function ViewEquipmentScreen() {
   const { equipmentId, labId } = useLocalSearchParams<{
     equipmentId: string;
     labId: string;
   }>();
-  if (!labId) throw new Error('Missing labId');
-  const [equipment, setEquipment] = useState<Equipment>({
-    id: null,
-    name: null,
-    model: null,
-    lab: null,
-    maintenanceInterval: null,
-    totalItems: null,
-    reservedItems: null,
-    availableItems: null,
-    imageURL: null,
-  });
-  useEffect(() => {
-    if (equipmentId) {
-      setEquipment({
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        maintenanceInterval: 120,
-        totalItems: 10,
-        reservedItems: 2,
-        availableItems: 8,
-      });
-    } else {
-      throw new Error('Missing equipmentId');
+  if (!labId || !equipmentId) throw new Error('Missing labId or equipmentId');
+  const [equipment, setEquipment] = useState<EquipmentDetailed | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/user/equipments/${equipmentId}`);
+      setEquipment(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [equipmentId]);
-  const handleViewItems = ({ item }: { item: Equipment }) => {
+  };
+
+  // Initialize Axios and fetch data on component mount
+  useEffect(() => {
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
+  }, []);
+
+  const handleViewItems = ({ item }: { item: EquipmentDetailed }) => {
     router.push({
       pathname: '/(clerk)/(equipments)/view-items',
-      params: { equipmentId: item.id, labId },
+      params: {
+        equipmentId: item.equipmentId,
+        labId,
+        name: item.name,
+        imageUrl: item.imageURL,
+        model: item.model,
+        maintenanceIntervalDays: item.maintenanceIntervalDays,
+      },
     });
   };
-  const handleUpdateEquipment = ({ item }: { item: Equipment }) => {
+
+  const handleUpdateEquipment = async ({
+    item,
+  }: {
+    item: EquipmentDetailed;
+  }) => {
     router.replace({
       pathname: '/(clerk)/(equipments)/update-equipment',
-      params: { equipmentId: item.id, labId },
+      params: {
+        labId,
+        equipmentId: item.equipmentId,
+        name: item.name,
+        model: item.model,
+        imageURL: item.imageURL,
+        specification: item.specification,
+        maintenanceIntervalDays: item.maintenanceIntervalDays,
+      },
     });
   };
-  const handleDeleteEquipment = ({ item }: { item: Equipment }) => {
-    router.back();
+
+  const handleDeleteEquipment = async ({
+    item,
+  }: {
+    item: EquipmentDetailed;
+  }) => {
+    try {
+      setDeleteLoading(true);
+      await initializeAxiosApi();
+      const response = await axiosApi.delete(
+        `/clerk/equipments/${item.equipmentId}`,
+      );
+      if (response.status === 204) {
+        Alert.alert('Success', 'Equipment deleted successfully');
+        router.back();
+      } else Alert.alert('Error', 'Failed to delete Equipment');
+    } catch (err: any) {
+      Alert.alert('Error', 'Failed to delete Equipment');
+    } finally {
+      setDeleteLoading(false);
+    }
   };
+
+  const showAlert = async ({ item }: { item: EquipmentDetailed }) => {
+    Alert.alert(
+      'Delete Equipment',
+      'Are you sure you want to delete this Equipment?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Operation canceled'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => handleDeleteEquipment({ item }),
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Equipments' />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='View Equipment' />
-          <SingleItemBackground>
-            <ScrollView style={{ width: '100%' }}>
-              <SingleItemWithImage
-                title={equipment.name ?? ''}
-                link={equipment.imageURL ?? 'equipment'}
-              >
-                <Text style={styles.text}>Model: {equipment.model}</Text>
-                <Text style={styles.text}>Lab: {equipment.lab}</Text>
-                <Text style={styles.text}>
-                  Maintenance Interval: {equipment.maintenanceInterval} days
-                </Text>
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : equipment ? (
+            <SingleItemBackground>
+              <ScrollView style={{ width: '100%' }}>
+                <SingleItemWithImage
+                  title={equipment.name ?? ''}
+                  link={equipment.imageURL ?? 'equipment'}
+                >
+                  <Text style={styles.text}>Model: {equipment.model}</Text>
+                  <Text style={styles.text}>Lab: {equipment.labName}</Text>
+                  <Text style={styles.text}>
+                    Maintenance Interval: {equipment.maintenanceIntervalDays}{' '}
+                    days
+                  </Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Total Items: {equipment.totalCount}
+                  </Text>
+                  <Text style={styles.text}>
+                    Reserved Items: {equipment.reservedCount}
+                  </Text>
+                  <Text style={styles.text}>
+                    Available Items: {equipment.availableCount}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                </SingleItemWithImage>
+                <WideButton
+                  text='View Items'
+                  buttonClickHandler={() =>
+                    handleViewItems({ item: equipment })
+                  }
+                />
+                <WideButton
+                  text='Update Equipment'
+                  buttonClickHandler={() =>
+                    handleUpdateEquipment({ item: equipment })
+                  }
+                />
+                {deleteLoading ? (
+                  <ActivityIndicator size='large' color='black' />
+                ) : (
+                  <WideButton
+                    text='Delete Equipment'
+                    buttonClickHandler={() => showAlert({ item: equipment })}
+                    danger={true}
+                  />
+                )}
                 <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Total Items: {equipment.totalItems}
-                </Text>
-                <Text style={styles.text}>
-                  Reserved Items: {equipment.reservedItems}
-                </Text>
-                <Text style={styles.text}>
-                  Available Items: {equipment.availableItems}
-                </Text>
-                <View style={styles.textSeparator} />
-              </SingleItemWithImage>
-              <WideButton
-                text='View Items'
-                buttonClickHandler={() => handleViewItems({ item: equipment })}
-              />
-              <WideButton
-                text='Update Equipment'
-                buttonClickHandler={() =>
-                  handleUpdateEquipment({ item: equipment })
-                }
-              />
-              <WideButton
-                text='Delete Equipment'
-                buttonClickHandler={() =>
-                  handleDeleteEquipment({ item: equipment })
-                }
-                danger={true}
-              />
-              <View style={styles.textSeparator} />
-            </ScrollView>
-          </SingleItemBackground>
+              </ScrollView>
+            </SingleItemBackground>
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

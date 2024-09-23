@@ -1,8 +1,7 @@
-export interface Equipment {
+export interface EquipmentDetailed {
   equipmentId: number;
   name: string;
   model: string;
-  lab: string;
   imageURL?: string | null;
   labId: number;
   labName: string;
@@ -13,9 +12,30 @@ export interface Equipment {
   reservedCount: number;
 }
 
+export interface Equipment {
+  equipmentId: number;
+  name: string;
+  model: string;
+  imageURL?: string | null;
+  labId: number;
+  labName: string;
+  specification?: string | null;
+  maintenanceIntervalDays?: number | null;
+}
+
 export interface CreateEquipment {
   name: string | null;
   model: string | null;
-  lab: string | null;
+  labId: number | null;
   imageURL?: string | null;
+  specification?: string | null;
+  maintenanceIntervalDays?: number | null;
+}
+
+export interface UpdateEquipment {
+  name?: string | null;
+  model?: string | null;
+  imageURL?: string | null;
+  specification?: string | null;
+  maintenanceIntervalDays?: number | null;
 }

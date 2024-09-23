@@ -36,6 +36,7 @@ export default function UpdateLabScreen() {
     labCode,
     imageURL,
   });
+
   const handleUpdateButtonPress = async () => {
     try {
       setUpdateLoading(true);

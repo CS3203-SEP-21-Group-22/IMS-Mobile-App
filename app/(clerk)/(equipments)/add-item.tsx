@@ -1,61 +1,59 @@
 import {
   StyleSheet,
-  Pressable,
   TextInput,
-  ImageBackground,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import WideButton from '@/components/WideButton';
+import { CreateItem } from '@/interfaces/item.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
-interface Equipment {
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  maintenanceInterval: number | null;
-  imageURL?: string | null;
-}
+export default function AddItemScreen() {
+  const { equipmentId, name, model, imageUrl, maintenanceIntervalDays } =
+    useLocalSearchParams<{
+      equipmentId: string;
+      name: string;
+      model: string;
+      imageUrl: string;
+      maintenanceIntervalDays: string;
+    }>();
+  if (!equipmentId || !name || !model)
+    throw new Error('Missing equipmentId, name or model');
+  const [createItem, setCreateItem] = useState<CreateItem>({
+    equipmentId: parseInt(equipmentId),
+    serialNumber: null,
+  });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<[string, string][]>([]);
 
-interface AddItemScreenProps {
-  testEquipmentData?: Equipment; // Accept initial data via props for testing
-}
-
-export default function AddItemScreen({
-  testEquipmentData,
-}: AddItemScreenProps) {
-  const { equipmentId } = useLocalSearchParams<{ equipmentId: string }>();
-  const [equipment, setEquipment] = useState<Equipment>(
-    testEquipmentData || {
-      name: null,
-      model: null,
-      lab: null,
-      maintenanceInterval: null,
-      imageURL: null,
-    },
-  );
-  useEffect(() => {
-    if (equipmentId && !testEquipmentData) {
-      setEquipment({
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        maintenanceInterval: 120,
-      });
-    } else if (!equipmentId) {
-      throw new Error('Missing equipmentId');
+  const handleButtonPress = async () => {
+    try {
+      setLoading(true);
+      await initializeAxiosApi();
+      const response = await axiosApi.post('/clerk/items', createItem);
+      if (response.status === 201) {
+        Alert.alert('Success', 'Item added successfully');
+        router.back();
+      } else Alert.alert('Error', 'Failed to add item');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setErrors(Object.entries(err.response.data.errors));
+      }
+      Alert.alert('Error', 'Failed to add item');
+    } finally {
+      setLoading(false);
     }
-  }, [equipmentId, testEquipmentData]);
-  const [serialNumber, setSerialNumber] = useState<string | null>(null);
-  const handleButtonPress = () => {
-    router.back();
   };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Equipments' />
@@ -64,29 +62,47 @@ export default function AddItemScreen({
           <ContentContainerHeader title='Add New Item' />
           <EditSingleItemBackground>
             <Text style={styles.title}>Item Details</Text>
-            <Text style={styles.text}>{equipment.name}</Text>
+            <Text style={styles.text}>{name}</Text>
             <Image
               source={
-                equipment.imageURL
-                  ? { uri: equipment.imageURL }
+                imageUrl
+                  ? { uri: imageUrl }
                   : require('@/assets/images/equipmentSample.png')
               }
               style={styles.image}
             />
-            <Text style={styles.text}>Model: {equipment.model}</Text>
+            <Text style={styles.text}>Model: {model}</Text>
             <Text style={styles.text}>
-              Maintenance Interval: {equipment.maintenanceInterval} days
+              Maintenance Interval: {maintenanceIntervalDays} days
             </Text>
             <View style={styles.separator} />
             <Text style={styles.text}>Serial Number</Text>
             <TextInput
               style={styles.textInput}
               placeholder='Enter Serial Number'
-              value={serialNumber ?? ''}
-              onChangeText={(text) => setSerialNumber(text)}
+              value={createItem.serialNumber ?? ''}
+              onChangeText={(text) =>
+                setCreateItem({ ...createItem, serialNumber: text })
+              }
             />
+            {errors
+              .filter(([key, value]) => key === 'serialNumber')
+              .map(([key, value]) => (
+                <Text key={key} style={styles.errorText}>
+                  {value}
+                </Text>
+              ))}
           </EditSingleItemBackground>
-          <WideButton text='Add Item' buttonClickHandler={handleButtonPress} />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : errors.length > 0 ? (
+            <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
+          ) : (
+            <WideButton
+              text='Add Item'
+              buttonClickHandler={handleButtonPress}
+            />
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -110,6 +126,11 @@ const styles = StyleSheet.create({
   separator: {
     marginVertical: '1%',
     width: '80%',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
   },
   text: {
     fontSize: 15,
