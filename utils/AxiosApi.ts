@@ -54,11 +54,9 @@ export const initializeAxiosApi = async () => {
 
             // Save the new token to AsyncStorage
             await storeAccessToken(refreshTokenResponse.data.access_token);
-
             // Retry the original request with the new token
             error.config.headers['Authorization'] =
               `Bearer ${refreshTokenResponse.data.access_token}`;
-
             return axiosApi.request(error.config);
           } catch (refreshError) {
             // If the refresh token request fails, log out the user
@@ -69,7 +67,7 @@ export const initializeAxiosApi = async () => {
             return Promise.reject(refreshError);
           }
         }
-
+        console.log(error.response.data);
         // Reject the error if it's not a 401 or token refresh fails
         return Promise.reject(error);
       },

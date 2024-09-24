@@ -5,7 +5,7 @@ import {
   ActivityIndicator,
   Button,
 } from 'react-native';
-import { Link, useLocalSearchParams, router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -21,6 +21,7 @@ export default function ViewMaintenancesScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { itemId } = useLocalSearchParams<{ itemId: string }>();
+  if (!itemId) throw new Error('itemId is required');
 
   const fetchData = async () => {
     try {

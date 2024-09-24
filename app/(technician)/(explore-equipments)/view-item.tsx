@@ -1,10 +1,11 @@
 import {
   StyleSheet,
-  Pressable,
+  Alert,
   ScrollView,
-  ImageBackground,
+  ActivityIndicator,
+  Button,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -14,114 +15,111 @@ import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
-
-interface Item {
-  id: number | null;
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  maintenanceInterval: number | null;
-  serialNumber: string | null;
-  lastMaintenanceOn: string | null;
-  lastMaintenanceBy: string | null;
-  status: string | null;
-  imageURL?: string | null;
-}
+import { ItemDetailed } from '@/interfaces/item.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function ViewItemScreen() {
+  const [item, setItem] = useState<ItemDetailed | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { itemId, equipmentId, labId } = useLocalSearchParams<{
     itemId: string;
     equipmentId: string;
     labId: string;
   }>();
-  if (!equipmentId) throw new Error('Missing equipmentId');
-  if (!labId) throw new Error('Missing labId');
-  const [item, setItem] = useState<Item>({
-    id: null,
-    name: null,
-    model: null,
-    lab: null,
-    maintenanceInterval: null,
-    serialNumber: null,
-    lastMaintenanceOn: null,
-    lastMaintenanceBy: null,
-    status: null,
-    imageURL: null,
-  });
-  useEffect(() => {
-    if (itemId) {
-      setItem({
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        maintenanceInterval: 120,
-        serialNumber: 'FOC1234X56Y',
-        lastMaintenanceOn: '2021-09-01',
-        lastMaintenanceBy: 'John Doe',
-        status: 'Available',
-      });
-    } else {
-      throw new Error('Missing itemId');
+  if (!equipmentId || !itemId) throw new Error('Missing equipmentId or itemId');
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/user/items/${itemId}`);
+      setItem(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [itemId]);
-  const handleViewReservHistory = ({ item }: { item: Item }) => {
+  };
+
+  // Initialize Axios and fetch data on component mount
+  useEffect(() => {
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
+  }, []);
+
+  const handleViewReservHistory = ({ item }: { item: ItemDetailed }) => {
     router.push({
       pathname: '/(technician)/(explore-equipments)/reservations',
-      params: { itemId: item.id },
+      params: { itemId: item.itemId },
     });
   };
-  const handleViewMaintHistory = ({ item }: { item: Item }) => {
+
+  const handleViewMaintHistory = ({ item }: { item: ItemDetailed }) => {
     router.push({
       pathname: '/(technician)/(explore-equipments)/maintenances',
-      params: { itemId: item.id },
+      params: { itemId: item.itemId },
     });
   };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Explore Equipments' />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='View Item' />
-          <SingleItemBackground>
-            <ScrollView style={{ width: '100%' }}>
-              <SingleItemWithImage
-                title={item.name ?? ''}
-                link={item.imageURL ?? 'equipment'}
-              >
-                <Text style={styles.text}>Model: {item.model}</Text>
-                <Text style={styles.text}>Lab: {item.lab}</Text>
-                <Text style={styles.text}>
-                  Maintenance Interval: {item.maintenanceInterval} days
-                </Text>
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : item ? (
+            <SingleItemBackground>
+              <ScrollView style={{ width: '100%' }}>
+                <SingleItemWithImage
+                  title={item.itemName ?? ''}
+                  link={item.imageUrl ?? 'equipment'}
+                >
+                  <Text style={styles.text}>Model: {item.itemModel}</Text>
+                  <Text style={styles.text}>Lab: {item.labName}</Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Serial Number: {item.serialNumber}
+                  </Text>
+                  {item.lastMaintenanceOn && (
+                    <Text style={styles.text}>
+                      Last Maintenance On: {item.lastMaintenanceOn}
+                    </Text>
+                  )}
+                  {item.lastMaintenanceBy && (
+                    <Text style={styles.text}>
+                      Last Maintenance By: {item.lastMaintenanceBy}
+                    </Text>
+                  )}
+                  <Text style={styles.text}>Status: {item.status}</Text>
+                  <View style={styles.textSeparator} />
+                </SingleItemWithImage>
+                <WideButton
+                  text='View Reservations History'
+                  buttonClickHandler={() =>
+                    handleViewReservHistory({ item: item })
+                  }
+                />
+                <WideButton
+                  text='View Maintenance History'
+                  buttonClickHandler={() =>
+                    handleViewMaintHistory({ item: item })
+                  }
+                />
                 <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Serial Number: {item.serialNumber}
-                </Text>
-                <Text style={styles.text}>
-                  Last Maintenance On: {item.lastMaintenanceOn}
-                </Text>
-                <Text style={styles.text}>
-                  Last Maintenance By: {item.lastMaintenanceBy}
-                </Text>
-                <Text style={styles.text}>Status: {item.status}</Text>
-                <View style={styles.textSeparator} />
-              </SingleItemWithImage>
-              <WideButton
-                text='View Reservations History'
-                buttonClickHandler={() =>
-                  handleViewReservHistory({ item: item })
-                }
-              />
-              <WideButton
-                text='View Maintenance History'
-                buttonClickHandler={() =>
-                  handleViewMaintHistory({ item: item })
-                }
-              />
-              <View style={styles.textSeparator} />
-            </ScrollView>
-          </SingleItemBackground>
+              </ScrollView>
+            </SingleItemBackground>
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

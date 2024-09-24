@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -8,67 +13,47 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
-
-interface Equipment {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  imageURL?: string | null;
-}
+import { Equipment } from '@/interfaces/equipment.interface';
+import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
+import { Alert, Button } from 'react-native';
 
 export default function ViewEquipmentsScreen() {
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const { labId, labName } = useLocalSearchParams<{
     labId: string;
     labName: string;
   }>();
-  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  if (!labId || !labName) throw new Error('Missing labId or labName');
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/user/equipments?labId=${labId}`);
+      setEquipments(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    if (!labId || !labName) throw new Error('Lab parameters are required');
-    setEquipments([
-      {
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-      },
-      {
-        id: 2,
-        name: '8-Port Ethernet Switch',
-        model: 'Cisco SG350-10P',
-        lab: 'Network Lab',
-      },
-      {
-        id: 3,
-        name: '24-Port Ethernet Switch',
-        model: 'Cisco SG350-28P',
-        lab: 'Network Lab',
-      },
-      {
-        id: 4,
-        name: '16-Port Ethernet Switch',
-        model: 'Cisco SG350-16P',
-        lab: 'Network Lab',
-      },
-      {
-        id: 5,
-        name: '24-Port PoE Switch',
-        model: 'Cisco SG350-28P',
-        lab: 'Network Lab',
-      },
-      {
-        id: 6,
-        name: '8-Port PoE Switch',
-        model: 'Cisco SG350-10P',
-        lab: 'Network Lab',
-      },
-    ]);
-  }, [labId]);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
+  }, []);
+
   const ItemComponent: React.FC<{ item: Equipment }> = ({ item }) => (
     <Link
       href={{
         pathname: `/(technician)/(explore-equipments)/view-equipment`,
-        params: { equipmentId: item.id, labId: labId },
+        params: { labId: labId },
       }}
       asChild
     >
@@ -78,7 +63,7 @@ export default function ViewEquipmentsScreen() {
             <ListItemWithImage link={item.imageURL ?? 'equipment'}>
               <Text style={styles.titleText}>{item.name}</Text>
               <Text style={styles.text}>Model: {item.model}</Text>
-              <Text style={styles.text}>Lab: {item.lab}</Text>
+              <Text style={styles.text}>Lab: {item.labName}</Text>
             </ListItemWithImage>
           </ListItemBackground>
         )}
@@ -91,18 +76,31 @@ export default function ViewEquipmentsScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title={`${labName} - Equipments`} />
-          <FlatList
-            data={equipments}
-            renderItem={({ item }) => <ItemComponent item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatList}
-            contentContainerStyle={{
-              alignItems: 'stretch',
-              justifyContent: 'center',
-              width: '100%',
-              backgroundColor: 'transparent',
-            }}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : equipments ? (
+            equipments.length > 0 ? (
+              <FlatList
+                data={equipments}
+                renderItem={({ item }) => <ItemComponent item={item} />}
+                keyExtractor={(item) => item.equipmentId.toString()}
+                style={styles.flatList}
+                contentContainerStyle={{
+                  alignItems: 'stretch',
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : (
+              <Text style={styles.text}>No equipments found</Text>
+            )
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

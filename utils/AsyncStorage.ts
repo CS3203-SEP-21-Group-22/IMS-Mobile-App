@@ -71,9 +71,7 @@ export const getTokens = async () => {
 // To get AccessToken
 export const getAccessToken = async () => {
   try {
-    const at = await AsyncStorage.getItem('accessToken');
-    console.log('retrieved access token : ', at);
-    return at;
+    return await AsyncStorage.getItem('accessToken');
   } catch (e) {
     console.error(e);
   }

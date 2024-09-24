@@ -1,6 +1,6 @@
-import { StyleSheet, Pressable } from 'react-native';
+import { StyleSheet, Pressable, Alert, ActivityIndicator } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
@@ -8,17 +8,39 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import { useState, useEffect } from 'react';
 import QRCode from 'react-native-qrcode-svg';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function VerifyReturningItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
-  const [qrValue, setQrValue] = useState('sample');
+  if (!reservationId) throw new Error('Missing reservationId');
+  const [qrValue, setQrValue] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(
+        `/clerk/reservations/${reservationId}/token`,
+      );
+      setQrValue(response.data.qrToken);
+    } catch (err: any) {
+      setError('Failed to get QR code');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    if (!reservationId) throw new Error('Missing reservationId');
-    const qrValue = `{
-      "verifyToken": "verifyReturningItem"
-    }`;
-    setQrValue(qrValue);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, [reservationId]);
+
   return (
     <BackgroundLayout>
       <MainHeader title='Reservations' />
@@ -26,8 +48,16 @@ export default function VerifyReturningItemScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Verify Returning Item' />
-          <Text style={styles.text}>Scan QR code to verify item return</Text>
-          <QRCode value={qrValue} size={200} />
+          {loading && <ActivityIndicator />}
+          {error && <Text>{error}</Text>}
+          {!qrValue ? (
+            <Text>QR code not found</Text>
+          ) : (
+            <>
+              <Text style={styles.text}>Scan QR code to verify Returning</Text>
+              <QRCode value={qrValue} size={200} />
+            </>
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>

@@ -1,8 +1,9 @@
 import {
   StyleSheet,
-  Pressable,
-  ImageBackground,
   ScrollView,
+  ActivityIndicator,
+  Alert,
+  Button,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -15,71 +16,49 @@ import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
+import { ReservationDetailed } from '@/interfaces/reservation.interface';
+import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
 
-interface Reservation {
-  id: number | null;
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  user: string | null;
-  fromDate: string | null;
-  toDate: string | null;
-  requestedAt: string | null;
-  imageURL?: string | null;
-  assignedItem: string | null;
-  assignedBy: string | null;
-  assignedAt: string | null;
-  borrowedFrom: string | null;
-  borrowedAt: string | null;
-}
-
-const handleVerify = ({ item }: { item: Reservation }) => {
+const handleReturn = ({ item }: { item: ReservationDetailed }) => {
   router.replace({
     pathname: '/(clerk)/(reservations)/(borrowed)/verify',
-    params: { reservationId: item.id },
+    params: { reservationId: item.reservationId },
   });
 };
 
 export default function ViewBorrowedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
-  const [reservation, setReservation] = useState<Reservation>({
-    id: null,
-    name: null,
-    model: null,
-    lab: null,
-    user: null,
-    fromDate: null,
-    toDate: null,
-    requestedAt: null,
-    imageURL: null,
-    assignedItem: null,
-    assignedBy: null,
-    assignedAt: null,
-    borrowedFrom: null,
-    borrowedAt: null,
-  });
-  useEffect(() => {
-    if (reservationId) {
-      setReservation({
-        id: parseInt(reservationId),
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        user: 'John Doe',
-        fromDate: '2024-08-02',
-        toDate: '2024-08-02',
-        requestedAt: '2024-08-02 12:03',
-        imageURL: null,
-        assignedItem: 'FOC1234X56Y',
-        assignedBy: 'Jane Doe',
-        assignedAt: '2024-08-02 12:03',
-        borrowedFrom: 'John Doe',
-        borrowedAt: '2024-08-02 12:03',
-      });
-    } else {
-      throw new Error('Missing reservationId');
+  if (!reservationId) throw new Error('Missing reservationId');
+  const [reservation, setReservation] = useState<ReservationDetailed | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(
+        `/user/reservations/${reservationId}`,
+      );
+      setReservation(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [reservationId]);
+  };
+
+  // Initialize Axios and fetch data on component mount
+  useEffect(() => {
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
+  }, []);
+
   return (
     <BackgroundLayout>
       <MainHeader title='Reservations' />
@@ -87,49 +66,64 @@ export default function ViewBorrowedItemScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Item Request' />
-          <SingleItemBackground>
-            <ScrollView>
-              <SingleItemWithImage
-                title={reservation.name ?? ''}
-                link={reservation.imageURL ?? 'equipment'}
-              >
-                <Text style={styles.text}>Model: {reservation.model}</Text>
-                <Text style={styles.text}>Lab: {reservation.lab}</Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Requested By: {reservation.user}
-                </Text>
-                <Text style={styles.text}>From: {reservation.fromDate}</Text>
-                <Text style={styles.text}>To: {reservation.toDate}</Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Requested At: {reservation.requestedAt}
-                </Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Assigned Item: {reservation.assignedItem}
-                </Text>
-                <Text style={styles.text}>
-                  Assigned By: {reservation.assignedBy}
-                </Text>
-                <Text style={styles.text}>
-                  Assigned At: {reservation.assignedAt}
-                </Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Borrowed From: {reservation.borrowedFrom}
-                </Text>
-                <Text style={styles.text}>
-                  Borrowed At: {reservation.borrowedAt}
-                </Text>
-                <View style={styles.textSeparator} />
-              </SingleItemWithImage>
-            </ScrollView>
-          </SingleItemBackground>
-          <WideButton
-            text='Verify'
-            buttonClickHandler={() => handleVerify({ item: reservation })}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : reservation ? (
+            <SingleItemBackground>
+              <ScrollView>
+                <SingleItemWithImage
+                  title={reservation.itemName ?? ''}
+                  link={reservation.imageUrl ?? 'equipment'}
+                >
+                  <Text style={styles.text}>
+                    Model: {reservation.itemModel}
+                  </Text>
+                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Requested By: {reservation.reservedUserName}
+                  </Text>
+                  <Text style={styles.text}>From: {reservation.startDate}</Text>
+                  <Text style={styles.text}>To: {reservation.endDate}</Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Requested At: {reservation.createdAt}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Assigned Item: {reservation.itemSerialNumber}
+                  </Text>
+                  <Text style={styles.text}>
+                    Assigned By: {reservation.reservedUserName}
+                  </Text>
+                  <Text style={styles.text}>
+                    Assigned At: {reservation.respondedAt}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Borrowed From: {reservation.lentClerkId}
+                  </Text>
+                  <Text style={styles.text}>
+                    Borrowed At: {reservation.borrowedAt}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                </SingleItemWithImage>
+              </ScrollView>
+            </SingleItemBackground>
+          ) : (
+            <Text>No reservation found</Text>
+          )}
+          {reservation && reservation.status === 'Borrowed' && (
+            <WideButton
+              text='Return Item'
+              buttonClickHandler={() => handleReturn({ item: reservation })}
+            />
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>

@@ -68,9 +68,6 @@ export default function UpdateEquipmentScreen() {
       if (err.response.status === 400) {
         setErrors(Object.entries(err.response.data.errors));
       }
-      for (const [key, value] of Object.entries(err)) {
-        console.log(key, value);
-      }
       Alert.alert('Error', 'Failed to update Equipment');
     } finally {
       setUpdateLoading(false);

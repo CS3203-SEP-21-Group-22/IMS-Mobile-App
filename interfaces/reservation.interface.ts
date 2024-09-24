@@ -48,3 +48,9 @@ export interface ReservationDetailed {
   cancelledAt?: string | null;
   status: string;
 }
+
+export interface CreateReservation {
+  equipmentId?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+}

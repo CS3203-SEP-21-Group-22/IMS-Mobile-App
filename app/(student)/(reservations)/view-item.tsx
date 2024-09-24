@@ -1,10 +1,11 @@
 import {
   StyleSheet,
-  Pressable,
-  ImageBackground,
   ScrollView,
+  Alert,
+  ActivityIndicator,
+  Button,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -14,93 +15,168 @@ import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
 import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
+import { ReservationDetailed } from '@/interfaces/reservation.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
-interface Reservation {
-  id: number | null;
-  name: string | null;
-  model: string | null;
-  serialNumber?: string | null;
-  lab: string | null;
-  startDate: string | null;
-  endDate: string | null;
-  status: string | null;
-  imageURL?: string | null;
-}
-
-const handleBorrow = ({ item }: { item: Reservation }) => {
+const handleBorrow = ({ item }: { item: ReservationDetailed }) => {
   router.replace({
     pathname: '/(student)/(reservations)/borrow-item',
-    params: { reservationId: item.id },
+    params: { reservationId: item.reservationId },
   });
 };
 
 export default function ViewReservedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
-  const [reservation, setReservation] = useState<Reservation>({
-    id: null,
-    name: null,
-    model: null,
-    serialNumber: null,
-    lab: null,
-    startDate: null,
-    endDate: null,
-    status: null,
-    imageURL: null,
-  });
-  useEffect(() => {
-    if (reservationId) {
-      setReservation({
-        id: parseInt(reservationId),
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        serialNumber: 'FOC1234X56Y',
-        lab: 'Network Lab',
-        startDate: '2021-10-01',
-        endDate: '2021-10-10',
-        status: 'Accepted',
-      });
-    } else {
-      throw new Error('Missing reservationId');
+  if (!reservationId) throw new Error('Missing reservationId');
+  const [reservation, setReservation] = useState<ReservationDetailed | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+  const [cancelLoading, setCancelLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [cancelError, setCancelError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(
+        `/user/reservations/${reservationId}`,
+      );
+      setReservation(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [reservationId]);
+  };
+
+  // Initialize Axios and fetch data on component mount
+  useEffect(() => {
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
+  }, []);
+
+  const handleCancelReservation = async ({
+    item,
+  }: {
+    item: ReservationDetailed;
+  }) => {
+    try {
+      setCancelLoading(true);
+      await initializeAxiosApi();
+      const response = await axiosApi.delete(
+        `/student/reservations/${reservationId}`,
+      );
+      if (response.status === 204) {
+        Alert.alert('Success', 'Reservation canceled successfully');
+        router.back();
+      } else Alert.alert('Error', 'Failed to cancel reservation');
+    } catch (err: any) {
+      Alert.alert('Error', 'Failed to cancel reservation');
+    } finally {
+      setCancelLoading(false);
+    }
+  };
+
+  const showAlert = async ({ item }: { item: ReservationDetailed }) => {
+    Alert.alert(
+      'Cancel Reservation',
+      'Are you sure you want to cancel this reservation?',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Operation canceled'),
+          style: 'cancel',
+        },
+        {
+          text: 'OK',
+          onPress: () => handleCancelReservation({ item }),
+        },
+      ],
+      { cancelable: true },
+    );
+  };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Reservations' />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='View Reservation' />
-          <SingleItemBackground>
-            <ScrollView>
-              <SingleItemWithImage
-                title={reservation.name ?? ''}
-                link={reservation.imageURL ?? 'equipment'}
-              >
-                <Text style={styles.text}>Model: {reservation.model}</Text>
-                {reservation.serialNumber && (
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : reservation ? (
+            <SingleItemBackground>
+              <ScrollView>
+                <SingleItemWithImage
+                  title={reservation.itemName ?? ''}
+                  link={reservation.imageUrl ?? 'equipment'}
+                >
                   <Text style={styles.text}>
-                    Serial Number: {reservation.serialNumber}
+                    Model: {reservation.itemModel}
                   </Text>
-                )}
-                <Text style={styles.text}>Lab: {reservation.lab}</Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Reserved From: {reservation.startDate}
-                </Text>
-                <Text style={styles.text}>
-                  Reserved Until: {reservation.endDate}
-                </Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>Status: {reservation.status}</Text>
-                <View style={styles.textSeparator} />
-              </SingleItemWithImage>
-            </ScrollView>
-          </SingleItemBackground>
-          {reservation.status === 'Accepted' && (
+                  {reservation.itemSerialNumber && (
+                    <Text style={styles.text}>
+                      Serial Number: {reservation.itemSerialNumber}
+                    </Text>
+                  )}
+                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Start Date: {reservation.startDate.split('T')[0]}
+                  </Text>
+                  <Text style={styles.text}>
+                    End Date: {reservation.endDate.split('T')[0]}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                  {reservation.status === 'Reserved' && (
+                    <Text style={styles.text}>
+                      Accepted By: {reservation.respondedClerkName}
+                    </Text>
+                  )}
+                  {reservation.status === 'Reserved' && (
+                    <Text style={styles.text}>
+                      Accepted At: {reservation.respondedAt}
+                    </Text>
+                  )}
+                  <Text style={styles.text}>Status: {reservation.status}</Text>
+                  {reservation && reservation.status === 'Rejected' && (
+                    <Text style={styles.text}>
+                      Rejection Reason: {reservation.responseNote}
+                    </Text>
+                  )}
+                  <View style={styles.textSeparator} />
+                </SingleItemWithImage>
+              </ScrollView>
+            </SingleItemBackground>
+          ) : (
+            <Text>No reservation found</Text>
+          )}
+          {reservation && reservation.status === 'Reserved' && (
             <WideButton
               text='Borrow Item'
               buttonClickHandler={() => handleBorrow({ item: reservation })}
             />
           )}
+          {cancelError && <Text>Error: {cancelError}</Text>}
+          {cancelLoading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : reservation && reservation.status === 'Reserved' ? (
+            <WideButton
+              text='Cancel Reservation'
+              buttonClickHandler={() => showAlert({ item: reservation })}
+              danger={true}
+            />
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

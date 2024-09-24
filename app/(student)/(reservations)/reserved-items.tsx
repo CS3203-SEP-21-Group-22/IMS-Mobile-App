@@ -1,5 +1,12 @@
-import { StyleSheet, Pressable, FlatList } from 'react-native';
-import { Link, useLocalSearchParams, router } from 'expo-router';
+import {
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  Button,
+} from 'react-native';
+import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -8,89 +15,64 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
-
-interface Reservation {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  startDate: string;
-  status: string;
-  imageURL?: string | null;
-}
+import { Reservation } from '@/interfaces/reservation.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function ReservedItemsScreen() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(
+        `/student/reservations?borrowed=false`,
+      );
+      setReservations(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    setReservations([
-      {
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        startDate: '2021-10-01',
-        status: 'Accepted',
-      },
-      {
-        id: 2,
-        name: '8-Port Ethernet Switch',
-        model: 'Cisco SG350-10P',
-        lab: 'Network Lab',
-        startDate: '2021-10-02',
-        status: 'Acceptance Pending',
-      },
-      {
-        id: 3,
-        name: '24-Port Ethernet Switch',
-        model: 'Cisco SG350-28P',
-        lab: 'Network Lab',
-        startDate: '2021-10-03',
-        status: 'Rejected',
-      },
-      {
-        id: 4,
-        name: '16-Port Ethernet Switch',
-        model: 'Cisco SG350-16P',
-        lab: 'Network Lab',
-        startDate: '2021-10-04',
-        status: 'Accepted',
-      },
-      {
-        id: 5,
-        name: '24-Port PoE Switch',
-        model: 'Cisco SG350-28P',
-        lab: 'Network Lab',
-        startDate: '2021-10-05',
-        status: 'Accepted',
-      },
-      {
-        id: 6,
-        name: '8-Port PoE Switch',
-        model: 'Cisco SG350-10P',
-        lab: 'Network Lab',
-        startDate: '2021-10-06',
-        status: 'Acceptance Pending',
-      },
-    ]);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, []);
+
   const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
     <Link
       href={{
         pathname: `/(student)/(reservations)/view-item`,
-        params: { reservationId: item.id },
+        params: { reservationId: item.reservationId },
       }}
       asChild
     >
       <Pressable>
         {({ pressed }) => (
           <ListItemBackground>
-            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-              <Text style={styles.titleText}>{item.name}</Text>
-              <Text style={styles.text}>Model: {item.model}</Text>
-              <Text style={styles.text}>Lab: {item.lab}</Text>
-              <Text style={styles.text}>
-                Reservation Start Date: {item.startDate}
+            <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
+              <Text style={styles.titleText}>
+                {item.itemName} ({item.itemModel})
               </Text>
+              {item.status === 'Reserved' && (
+                <Text style={styles.text}>
+                  Serial Number: {item.itemSerialNumber}
+                </Text>
+              )}
+              <Text style={styles.text}>Lab: {item.labName}</Text>
+              {item.status === 'Reserved' && (
+                <Text style={styles.text}>
+                  Reservation Start Date: {item.startDate.split('T')[0]}
+                </Text>
+              )}
               <Text style={styles.text}>Status: {item.status}</Text>
             </ListItemWithImage>
           </ListItemBackground>
@@ -98,24 +80,38 @@ export default function ReservedItemsScreen() {
       </Pressable>
     </Link>
   );
+
   return (
     <BackgroundLayout>
       <MainHeader title='Reservations' />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Reserved Items' />
-          <FlatList
-            data={reservations}
-            renderItem={({ item }) => <ItemComponent item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatList}
-            contentContainerStyle={{
-              alignItems: 'stretch',
-              justifyContent: 'center',
-              width: '100%',
-              backgroundColor: 'transparent',
-            }}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : reservations ? (
+            reservations.length > 0 ? (
+              <FlatList
+                data={reservations}
+                renderItem={({ item }) => <ItemComponent item={item} />}
+                keyExtractor={(item) => item.reservationId.toString()}
+                style={styles.flatList}
+                contentContainerStyle={{
+                  alignItems: 'stretch',
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : (
+              <Text>No reservations found</Text>
+            )
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

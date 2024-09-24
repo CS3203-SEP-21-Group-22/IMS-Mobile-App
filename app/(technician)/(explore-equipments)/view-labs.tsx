@@ -1,4 +1,9 @@
-import { StyleSheet, Pressable, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
 import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -8,20 +13,20 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
-
-interface Lab {
-  id: number;
-  name: string;
-  code: string;
-  equipmentCount: number;
-  imageURL?: string | null;
-}
+import { Lab } from '@/interfaces/lab.interface';
+import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
+import { Alert, Button } from 'react-native';
 
 const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
   <Link
     href={{
       pathname: `/(technician)/(explore-equipments)/view-equipments`,
-      params: { labId: item.id, labName: item.name },
+      params: {
+        labId: item.labId,
+        labName: item.labName,
+        labCode: item.labCode,
+        imageURL: item.imageURL,
+      },
     }}
     asChild
   >
@@ -29,11 +34,8 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
       {({ pressed }) => (
         <ListItemBackground>
           <ListItemWithImage link={item.imageURL ?? 'lab'}>
-            <Text style={styles.titleText}>{item.name}</Text>
-            <Text style={styles.text}>Code: {item.code}</Text>
-            <Text style={styles.text}>
-              Equipment Count: {item.equipmentCount}
-            </Text>
+            <Text style={styles.titleText}>{item.labName}</Text>
+            <Text style={styles.text}>Code: {item.labCode}</Text>
           </ListItemWithImage>
         </ListItemBackground>
       )}
@@ -43,58 +45,63 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
 
 export default function ViewLabsScreen() {
   const [labs, setLabs] = useState<Lab[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch data from the API
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get('/user/labs');
+      setLabs(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    setLabs([
-      {
-        id: 1,
-        name: 'Network Lab',
-        code: 'NET',
-        equipmentCount: 12,
-      },
-      {
-        id: 2,
-        name: 'Computer Lab',
-        code: 'CSE',
-        equipmentCount: 15,
-      },
-      {
-        id: 3,
-        name: 'Physics Lab',
-        code: 'PHY',
-        equipmentCount: 9,
-      },
-      {
-        id: 4,
-        name: 'Chemistry Lab',
-        code: 'CHE',
-        equipmentCount: 7,
-      },
-      {
-        id: 5,
-        name: 'Biology Lab',
-        code: 'BIO',
-        equipmentCount: 5,
-      },
-    ]);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, []);
+
   return (
     <BackgroundLayout>
       <MainHeader title='Explore Equipments' />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='View Labs' />
-          <FlatList
-            data={labs}
-            renderItem={({ item }) => <ItemComponent item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatList}
-            contentContainerStyle={{
-              alignItems: 'stretch',
-              justifyContent: 'center',
-              width: '100%',
-              backgroundColor: 'transparent',
-            }}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : labs ? (
+            labs.length > 0 ? (
+              <FlatList
+                data={labs}
+                renderItem={({ item }) => <ItemComponent item={item} />}
+                keyExtractor={(item) => item.labId.toString()}
+                style={styles.flatList}
+                contentContainerStyle={{
+                  alignItems: 'stretch',
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : (
+              <Text style={styles.text}>No labs found</Text>
+            )
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

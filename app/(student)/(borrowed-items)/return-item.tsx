@@ -1,5 +1,5 @@
-import { StyleSheet, Pressable, Button } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { StyleSheet, Button, Alert, ActivityIndicator } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -8,13 +8,16 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import React, { useState } from 'react';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function ReturnItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
   if (!reservationId) throw new Error('Missing reservationId');
   const [scanned, setScanned] = useState(false);
-  const [scannedValue, setScannedValue] = useState('');
   const [permission, requestPermission] = useCameraPermissions();
+  const [qrValue, setQrValue] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!permission) return <View />;
 
@@ -32,29 +35,58 @@ export default function ReturnItemScreen() {
   const handleBarCodeScanned = ({ data }: { data: string }) => {
     if (data) {
       setScanned(true);
-      setScannedValue(data);
+      setQrValue(data);
     }
   };
 
-  const handleResult = () => {
-    if (scannedValue) {
-      try {
-        const { verifyToken } = JSON.parse(scannedValue);
-        console.log(verifyToken);
-        return (
-          <Text style={styles.resulttext}>
-            {'Successfully, verified returning item'}
-          </Text>
-        );
-      } catch (e) {
-        return (
-          <Text style={styles.resulttext}>
-            {'Invalid QR code. Please scan a valid QR code'}
-          </Text>
-        );
-      }
+  const makeRequest = async (qrValue: string) => {
+    try {
+      setLoading(true);
+      await initializeAxiosApi();
+      await axiosApi.patch(
+        `/student/reservations/${reservationId}/verify?token=${qrValue}`,
+        {},
+      );
+      Alert.alert('Success', 'Successfully Updated');
+      router.replace('/(student)/(borrowed-items)/return-item');
+    } catch (e: any) {
+      setError(e.response.data);
+      Alert.alert('Error', e.response.data);
+    } finally {
+      setLoading(false);
     }
-    return <Text style={styles.resulttext}>No QR code scanned</Text>;
+  };
+
+  const handleScanning = () => {
+    if (qrValue) {
+      return (
+        <View>
+          <Text
+            style={[
+              styles.helpText,
+              error ? { color: 'red' } : { color: 'white' },
+            ]}
+          >
+            {error ? error : 'Scan QR Code'}
+          </Text>
+          {loading ? (
+            <ActivityIndicator />
+          ) : (
+            <Button
+              onPress={() => {
+                makeRequest(qrValue);
+              }}
+              title='Verify Returning Item'
+            />
+          )}
+        </View>
+      );
+    } else
+      return (
+        <View>
+          <Text style={styles.helpText}>{error ? error : 'Scan QR Code'}</Text>
+        </View>
+      );
   };
 
   return (
@@ -63,6 +95,7 @@ export default function ReturnItemScreen() {
       <ClerkReservationsHorizontalBar selectedIndex={1} />
       <ContentContainer>
         <View style={styles.container}>
+          <ContentContainerHeader title='Verify Returning Item' />
           <View style={styles.camerabox}>
             <CameraView
               barcodeScannerSettings={{
@@ -92,8 +125,7 @@ export default function ReturnItemScreen() {
               />
             )}
           </View>
-          <View style={styles.textbox}>{handleResult()}</View>
-          <ContentContainerHeader title='Verify Returning Item' />
+          <View style={styles.textbox}>{handleScanning()}</View>
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -151,6 +183,11 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     fontFamily: 'monospace',
     padding: 20,
+  },
+  helpText: {
+    color: 'white',
+    padding: 10,
+    alignSelf: 'center',
   },
   textbox: {
     borderTopColor: 'blue',

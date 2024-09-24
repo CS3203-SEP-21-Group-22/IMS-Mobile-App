@@ -56,6 +56,7 @@ export default function ViewEquipmentsScreen() {
       params: { labId: labId },
     });
   };
+
   const ItemComponent: React.FC<{ item: Equipment }> = ({ item }) => (
     <Link
       href={{

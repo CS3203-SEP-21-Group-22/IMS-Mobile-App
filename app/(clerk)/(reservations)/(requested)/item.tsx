@@ -1,5 +1,12 @@
-import { StyleSheet, TextInput, ScrollView } from 'react-native';
-import { useLocalSearchParams, router } from 'expo-router';
+import {
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+  Button,
+  TextInput,
+} from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
@@ -8,73 +15,91 @@ import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBa
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import SingleItemWithImage from '@/components/SingleItemWithImage';
-import { Dropdown } from 'react-native-element-dropdown';
 import { useState, useEffect } from 'react';
+import { ReservationDetailed } from '@/interfaces/reservation.interface';
+import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
+import { Item } from '@/interfaces/item.interface';
+import { Dropdown } from 'react-native-element-dropdown';
 import ShortButtonsBar from '@/components/ShortButtonsBar';
-
-interface Reservation {
-  id: number | null;
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  user: string | null;
-  fromDate: string | null;
-  toDate: string | null;
-  requestedAt: string | null;
-  imageURL?: string | null;
-}
-
-interface Item {
-  id: number;
-  serialNumber: string;
-}
-
-const handleAccept = () => {
-  router.replace('/(clerk)/(reservations)/(requested)/items');
-};
-
-const handleReject = () => {
-  router.replace('/(clerk)/(reservations)/(requested)/items');
-};
 
 export default function ViewRequestedItemScreen() {
   const { reservationId } = useLocalSearchParams<{ reservationId: string }>();
-  const [reservation, setReservation] = useState<Reservation>({
-    id: null,
-    name: null,
-    model: null,
-    lab: null,
-    user: null,
-    fromDate: null,
-    toDate: null,
-    requestedAt: null,
-    imageURL: null,
-  });
+  if (!reservationId) throw new Error('Missing reservationId');
+  const [reservation, setReservation] = useState<ReservationDetailed | null>(
+    null,
+  );
   const [itemsList, setItemsList] = useState<Item[]>([]);
-  useEffect(() => {
-    if (reservationId) {
-      setReservation({
-        id: parseInt(reservationId),
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        user: 'John Doe',
-        fromDate: '2024-08-02',
-        toDate: '2024-08-02',
-        requestedAt: '2024-08-02 12:03',
-        imageURL: null,
-      });
-      setItemsList([
-        { id: 1, serialNumber: 'FOC1234X56Y' },
-        { id: 2, serialNumber: 'FOC1234X56Z' },
-        { id: 3, serialNumber: 'FOC1234X56A' },
-      ]);
-    } else {
-      throw new Error('Reservation ID is required');
+  const [note, setNote] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [resposeLoading, setResponseLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [responseErrors, setResponseErrors] = useState<[string, string][]>([]);
+
+  const fetchData = async () => {
+    try {
+      const resvResponse = await axiosApi.get(
+        `/user/reservations/${reservationId}`,
+      );
+      setReservation(resvResponse.data);
+      const itemsResponse = await axiosApi.get(
+        `/user/items?equipmentId=${resvResponse.data.equipmentId}`,
+      );
+      setItemsList(itemsResponse.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  // Initialize Axios and fetch data on component mount
+  useEffect(() => {
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, [reservationId]);
 
-  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const handleAccept = async () => {
+    setResponseLoading(true);
+    try {
+      await axiosApi.patch(`/clerk/reservations/${reservationId}`, {
+        itemId: selectedItem?.itemId,
+        accepted: true,
+      });
+      router.replace('/(clerk)/(reservations)/(requested)/items');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setResponseErrors(Object.entries(err.response.data.errors));
+      }
+      Alert.alert('Error', err.message);
+    } finally {
+      setResponseLoading(false);
+    }
+  };
+
+  const handleReject = async () => {
+    setResponseLoading(true);
+    try {
+      await axiosApi.patch(`/clerk/reservations/${reservationId}`, {
+        rejectNote: note && note.length > 0 ? note : null,
+        accepted: false,
+      });
+      router.replace('/(clerk)/(reservations)/(requested)/items');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setResponseErrors(Object.entries(err.response.data.errors));
+      }
+      Alert.alert('Error', err.message);
+    } finally {
+      setResponseLoading(false);
+    }
+  };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Reservations' />
@@ -82,56 +107,101 @@ export default function ViewRequestedItemScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Item Request' />
-          <SingleItemBackground>
-            <ScrollView>
-              <SingleItemWithImage
-                title={reservation.name ?? ''}
-                link={reservation.imageURL ?? 'equipment'}
-              >
-                <Text style={styles.text}>Model: {reservation.model}</Text>
-                <Text style={styles.text}>Lab: {reservation.lab}</Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Requested By: {reservation.user}
-                </Text>
-                <Text style={styles.text}>From: {reservation.fromDate}</Text>
-                <Text style={styles.text}>To: {reservation.toDate}</Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>
-                  Requested At: {reservation.requestedAt}
-                </Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>Assigned Item:</Text>
-                <Dropdown
-                  data={itemsList}
-                  mode='modal'
-                  search
-                  searchPlaceholder='Search Item'
-                  labelField='serialNumber'
-                  valueField='id'
-                  onChange={(item) => setSelectedItem(item)}
-                  style={styles.dropdown}
-                  placeholder={
-                    selectedItem ? selectedItem.serialNumber : 'Select Item'
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : reservation ? (
+            <SingleItemBackground>
+              <ScrollView>
+                <SingleItemWithImage
+                  title={
+                    reservation.itemName
+                      ? reservation.itemName +
+                        ' (' +
+                        reservation.itemModel +
+                        ')'
+                      : ''
                   }
-                  placeholderStyle={styles.dropdownText}
-                  selectedTextStyle={styles.dropdownText}
-                />
-                <TextInput
-                  style={styles.multilineInput}
-                  placeholder='Notes'
-                  multiline
-                />
-                <View style={styles.textSeparator} />
-                <ShortButtonsBar
-                  primaryButtonText='Assign'
-                  secondaryButtonText='Reject'
-                  primaryButtonClickHandler={handleAccept}
-                  secondaryButtonClickHandler={handleReject}
-                />
-              </SingleItemWithImage>
-            </ScrollView>
-          </SingleItemBackground>
+                  link={reservation.imageUrl ?? 'equipment'}
+                >
+                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Requested By: {reservation.reservedUserName}
+                  </Text>
+                  <Text style={styles.text}>
+                    From: {reservation.startDate.split('T')[0]}
+                  </Text>
+                  <Text style={styles.text}>
+                    To: {reservation.endDate.split('T')[0]}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>
+                    Requested At: {reservation.createdAt.split('T')[0]}{' '}
+                    {reservation.createdAt
+                      .split('T')[1]
+                      .split('.')[0]
+                      .slice(0, 5)}
+                  </Text>
+                  <View style={styles.textSeparator} />
+                  <Text style={styles.text}>Select item to assign: </Text>
+                  <Dropdown
+                    data={itemsList}
+                    mode='modal'
+                    search
+                    searchPlaceholder='Search Item'
+                    labelField='serialNumber'
+                    valueField='itemId'
+                    onChange={(item) => setSelectedItem(item)}
+                    style={styles.dropdown}
+                    placeholder={
+                      selectedItem ? selectedItem.serialNumber : 'Select Item'
+                    }
+                    placeholderStyle={styles.dropdownText}
+                    selectedTextStyle={styles.dropdownText}
+                  />
+                  {responseErrors
+                    .filter(([key, value]) => key === 'itemId')
+                    .map(([key, value]) => (
+                      <Text key={key} style={styles.errorText}>
+                        {value}
+                      </Text>
+                    ))}
+                  <View style={styles.textSeparator} />
+                  <TextInput
+                    style={styles.multilineInput}
+                    placeholder='Reject Note'
+                    value={note ? note.toString() : ''}
+                    onChangeText={(text) => setNote(text)}
+                    multiline
+                  />
+                  {responseErrors
+                    .filter(([key, value]) => key === 'rejectNote')
+                    .map(([key, value]) => (
+                      <Text key={key} style={styles.errorText}>
+                        {value}
+                      </Text>
+                    ))}
+                  <View style={styles.textSeparator} />
+                  {resposeLoading ? (
+                    <ActivityIndicator size='large' color='#ffffff' />
+                  ) : (
+                    <ShortButtonsBar
+                      primaryButtonText='Assign'
+                      secondaryButtonText='Reject'
+                      primaryButtonClickHandler={handleAccept}
+                      secondaryButtonClickHandler={handleReject}
+                    />
+                  )}
+                  <View style={styles.textSeparator} />
+                </SingleItemWithImage>
+              </ScrollView>
+            </SingleItemBackground>
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -151,13 +221,18 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: 'bold',
   },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
+  },
   text: {
     color: 'white',
     fontSize: 12,
     marginBottom: '0.2%',
   },
   textSeparator: {
-    marginVertical: '1%',
+    marginVertical: '2%',
     height: 0.1,
     width: '80%',
     backgroundColor: 'transparent',
@@ -184,26 +259,5 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     paddingLeft: '3%',
-  },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: '3%',
-    backgroundColor: 'transparent',
-  },
-  button: {
-    width: '45%',
-    backgroundColor: 'transparent',
-  },
-  buttonBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 15,
-    paddingTop: '4%',
-    paddingBottom: '6%',
   },
 });

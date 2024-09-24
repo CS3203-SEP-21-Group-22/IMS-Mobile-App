@@ -1,72 +1,69 @@
 import {
   StyleSheet,
-  Pressable,
-  TextInput,
-  ImageBackground,
   Image,
   Button,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Text, View } from '@/components/Themed';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import EditSingleItemBackground from '@/components/EditSingleItemBackground';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import WideButton from '@/components/WideButton';
-
-interface Reservation {
-  equipmentId: number | null;
-  startDate: string | null;
-  endDate: string | null;
-}
-
-interface Equipment {
-  id: number | null;
-  name: string | null;
-  model: string | null;
-  lab: string | null;
-  imageURL?: string | null;
-}
+import { CreateReservation } from '@/interfaces/reservation.interface';
+import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
 
 export default function ReserveEquipmentScreen() {
-  const { equipmentId, labId } = useLocalSearchParams<{
-    equipmentId: string;
-    labId: string;
-  }>();
+  const { equipmentId, labId, name, model, labName, imageURL } =
+    useLocalSearchParams<{
+      equipmentId: string;
+      labId: string;
+      name: string;
+      model: string;
+      labName: string;
+      imageURL: string;
+    }>();
+  if (!equipmentId || !labId || !name || !model || !labName) {
+    throw new Error('Missing equipmentId, labId, name, model or labName');
+  }
   const [startDatePickerVisible, setStartDatePickerVisible] = useState(false);
   const [endDatePickerVisible, setEndDatePickerVisible] = useState(false);
-  const [reservation, setReservation] = useState<Reservation>({
-    equipmentId: null,
+  const [reservation, setReservation] = useState<CreateReservation>({
+    equipmentId: parseInt(equipmentId),
     startDate: new Date().toISOString().split('T')[0],
     endDate: new Date().toISOString().split('T')[0],
   });
-  const [equipment, setEquipment] = useState<Equipment>({
-    id: null,
-    name: null,
-    model: null,
-    lab: null,
-    imageURL: null,
-  });
-  useEffect(() => {
-    if (equipmentId) {
-      setReservation({ ...reservation, equipmentId: parseInt(equipmentId) });
-      setEquipment({
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-      });
-    } else {
-      throw new Error('Equipment ID is required');
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState<[string, string][]>([]);
+
+  const handleButtonPress = async () => {
+    try {
+      setLoading(true);
+      await initializeAxiosApi();
+      const response = await axiosApi.post(
+        '/student/reservations',
+        reservation,
+      );
+      if (response.status === 201) {
+        Alert.alert('Success', 'Equipment reserved successfully');
+        router.back();
+      } else Alert.alert('Error', 'Failed to reserve equipment');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setErrors(Object.entries(err.response.data.errors));
+      }
+      Alert.alert('Error', 'Failed to reserve equipment');
+    } finally {
+      setLoading(false);
     }
-  }, [equipmentId]);
-  const handleButtonPress = () => {
-    router.back();
   };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Explore Equipments' />
@@ -80,20 +77,17 @@ export default function ReserveEquipmentScreen() {
             >
               <Text style={styles.title}>Reservation Details</Text>
               <Text style={styles.text}>Equipment</Text>
-              {equipment.imageURL ? (
-                <Image
-                  source={{ uri: equipment.imageURL }}
-                  style={styles.image}
-                />
+              {imageURL ? (
+                <Image source={{ uri: imageURL }} style={styles.image} />
               ) : (
                 <Image
                   source={require('@/assets/images/equipmentSample.png')}
                   style={styles.image}
                 />
               )}
-              <Text style={styles.text}>Name: {equipment.name}</Text>
-              <Text style={styles.text}>Model: {equipment.model}</Text>
-              <Text style={styles.text}>Lab: {equipment.lab}</Text>
+              <Text style={styles.text}>Name: {name}</Text>
+              <Text style={styles.text}>Model: {model}</Text>
+              <Text style={styles.text}>Lab: {labName}</Text>
               <View
                 style={{
                   flexDirection: 'row',
@@ -156,6 +150,13 @@ export default function ReserveEquipmentScreen() {
                     />
                   )}
                 </View>
+                {errors
+                  .filter(([key, value]) => key === 'startDate')
+                  .map(([key, value]) => (
+                    <Text key={key} style={styles.errorText}>
+                      {value}
+                    </Text>
+                  ))}
                 <View
                   style={{
                     width: '50%',
@@ -207,11 +208,39 @@ export default function ReserveEquipmentScreen() {
                     />
                   )}
                 </View>
+                {errors
+                  .filter(([key, value]) => key === 'endDate')
+                  .map(([key, value]) => (
+                    <Text key={key} style={styles.errorText}>
+                      {value}
+                    </Text>
+                  ))}
               </View>
+              {errors
+                .filter(
+                  ([key, value]) =>
+                    key !== 'startDate' &&
+                    key !== 'endDate' &&
+                    key !== 'equipmentId',
+                )
+                .map(([key, value]) => (
+                  <Text key={key} style={styles.errorText}>
+                    {value}
+                  </Text>
+                ))}
               <View style={styles.separator} />
             </ScrollView>
           </EditSingleItemBackground>
-          <WideButton text='Request' buttonClickHandler={handleButtonPress} />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : errors.length > 0 ? (
+            <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
+          ) : (
+            <WideButton
+              text='Reserve Equipment'
+              buttonClickHandler={handleButtonPress}
+            />
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -235,6 +264,11 @@ const styles = StyleSheet.create({
   separator: {
     marginVertical: '1%',
     width: '80%',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
   },
   text: {
     fontSize: 13,
