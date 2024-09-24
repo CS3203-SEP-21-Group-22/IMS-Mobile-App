@@ -77,39 +77,59 @@ export default function ViewBorrowedItemScreen() {
             <SingleItemBackground>
               <ScrollView>
                 <SingleItemWithImage
-                  title={reservation.itemName ?? ''}
+                  title={
+                    reservation.itemName
+                      ? reservation.itemName +
+                        ' (' +
+                        reservation.itemModel +
+                        ')'
+                      : ''
+                  }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>
-                    Model: {reservation.itemModel}
-                  </Text>
                   <Text style={styles.text}>Lab: {reservation.labName}</Text>
                   <View style={styles.textSeparator} />
                   <Text style={styles.text}>
                     Requested By: {reservation.reservedUserName}
                   </Text>
-                  <Text style={styles.text}>From: {reservation.startDate}</Text>
-                  <Text style={styles.text}>To: {reservation.endDate}</Text>
+                  <Text style={styles.text}>
+                    From: {reservation.startDate.split('T')[0]}
+                  </Text>
+                  <Text style={styles.text}>
+                    To: {reservation.endDate.split('T')[0]}
+                  </Text>
                   <View style={styles.textSeparator} />
                   <Text style={styles.text}>
-                    Requested At: {reservation.createdAt}
+                    Requested At: {reservation.createdAt.split('T')[0]}{' '}
+                    {reservation.createdAt
+                      .split('T')[1]
+                      .split('.')[0]
+                      .slice(0, 5)}
                   </Text>
                   <View style={styles.textSeparator} />
                   <Text style={styles.text}>
                     Assigned Item: {reservation.itemSerialNumber}
                   </Text>
                   <Text style={styles.text}>
-                    Assigned By: {reservation.reservedUserName}
+                    Assigned By: {reservation.respondedClerkName}
                   </Text>
                   <Text style={styles.text}>
-                    Assigned At: {reservation.respondedAt}
+                    Assigned At: {reservation.respondedAt?.split('T')[0]}{' '}
+                    {reservation.respondedAt
+                      ?.split('T')[1]
+                      .split('.')[0]
+                      .slice(0, 5)}
                   </Text>
                   <View style={styles.textSeparator} />
                   <Text style={styles.text}>
-                    Borrowed From: {reservation.lentClerkId}
+                    Borrowed From: {reservation.lentClerkName}
                   </Text>
                   <Text style={styles.text}>
-                    Borrowed At: {reservation.borrowedAt}
+                    Borrowed At: {reservation.borrowedAt?.split('T')[0]}{' '}
+                    {reservation.borrowedAt
+                      ?.split('T')[1]
+                      .split('.')[0]
+                      .slice(0, 5)}
                   </Text>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
@@ -120,7 +140,7 @@ export default function ViewBorrowedItemScreen() {
           )}
           {reservation && reservation.status === 'Borrowed' && (
             <WideButton
-              text='Return Item'
+              text='Accept Item'
               buttonClickHandler={() => handleReturn({ item: reservation })}
             />
           )}

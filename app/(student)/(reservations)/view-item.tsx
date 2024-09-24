@@ -118,12 +118,16 @@ export default function ViewReservedItemScreen() {
             <SingleItemBackground>
               <ScrollView>
                 <SingleItemWithImage
-                  title={reservation.itemName ?? ''}
+                  title={
+                    reservation.itemName
+                      ? reservation.itemName +
+                        ' (' +
+                        reservation.itemModel +
+                        ')'
+                      : ''
+                  }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>
-                    Model: {reservation.itemModel}
-                  </Text>
                   {reservation.itemSerialNumber && (
                     <Text style={styles.text}>
                       Serial Number: {reservation.itemSerialNumber}
@@ -145,7 +149,11 @@ export default function ViewReservedItemScreen() {
                   )}
                   {reservation.status === 'Reserved' && (
                     <Text style={styles.text}>
-                      Accepted At: {reservation.respondedAt}
+                      Accepted At: {reservation.respondedAt?.split('T')[0]}{' '}
+                      {reservation.respondedAt
+                        ?.split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
                     </Text>
                   )}
                   <Text style={styles.text}>Status: {reservation.status}</Text>

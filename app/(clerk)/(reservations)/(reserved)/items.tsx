@@ -14,6 +14,7 @@ import MainHeader from '@/components/MainHeader';
 import ClerkReservationsHorizontalBar from '@/components/ClerkReservHorizontalBar';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
+import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
 import { Reservation } from '@/interfaces/reservation.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
@@ -29,42 +30,19 @@ const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
     <Pressable>
       {({ pressed }) => (
         <ListItemBackground>
-          <Text style={styles.titleText}>{item.itemName}</Text>
-          <Text style={styles.text}>Model: {item.itemModel}</Text>
-          {item.itemSerialNumber ? (
+          <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
+            <Text style={styles.titleText}>
+              {item.itemName} ({item.itemModel})
+            </Text>
             <Text style={styles.text}>
               Serial Number: {item.itemSerialNumber}
             </Text>
-          ) : null}
-          <Text style={styles.text}>Lab: {item.labName}</Text>
-          <Text style={styles.text}>Reserved By: {item.reservedUserName}</Text>
-          <Text style={styles.text}>
-            From Date: {item.startDate.split('T')[0]}
-          </Text>
-          <Text style={styles.text}>To Date: {item.endDate.split('T')[0]}</Text>
-          <Text style={styles.text}>
-            Requested At: {item.createdAt.split('T')[0]}{' '}
-            {item.createdAt?.split('T')[1].split('.')[0].slice(0, 5)}
-          </Text>
-          {item.status === 'Reserved' ? (
+            <Text style={styles.text}>Lab: {item.labName}</Text>
             <Text style={styles.text}>
-              Responded At: {item.respondedAt?.split('T')[0]}{' '}
-              {item.respondedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+              From: {item.startDate.split('T')[0]} To:{' '}
+              {item.endDate.split('T')[0]}
             </Text>
-          ) : null}
-          {item.status === 'Rejected' ? (
-            <Text style={styles.text}>Responded At: {item.respondedAt}</Text>
-          ) : null}
-          {item.status === 'Borrowed' ? (
-            <Text style={styles.text}>Borrowed At: {item.borrowedAt}</Text>
-          ) : null}
-          {item.status === 'Returned' ? (
-            <Text style={styles.text}>Returned At: {item.returnedAt}</Text>
-          ) : null}
-          {item.status === 'Canceled' ? (
-            <Text style={styles.text}>Cancelled At: {item.cancelledAt}</Text>
-          ) : null}
-          <Text style={styles.text}>Status: {item.status}</Text>
+          </ListItemWithImage>
         </ListItemBackground>
       )}
     </Pressable>

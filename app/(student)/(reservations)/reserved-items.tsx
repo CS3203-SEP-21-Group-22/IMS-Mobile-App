@@ -86,7 +86,7 @@ export default function ReservedItemsScreen() {
       <MainHeader title='Reservations' />
       <ContentContainer>
         <View style={styles.container}>
-          <ContentContainerHeader title='Reserved Items' />
+          <ContentContainerHeader title='Reservation Requests' />
           {loading ? (
             <ActivityIndicator size='large' color='#ffffff' />
           ) : error ? (

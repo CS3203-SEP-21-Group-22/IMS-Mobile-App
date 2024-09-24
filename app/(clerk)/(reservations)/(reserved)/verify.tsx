@@ -76,7 +76,7 @@ export default function VerifyBorrowingItemScreen() {
               onPress={() => {
                 makeRequest(qrValue);
               }}
-              title='Verify Borrowing Item'
+              title='Verify Lending Item'
             />
           )}
         </View>
@@ -95,7 +95,7 @@ export default function VerifyBorrowingItemScreen() {
       <ClerkReservationsHorizontalBar selectedIndex={1} />
       <ContentContainer>
         <View style={styles.container}>
-          <ContentContainerHeader title='Verify Borrowing Item' />
+          <ContentContainerHeader title='Verify Lending Item' />
           <View style={styles.camerabox}>
             <CameraView
               barcodeScannerSettings={{

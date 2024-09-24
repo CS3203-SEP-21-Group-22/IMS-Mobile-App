@@ -59,13 +59,16 @@ export default function BorrowedItemsScreen() {
         {({ pressed }) => (
           <ListItemBackground>
             <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
-              <Text style={styles.titleText}>{item.itemName}</Text>
-              <Text style={styles.text}>Model: {item.itemModel}</Text>
+              <Text style={styles.titleText}>
+                {item.itemName} ({item.itemModel})
+              </Text>
               <Text style={styles.text}>
                 Serial Number: {item.itemSerialNumber}
               </Text>
               <Text style={styles.text}>Lab: {item.labName}</Text>
-              <Text style={styles.text}>Due Date: {item.endDate}</Text>
+              <Text style={styles.text}>
+                Due Date: {item.endDate.split('T')[0]}
+              </Text>
             </ListItemWithImage>
           </ListItemBackground>
         )}

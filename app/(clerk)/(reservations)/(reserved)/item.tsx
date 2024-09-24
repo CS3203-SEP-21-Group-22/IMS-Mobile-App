@@ -77,12 +77,16 @@ export default function ViewReservedItemScreen() {
             <SingleItemBackground>
               <ScrollView>
                 <SingleItemWithImage
-                  title={reservation.itemName ?? ''}
+                  title={
+                    reservation.itemName
+                      ? reservation.itemName +
+                        ' (' +
+                        reservation.itemModel +
+                        ')'
+                      : ''
+                  }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>
-                    Model: {reservation.itemModel}
-                  </Text>
                   <Text style={styles.text}>Lab: {reservation.labName}</Text>
                   <View style={styles.textSeparator} />
                   <Text style={styles.text}>
@@ -123,7 +127,7 @@ export default function ViewReservedItemScreen() {
           ) : null}
           {reservation && reservation.status === 'Reserved' ? (
             <WideButton
-              text='Borrow'
+              text='Lend Item'
               buttonClickHandler={() => handleVerify({ item: reservation })}
             />
           ) : null}

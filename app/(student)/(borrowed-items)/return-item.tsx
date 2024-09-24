@@ -48,7 +48,10 @@ export default function ReturnItemScreen() {
         {},
       );
       Alert.alert('Success', 'Successfully Updated');
-      router.replace('/(student)/(borrowed-items)/return-item');
+      router.replace({
+        pathname: '/(student)/(borrowed-items)/return-item',
+        params: { reservationId },
+      });
     } catch (e: any) {
       setError(e.response.data);
       Alert.alert('Error', e.response.data);

@@ -74,9 +74,13 @@ export default function ViewRequestedItemScreen() {
       router.replace('/(clerk)/(reservations)/(requested)/items');
     } catch (err: any) {
       if (err.response.status === 400) {
-        setResponseErrors(Object.entries(err.response.data.errors));
+        if (err.response.data.errors == null) {
+          setResponseErrors([['', err.response.data]]);
+        } else {
+          setResponseErrors(Object.entries(err.response.data.errors));
+        }
       }
-      Alert.alert('Error', err.message);
+      Alert.alert('Error', 'Failed to assign item');
     } finally {
       setResponseLoading(false);
     }
@@ -92,9 +96,13 @@ export default function ViewRequestedItemScreen() {
       router.replace('/(clerk)/(reservations)/(requested)/items');
     } catch (err: any) {
       if (err.response.status === 400) {
-        setResponseErrors(Object.entries(err.response.data.errors));
+        if (err.response.data.errors == null) {
+          setResponseErrors([['', err.response.data]]);
+        } else {
+          setResponseErrors(Object.entries(err.response.data.errors));
+        }
       }
-      Alert.alert('Error', err.message);
+      Alert.alert('Error', 'Failed to reject item');
     } finally {
       setResponseLoading(false);
     }
@@ -167,11 +175,14 @@ export default function ViewRequestedItemScreen() {
                   {responseErrors
                     .filter(([key, value]) => key === 'itemId')
                     .map(([key, value]) => (
-                      <Text key={key} style={styles.errorText}>
-                        {value}
-                      </Text>
+                      <View key={key}>
+                        <Text key={key} style={styles.errorText}>
+                          {value}
+                        </Text>
+                        <View style={styles.textSeparator} />
+                      </View>
                     ))}
-                  <View style={styles.textSeparator} />
+
                   <TextInput
                     style={styles.multilineInput}
                     placeholder='Reject Note'
@@ -185,6 +196,19 @@ export default function ViewRequestedItemScreen() {
                       <Text key={key} style={styles.errorText}>
                         {value}
                       </Text>
+                    ))}
+                  {responseErrors
+                    .filter(
+                      ([key, value]) =>
+                        key !== 'itemId' && key !== 'rejectNote',
+                    )
+                    .map(([key, value]) => (
+                      <View key={key}>
+                        <View style={styles.textSeparator} />
+                        <Text key={key} style={styles.errorText}>
+                          {value}
+                        </Text>
+                      </View>
                     ))}
                   <View style={styles.textSeparator} />
                   {resposeLoading ? (

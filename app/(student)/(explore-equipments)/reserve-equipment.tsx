@@ -51,14 +51,18 @@ export default function ReserveEquipmentScreen() {
         reservation,
       );
       if (response.status === 201) {
-        Alert.alert('Success', 'Equipment reserved successfully');
+        Alert.alert('Success', 'Equipment requested successfully');
         router.back();
-      } else Alert.alert('Error', 'Failed to reserve equipment');
+      } else Alert.alert('Error', 'Failed to request equipment');
     } catch (err: any) {
       if (err.response.status === 400) {
-        setErrors(Object.entries(err.response.data.errors));
+        if (err.response.data.errors == null) {
+          setErrors([['', err.response.data]]);
+        } else {
+          setErrors(Object.entries(err.response.data.errors));
+        }
       }
-      Alert.alert('Error', 'Failed to reserve equipment');
+      Alert.alert('Error', 'Failed to request equipment');
     } finally {
       setLoading(false);
     }
