@@ -6,6 +6,8 @@ import {
   Image,
   Button,
   ScrollView,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Link, router, useLocalSearchParams } from 'expo-router';
@@ -17,64 +19,77 @@ import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import ClerkMaintenancesHorizontalBar from '@/components/ClerkMaintHorizontalBar';
 import React, { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
-
-interface Maintenance {
-  name: string | null;
-  model: string | null;
-  serialNumber: string | null;
-  lab: string | null;
-  startDate: string | null;
-  endDate: string | null;
-  assignedTechnician: string | null;
-  taskDescription: string | null;
-  status: string | null;
-  submitNote?: string | null;
-  reviewNote?: string | null;
-  reviewedBy?: string | null;
-}
+import { MaintenanceDetailed } from '@/interfaces/maintenance.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function UpdateMaintenanceScreen() {
   const { maintenanceId } = useLocalSearchParams<{ maintenanceId: string }>();
-  const [maintenance, setMaintenance] = useState<Maintenance>({
-    name: null,
-    model: null,
-    serialNumber: null,
-    lab: null,
-    startDate: null,
-    endDate: null,
-    assignedTechnician: null,
-    taskDescription: null,
-    status: null,
-    submitNote: null,
-    reviewNote: null,
-    reviewedBy: null,
-  });
-  useEffect(() => {
-    if (maintenanceId) {
-      setMaintenance({
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        serialNumber: 'FOC1234X56Y',
-        lab: 'Network Lab',
-        startDate: '2021-09-01',
-        endDate: '2021-09-02',
-        assignedTechnician: 'John Doe',
-        taskDescription: 'Check the network connection',
-        status: 'Under Review',
-        submitNote: 'The router was repaired',
-        reviewNote: 'The router was repaired',
-        reviewedBy: 'Jane Doe',
-      });
-    } else {
-      throw new Error('Maintenance ID not found');
+  if (!maintenanceId) throw new Error('Missing maintenanceId');
+  const [maintenance, setMaintenance] = useState<MaintenanceDetailed | null>(
+    null,
+  );
+  const [updateData, setUpdateData] = useState<{
+    reviewNote: string | null;
+    accepted: boolean;
+  }>({ reviewNote: null, accepted: false });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [updateLoading, setUpdateLoading] = useState(false);
+  const [errors, setErrors] = useState<[string, string][]>([]);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/user/maintenance/${maintenanceId}`);
+      setMaintenance(response.data);
+      if (response.data.reviewNote) {
+        setUpdateData({
+          reviewNote: response.data.reviewNote,
+          accepted: updateData.accepted,
+        });
+      }
+    } catch (err: any) {
+      setError(err.message);
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
     }
-  }, [maintenanceId]);
-  const updateMaintenance = ({ completed }: { completed: boolean }) => {
-    router.replace({
-      pathname: '/(clerk)/(maintenances)/(ongoing)/view-maintenance',
-      params: { maintenanceId: '1' },
-    });
   };
+
+  // Initialize Axios and fetch data on component mount
+  useEffect(() => {
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
+  }, []);
+
+  const updateMaintenance = async ({ accepted }: { accepted: boolean }) => {
+    setUpdateLoading(true);
+    try {
+      const response = await axiosApi.patch(
+        `/clerk/maintenance/${maintenanceId}`,
+        { ...updateData, accepted },
+      );
+      Alert.alert('Success', 'Maintenance updated successfully');
+      router.replace({
+        pathname: '/(clerk)/(maintenances)/(ongoing)/view-maintenance',
+        params: { maintenanceId: maintenanceId },
+      });
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        if (err.response.data.errors == null) {
+          setErrors([['', err.response.data]]);
+        } else {
+          setErrors(Object.entries(err.response.data.errors));
+        }
+      }
+    } finally {
+      setUpdateLoading(false);
+    }
+  };
+
   return (
     <BackgroundLayout>
       <MainHeader title='Maintenances' />
@@ -82,68 +97,125 @@ export default function UpdateMaintenanceScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Review Maintenance' />
-          <EditSingleItemBackground>
-            <ScrollView
-              style={{ width: '95%' }}
-              contentContainerStyle={{ alignItems: 'center' }}
-            >
-              <Text style={styles.title}>Maintenance Details</Text>
-              <Text style={styles.text}>Name: {maintenance.name}</Text>
-              <Text style={styles.text}>Model: {maintenance.model}</Text>
-              <Text style={styles.text}>Lab: {maintenance.lab}</Text>
-              <Text style={styles.text}>
-                Serial Number: {maintenance.serialNumber}
-              </Text>
-              <View style={styles.separator} />
-              <Text style={styles.text}>
-                Task Description: {maintenance.taskDescription}
-              </Text>
-              <Text style={styles.text}>
-                Assigned To: {maintenance.assignedTechnician}
-              </Text>
-              <Text style={styles.text}>
-                Start Date: {maintenance.startDate}
-              </Text>
-              <Text style={styles.text}>End Date: {maintenance.endDate}</Text>
-              <View style={styles.separator} />
-              <Text style={styles.text}>Status: {maintenance.status}</Text>
-              <Text style={styles.text}>
-                Submit Note: {maintenance.submitNote}
-              </Text>
-              <View style={styles.separator} />
-              <TextInput
-                style={styles.textInput}
-                multiline
-                placeholder={
-                  maintenance.reviewNote
-                    ? maintenance.reviewNote
-                    : 'Review Note'
-                }
-                value={
-                  maintenance.reviewNote
-                    ? maintenance.reviewNote
-                    : 'Review Note'
-                }
-                onChangeText={(text) =>
-                  setMaintenance({ ...maintenance, reviewNote: text })
-                }
-              />
-              {maintenance.reviewedBy && (
-                <Text style={styles.text}>
-                  Reviewed By: {maintenance.reviewedBy}
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : maintenance ? (
+            <EditSingleItemBackground>
+              <ScrollView
+                style={{ width: '95%' }}
+                contentContainerStyle={{ alignItems: 'center' }}
+              >
+                <Text style={styles.title}>
+                  {maintenance.itemName} ({maintenance.itemModel})
                 </Text>
-              )}
-              <View style={styles.separator} />
-            </ScrollView>
-          </EditSingleItemBackground>
-          <WideButton
-            text='Update Review'
-            buttonClickHandler={() => updateMaintenance({ completed: false })}
-          />
-          <WideButton
-            text='Mark as Completed'
-            buttonClickHandler={() => updateMaintenance({ completed: true })}
-          />
+                <View style={styles.separator} />
+                <Text style={styles.text}>
+                  Serial Number: {maintenance.itemSerialNumber}
+                </Text>
+                <Text style={styles.text}>Lab: {maintenance.labName}</Text>
+                <View style={styles.separator} />
+                <Text style={styles.text}>
+                  From: {maintenance.startDate.split('T')[0]} To:{' '}
+                  {maintenance.endDate.split('T')[0]}
+                </Text>
+                <Text style={[styles.descriptionText, { width: '90%' }]}>
+                  Task Description: {maintenance.taskDescription}
+                </Text>
+                <View style={styles.separator} />
+                <Text style={styles.text}>
+                  Assigned By: {maintenance.createdClerkName}
+                </Text>
+                <View style={styles.separator} />
+                {maintenance.reviewNote && (
+                  <Text style={styles.text}>
+                    Review Note: {maintenance.reviewNote}
+                  </Text>
+                )}
+                {maintenance.reviewedClerkName && (
+                  <Text style={styles.text}>
+                    Reviewed By: {maintenance.reviewedClerkName}
+                  </Text>
+                )}
+                {maintenance.reviewedAt && (
+                  <Text style={styles.text}>
+                    Reviewed At: {maintenance.reviewedAt.split('T')[0]}{' '}
+                    {maintenance.reviewedAt
+                      .split('T')[1]
+                      .split('.')[0]
+                      .slice(0, 5)}
+                  </Text>
+                )}
+                <View style={styles.separator} />
+                <Text style={styles.text}>Status: {maintenance.status}</Text>
+                {maintenance.reviewNote && (
+                  <>
+                    <View style={styles.separator} />
+                    <Text style={styles.descriptionText}>
+                      Review: {maintenance.reviewNote}
+                    </Text>
+                  </>
+                )}
+                <Text style={styles.descriptionText}>
+                  Submit Note: {maintenance.submitNote}
+                </Text>
+                <View style={styles.separator} />
+                <TextInput
+                  style={styles.textInput}
+                  multiline
+                  placeholder={
+                    updateData.reviewNote
+                      ? updateData.reviewNote
+                      : 'Review Note'
+                  }
+                  value={updateData.reviewNote ? updateData.reviewNote : ''}
+                  onChangeText={(text) =>
+                    setUpdateData({ ...updateData, reviewNote: text })
+                  }
+                />
+                {errors
+                  .filter(([key, value]) => key === 'reviewNote')
+                  .map(([key, value]) => (
+                    <Text key={key} style={styles.errorText}>
+                      {value}
+                    </Text>
+                  ))}
+                {maintenance.reviewedClerkName && (
+                  <Text style={styles.text}>
+                    Reviewed By: {maintenance.reviewedClerkName}
+                  </Text>
+                )}
+                <View style={styles.separator} />
+                {errors
+                  .filter(([key, value]) => key !== 'reviewNote')
+                  .map(([key, value]) => (
+                    <Text key={key} style={styles.errorText}>
+                      {value}
+                    </Text>
+                  ))}
+              </ScrollView>
+            </EditSingleItemBackground>
+          ) : null}
+          {updateLoading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : (
+            <WideButton
+              text='Update Review'
+              buttonClickHandler={() => updateMaintenance({ accepted: false })}
+            />
+          )}
+          {updateLoading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : (
+            <WideButton
+              text='Mark as Completed'
+              buttonClickHandler={() => updateMaintenance({ accepted: true })}
+            />
+          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -168,9 +240,19 @@ const styles = StyleSheet.create({
     marginVertical: '1%',
     width: '80%',
   },
+  descriptionText: {
+    fontSize: 13,
+    marginTop: '2%',
+    // fontWeight: 'bold',
+  },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
+  },
   text: {
     fontSize: 13,
-    fontWeight: 'bold',
+    // fontWeight: 'bold',
     marginTop: '1%',
   },
   textInput: {

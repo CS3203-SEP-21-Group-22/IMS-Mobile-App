@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, FlatList } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  Button,
+} from 'react-native';
 import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -9,32 +16,28 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import React, { useState, useEffect } from 'react';
-
-interface Maintenance {
-  id: number;
-  name: string;
-  model: string;
-  lab: string;
-  serialNumber: string;
-  imageURL?: string | null;
-}
+import { Maintenance } from '@/interfaces/maintenance.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
   <Link
     href={{
       pathname: '/(clerk)/(maintenances)/(ongoing)/add-maintenance',
-      params: { maintenanceId: item.id },
+      params: { itemId: item.itemId },
     }}
     asChild
   >
     <Pressable>
       {({ pressed }) => (
         <ListItemBackground>
-          <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-            <Text style={styles.titleText}>{item.name}</Text>
-            <Text style={styles.text}>Model: {item.model}</Text>
-            <Text style={styles.text}>Lab: {item.lab}</Text>
-            <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
+          <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
+            <Text style={styles.titleText}>
+              {item.itemName ? item.itemName + ' (' + item.itemModel + ')' : ''}
+            </Text>
+            <Text style={styles.text}>Lab: {item.labName}</Text>
+            <Text style={styles.text}>
+              Serial Number: {item.itemSerialNumber}
+            </Text>
           </ListItemWithImage>
         </ListItemBackground>
       )}
@@ -44,38 +47,31 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
 
 export default function ViewPendingMaintenancesScreen() {
   const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/clerk/maintenance/pending`);
+      setMaintenances(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    setMaintenances([
-      {
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        lab: 'Network Lab',
-        serialNumber: 'FOC1234X56Y',
-      },
-      {
-        id: 2,
-        name: '8-Port Ethernet Switch',
-        model: 'Cisco SG300-10',
-        lab: 'Network Lab',
-        serialNumber: 'FOC1234X56Z',
-      },
-      {
-        id: 3,
-        name: '16-Port Ethernet Switch',
-        model: 'Cisco SG300-20',
-        lab: 'Network Lab',
-        serialNumber: 'FOC1234X56W',
-      },
-      {
-        id: 4,
-        name: '24-Port Ethernet Switch',
-        model: 'Cisco SG300-30',
-        lab: 'Network Lab',
-        serialNumber: 'FOC1234X56V',
-      },
-    ]);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, []);
+
   return (
     <BackgroundLayout>
       <MainHeader title='Maintenances' />
@@ -83,18 +79,31 @@ export default function ViewPendingMaintenancesScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Pending Maintenances' />
-          <FlatList
-            data={maintenances}
-            renderItem={({ item }) => <ItemComponent item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatList}
-            contentContainerStyle={{
-              alignItems: 'stretch',
-              justifyContent: 'center',
-              width: '100%',
-              backgroundColor: 'transparent',
-            }}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : maintenances ? (
+            maintenances.length > 0 ? (
+              <FlatList
+                data={maintenances}
+                renderItem={({ item }) => <ItemComponent item={item} />}
+                keyExtractor={(item) => item.maintenanceId.toString()}
+                style={styles.flatList}
+                contentContainerStyle={{
+                  alignItems: 'stretch',
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : (
+              <Text style={styles.text}>No maintenances found</Text>
+            )
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>

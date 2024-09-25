@@ -56,23 +56,42 @@ export default function ViewReservationsScreen() {
       ) : null}
       <Text style={styles.text}>Lab: {item.labName}</Text>
       <Text style={styles.text}>Reserved By: {item.reservedUserName}</Text>
-      <Text style={styles.text}>From Date: {item.startDate}</Text>
-      <Text style={styles.text}>To Date: {item.endDate}</Text>
-      <Text style={styles.text}>Requested At: {item.createdAt}</Text>
+      <Text style={styles.text}>
+        From: {item.startDate.split('T')[0]} To: {item.endDate.split('T')[0]}
+      </Text>
+      <Text style={styles.text}>
+        Requested At: {item.createdAt.split('T')[0]}{' '}
+        {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
+      </Text>
       {item.status === 'Reserved' ? (
-        <Text style={styles.text}>Responded At: {item.respondedAt}</Text>
+        <Text style={styles.text}>
+          Responded At: {item.respondedAt?.split('T')[0]}{' '}
+          {item.respondedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
       ) : null}
       {item.status === 'Rejected' ? (
-        <Text style={styles.text}>Responded At: {item.respondedAt}</Text>
+        <Text style={styles.text}>
+          Responded At: {item.respondedAt?.split('T')[0]}{' '}
+          {item.respondedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
       ) : null}
       {item.status === 'Borrowed' ? (
-        <Text style={styles.text}>Borrowed At: {item.borrowedAt}</Text>
+        <Text style={styles.text}>
+          Borrowed At: {item.borrowedAt?.split('T')[0]}{' '}
+          {item.borrowedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
       ) : null}
       {item.status === 'Returned' ? (
-        <Text style={styles.text}>Returned At: {item.returnedAt}</Text>
+        <Text style={styles.text}>
+          Returned At: {item.returnedAt?.split('T')[0]}{' '}
+          {item.returnedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
       ) : null}
       {item.status === 'Canceled' ? (
-        <Text style={styles.text}>Cancelled At: {item.cancelledAt}</Text>
+        <Text style={styles.text}>
+          Cancelled At: {item.cancelledAt?.split('T')[0]}{' '}
+          {item.cancelledAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
       ) : null}
       <Text style={styles.text}>Status: {item.status}</Text>
     </ListItemBackground>
@@ -129,12 +148,12 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 11,
   },
   button: {
     width: '100%',

@@ -53,7 +53,7 @@ export default function ViewEquipmentsScreen() {
     <Link
       href={{
         pathname: `/(technician)/(explore-equipments)/view-equipment`,
-        params: { labId: labId },
+        params: { labId: labId, equipmentId: item.equipmentId },
       }}
       asChild
     >

@@ -117,7 +117,6 @@ const LoginLayout = () => {
 
   useEffect(() => {
     if (response) {
-      console.log('response', response);
       handleAuthResponse(response, router);
     }
   }, [response]);

@@ -54,6 +54,10 @@ function MaintenancesCompletedLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name='maintenances' options={{ headerShown: false }} />
+        <Stack.Screen
+          name='view-maintenance'
+          options={{ headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );

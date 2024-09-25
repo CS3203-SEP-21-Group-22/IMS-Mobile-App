@@ -21,7 +21,7 @@ import WideButton from '@/components/WideButton';
 import { MaintenanceDetailed } from '@/interfaces/maintenance.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
-export default function viewOngoingMaintenancesScreen() {
+export default function viewCompletedMaintenanceScreen() {
   const { maintenanceId } = useLocalSearchParams<{ maintenanceId: string }>();
   if (!maintenanceId) throw new Error('Missing maintenanceId');
   const [maintenance, setMaintenance] = useState<MaintenanceDetailed | null>(
@@ -52,17 +52,10 @@ export default function viewOngoingMaintenancesScreen() {
     initializeAndFetch();
   }, []);
 
-  const handleUpdateButtonPress = ({ item }: { item: MaintenanceDetailed }) => {
-    router.replace({
-      pathname: '/(clerk)/(maintenances)/(ongoing)/update-maintenance',
-      params: { maintenanceId: item.maintenanceId },
-    });
-  };
-
   return (
     <BackgroundLayout>
       <MainHeader title='Maintenances' />
-      <ClerkMaintenancesHorizontalBar selectedIndex={1} />
+      <ClerkMaintenancesHorizontalBar selectedIndex={2} />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='View Maintenance' />
@@ -79,34 +72,35 @@ export default function viewOngoingMaintenancesScreen() {
                 style={{ width: '100%' }}
                 contentContainerStyle={{ alignItems: 'center' }}
               >
-                <Text style={styles.titleText}>Maintenance Details</Text>
-                <Text style={styles.text}>Name: {maintenance.itemName}</Text>
-                <Text style={styles.text}>Model: {maintenance.itemModel}</Text>
+                <Text style={styles.title}>
+                  {maintenance.itemName} ({maintenance.itemModel})
+                </Text>
+                <View style={styles.separator} />
                 <Text style={styles.text}>
                   Serial Number: {maintenance.itemSerialNumber}
                 </Text>
                 <Text style={styles.text}>Lab: {maintenance.labName}</Text>
-                <View style={styles.textSeparator} />
+                <View style={styles.separator} />
                 <Text style={styles.text}>
+                  From: {maintenance.startDate.split('T')[0]} To:{' '}
+                  {maintenance.endDate.split('T')[0]}
+                </Text>
+                <View style={styles.separator} />
+                <Text style={[styles.descriptionText, { width: '95%' }]}>
                   Task Description: {maintenance.taskDescription}
                 </Text>
+                <View style={styles.separator} />
                 <Text style={styles.text}>
-                  Assigned To: {maintenance.technicianName}
+                  Assigned By: {maintenance.createdClerkName}
                 </Text>
                 <Text style={styles.text}>
-                  Start Date: {maintenance.startDate.split('T')[0]}
+                  Assigned At: {maintenance.createdAt.split('T')[0]}{' '}
+                  {maintenance.createdAt
+                    .split('T')[1]
+                    .split('.')[0]
+                    .slice(0, 5)}
                 </Text>
-                <Text style={styles.text}>
-                  End Date: {maintenance.endDate.split('T')[0]}
-                </Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>Status: {maintenance.status}</Text>
-                {maintenance.submitNote && (
-                  <Text style={styles.text}>
-                    Submit Note: {maintenance.submitNote}
-                  </Text>
-                )}
-                <View style={styles.textSeparator} />
+                <View style={styles.separator} />
                 {maintenance.reviewNote && (
                   <Text style={styles.text}>
                     Review Note: {maintenance.reviewNote}
@@ -126,15 +120,25 @@ export default function viewOngoingMaintenancesScreen() {
                       .slice(0, 5)}
                   </Text>
                 )}
-                {maintenance && maintenance.status === 'UnderReview' && (
-                  <WideButton
-                    text='Review Maintenance'
-                    buttonClickHandler={() =>
-                      handleUpdateButtonPress({ item: maintenance })
-                    }
-                  />
+                <View style={styles.separator} />
+                <Text style={styles.text}>Status: {maintenance.status}</Text>
+                {maintenance.reviewNote && (
+                  <>
+                    <View style={styles.separator} />
+                    <Text style={styles.descriptionText}>
+                      Review Note: {maintenance.reviewNote}
+                    </Text>
+                  </>
                 )}
-                <View style={styles.textSeparator} />
+                <View style={styles.separator} />
+                {maintenance.cost && (
+                  <Text style={styles.text}>Cost: {maintenance.cost}</Text>
+                )}
+                {maintenance.submitNote && (
+                  <Text style={styles.text}>
+                    Submit Note: {maintenance.submitNote}
+                  </Text>
+                )}
               </ScrollView>
             </SingleItemBackground>
           ) : null}
@@ -158,9 +162,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: '2%',
   },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginTop: '2%',
+    marginBottom: '1%',
+  },
   text: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 11,
     marginBottom: '0.2%',
   },
   textSeparator: {
@@ -216,5 +226,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  descriptionText: {
+    fontSize: 14,
+    // fontWeight: 'bold',
+  },
+  separator: {
+    marginVertical: '1%',
+    width: '80%',
   },
 });

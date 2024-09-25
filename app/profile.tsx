@@ -13,27 +13,24 @@ import {
   setLoginStatusLoggedOut,
   removeTokens,
   clearUserProfile,
+  getUserProfile,
 } from '@/utils/AsyncStorage';
 
 export default function ProfileScreen() {
-  const [user, setUser] = useState<UserProfile>({
-    id: null,
-    firstName: null,
-    lastName: null,
-    email: null,
-    role: null,
-    contactNumber: null,
-  });
+  const [user, setUser] = useState<UserProfile | null>(null);
+
   useEffect(() => {
-    setUser({
-      id: 1,
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'JohnDoe@uok.uk',
-      role: 'Technician',
-      contactNumber: '+4412345673',
-    });
+    const fetchUserProfile = async () => {
+      try {
+        const userProfile: UserProfile = await getUserProfile();
+        setUser(userProfile);
+      } catch (error) {
+        console.error('Error fetching user profile:', error);
+      }
+    };
+    fetchUserProfile();
   }, []);
+
   const handleLogout = async () => {
     await removeTokens();
     await clearUserProfile();
@@ -46,22 +43,24 @@ export default function ProfileScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='User Details' />
-          <SingleItemBackground>
-            <View style={styles.textSeparator} />
-            <View style={styles.textSeparator} />
-            <Text style={styles.titleText}>
-              Name: {user.firstName} {user.lastName}
-            </Text>
-            <View style={styles.textSeparator} />
-            <Text style={styles.text}>Email: {user.email}</Text>
-            <Text style={styles.text}>
-              Contact Number: {user.contactNumber}
-            </Text>
-            <View style={styles.textSeparator} />
-            <Text style={styles.text}>Role: {user.role}</Text>
-            <View style={styles.textSeparator} />
-            <View style={styles.textSeparator} />
-          </SingleItemBackground>
+          {user && (
+            <SingleItemBackground>
+              <View style={styles.textSeparator} />
+              <View style={styles.textSeparator} />
+              <Text style={styles.titleText}>
+                Name: {user.firstName} {user.lastName}
+              </Text>
+              <View style={styles.textSeparator} />
+              <Text style={styles.text}>Email: {user.email}</Text>
+              <Text style={styles.text}>
+                Contact Number: {user.contactNumber}
+              </Text>
+              <View style={styles.textSeparator} />
+              <Text style={styles.text}>Role: {user.role}</Text>
+              <View style={styles.textSeparator} />
+              <View style={styles.textSeparator} />
+            </SingleItemBackground>
+          )}
           <WideButton
             text='Logout'
             buttonClickHandler={handleLogout}
@@ -82,11 +81,11 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   titleText: {
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: 'bold',
   },
   text: {
-    fontSize: 12,
+    fontSize: 14,
     marginBottom: '0.2%',
   },
   textSeparator: {

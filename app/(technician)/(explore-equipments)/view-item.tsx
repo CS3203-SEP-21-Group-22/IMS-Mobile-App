@@ -93,7 +93,8 @@ export default function ViewItemScreen() {
                   </Text>
                   {item.lastMaintenanceOn && (
                     <Text style={styles.text}>
-                      Last Maintenance On: {item.lastMaintenanceOn}
+                      Last Maintenance On:{' '}
+                      {item.lastMaintenanceOn.split('T')[0]}
                     </Text>
                   )}
                   {item.lastMaintenanceBy && (

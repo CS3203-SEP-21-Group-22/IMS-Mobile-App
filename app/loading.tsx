@@ -14,8 +14,6 @@ const LoadingScreen = () => {
       try {
         const status = await getLoginStatus();
         const userProfile: UserProfile = await getUserProfile();
-        console.log('Login status:', status);
-        console.log('user profile', userProfile);
         if (status === 'loggedIn' && userProfile) {
           if (userProfile.role === 'SystemAdmin') {
             router.replace('/(admin)/(user-management)/view-users');

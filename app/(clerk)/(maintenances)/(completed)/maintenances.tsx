@@ -1,4 +1,12 @@
-import { StyleSheet, Pressable, FlatList, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  Pressable,
+  FlatList,
+  ImageBackground,
+  Alert,
+  ActivityIndicator,
+  Button,
+} from 'react-native';
 import { Link, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -9,142 +17,66 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import React, { useState, useEffect } from 'react';
-
-interface Maintenance {
-  id: number;
-  name: string;
-  model: string;
-  serialNumber: string;
-  lab: string;
-  description: string;
-  assignedTo: string;
-  createdBy: string;
-  createdAt: string;
-  submitNote: string;
-  cost: number;
-  returnedAt: string;
-  reviewNote: string;
-  reviewedBy: string;
-  reviewedAt: string;
-  startDate: string;
-  endDate: string;
-  status: string;
-}
+import { Maintenance } from '@/interfaces/maintenance.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
-  <ListItemBackground>
-    <Text style={styles.titleText}>{item.name}</Text>
-    <View style={styles.separator} />
-    <Text style={styles.text}>Model: {item.model}</Text>
-    <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
-    <Text style={styles.text}>Lab: {item.lab}</Text>
-    <View style={styles.separator} />
-    <Text style={styles.text}>Description: {item.description}</Text>
-    <Text style={styles.text}>Assigned To: {item.assignedTo}</Text>
-    <Text style={styles.text}>Created By: {item.createdBy}</Text>
-    <Text style={styles.text}>Created At: {item.createdAt}</Text>
-    <View style={styles.separator} />
-    <Text style={styles.text}>Submit Note: {item.submitNote}</Text>
-    <Text style={styles.text}>Cost: {item.cost}</Text>
-    <Text style={styles.text}>Returned At: {item.returnedAt}</Text>
-    <View style={styles.separator} />
-    <Text style={styles.text}>Review Note: {item.reviewNote}</Text>
-    <Text style={styles.text}>Reviewed By: {item.reviewedBy}</Text>
-    <Text style={styles.text}>Reviewed At: {item.reviewedAt}</Text>
-    <View style={styles.separator} />
-    <Text style={styles.text}>Start Date: {item.startDate}</Text>
-    <Text style={styles.text}>End Date: {item.endDate}</Text>
-    <View style={styles.separator} />
-    <Text style={styles.text}>Status: {item.status}</Text>
-  </ListItemBackground>
+  <Link
+    href={{
+      pathname: '/(clerk)/(maintenances)/(completed)/view-maintenance',
+      params: { maintenanceId: item.maintenanceId },
+    }}
+    asChild
+  >
+    <Pressable>
+      {({ pressed }) => (
+        <ListItemBackground>
+          <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
+            <Text style={styles.titleText}>
+              {item.itemName ? item.itemName + ' (' + item.itemModel + ')' : ''}
+            </Text>
+            <Text style={styles.text}>Lab: {item.labName}</Text>
+            <Text style={styles.text}>
+              Serial Number: {item.itemSerialNumber}
+            </Text>
+            <Text style={styles.text}>
+              From: {item.startDate.split('T')[0]} To:{' '}
+              {item.endDate.split('T')[0]}
+            </Text>
+          </ListItemWithImage>
+        </ListItemBackground>
+      )}
+    </Pressable>
+  </Link>
 );
 
 export default function ViewCompletedMaintenancesScreen() {
   const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/clerk/maintenance?completed=true`);
+      setMaintenances(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    setMaintenances([
-      {
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        serialNumber: 'FOC1234X56Y',
-        lab: 'Network Lab',
-        description: 'Replace broken parts',
-        assignedTo: 'John Doe',
-        createdBy: 'Jane Doe',
-        createdAt: '2021-09-01 10:00',
-        submitNote: 'Replaced the broken parts with new ones',
-        cost: 100,
-        returnedAt: '2021-09-02 10:00',
-        reviewNote: 'The maintenance was done perfectly',
-        reviewedBy: 'John Doe',
-        reviewedAt: '2021-09-03 10:00',
-        startDate: '2021-09-01',
-        endDate: '2021-09-02',
-        status: 'Completed',
-      },
-      {
-        id: 2,
-        name: '8-Port Ethernet Switch',
-        model: 'Cisco SG300-10',
-        serialNumber: 'FOC1234X56Z',
-        lab: 'Network Lab',
-        description: 'Replace broken parts',
-        assignedTo: 'John Doe',
-        createdBy: 'Jane Doe',
-        createdAt: '2021-09-01 10:00',
-        submitNote: 'Replaced the broken parts with new ones',
-        cost: 100,
-        returnedAt: '2021-09-02 10:00',
-        reviewNote: 'The maintenance was done perfectly',
-        reviewedBy: 'John Doe',
-        reviewedAt: '2021-09-03 10:00',
-        startDate: '2021-09-01',
-        endDate: '2021-09-02',
-        status: 'Completed',
-      },
-      {
-        id: 3,
-        name: '16-Port Ethernet Switch',
-        model: 'Cisco SG300-20',
-        serialNumber: 'FOC1234X56A',
-        lab: 'Network Lab',
-        description: 'Replace broken parts',
-        assignedTo: 'John Doe',
-        createdBy: 'Jane Doe',
-        createdAt: '2021-09-01 10:00',
-        submitNote: 'Replaced the broken parts with new ones',
-        cost: 100,
-        returnedAt: '2021-09-02 10:00',
-        reviewNote: 'The maintenance was done perfectly',
-        reviewedBy: 'John Doe',
-        reviewedAt: '2021-09-03 10:00',
-        startDate: '2021-09-01',
-        endDate: '2021-09-02',
-        status: 'Completed',
-      },
-      {
-        id: 4,
-        name: '24-Port Ethernet Switch',
-        model: 'Cisco SG300-28',
-        serialNumber: 'FOC1234X56B',
-        lab: 'Network Lab',
-        description: 'Replace broken parts',
-        assignedTo: 'John Doe',
-        createdBy: 'Jane Doe',
-        createdAt: '2021-09-01 10:00',
-        submitNote: 'Replaced the broken parts with new ones',
-        cost: 100,
-        returnedAt: '2021-09-02 10:00',
-        reviewNote: 'The maintenance was done perfectly',
-        reviewedBy: 'John Doe',
-        reviewedAt: '2021-09-03 10:00',
-        startDate: '2021-09-01',
-        endDate: '2021-09-02',
-        status: 'Completed',
-      },
-    ]);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, []);
+
   return (
     <BackgroundLayout>
       <MainHeader title='Maintenances' />
@@ -152,18 +84,31 @@ export default function ViewCompletedMaintenancesScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Completed Maintenances' />
-          <FlatList
-            data={maintenances}
-            renderItem={({ item }) => <ItemComponent item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatList}
-            contentContainerStyle={{
-              alignItems: 'stretch',
-              justifyContent: 'center',
-              width: '100%',
-              backgroundColor: 'transparent',
-            }}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : maintenances ? (
+            maintenances.length > 0 ? (
+              <FlatList
+                data={maintenances}
+                renderItem={({ item }) => <ItemComponent item={item} />}
+                keyExtractor={(item) => item.maintenanceId.toString()}
+                style={styles.flatList}
+                contentContainerStyle={{
+                  alignItems: 'stretch',
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : (
+              <Text style={styles.text}>No maintenances found</Text>
+            )
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -184,12 +129,12 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   text: {
     color: 'white',
-    fontSize: 12,
+    fontSize: 10,
   },
   separator: {
     marginVertical: '1%',

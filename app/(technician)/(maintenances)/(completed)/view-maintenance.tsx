@@ -1,27 +1,23 @@
 import {
   StyleSheet,
-  Pressable,
-  FlatList,
-  ScrollView,
-  ImageBackground,
   Alert,
   ActivityIndicator,
   Button,
+  ScrollView,
 } from 'react-native';
-import { Link, router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
+import TechnicianMaintHorizontalBar from '@/components/TechnicianMaintHorizontalBar';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
-import SingleItemBackground from '@/components/SingleItemBackground';
-import ClerkMaintenancesHorizontalBar from '@/components/ClerkMaintHorizontalBar';
-import React, { useState, useEffect } from 'react';
-import WideButton from '@/components/WideButton';
+import EditSingleItemBackground from '@/components/EditSingleItemBackground';
+import { useState, useEffect } from 'react';
 import { MaintenanceDetailed } from '@/interfaces/maintenance.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
-export default function viewOngoingMaintenancesScreen() {
+export default function ViewMaintenanceScreen() {
   const { maintenanceId } = useLocalSearchParams<{ maintenanceId: string }>();
   if (!maintenanceId) throw new Error('Missing maintenanceId');
   const [maintenance, setMaintenance] = useState<MaintenanceDetailed | null>(
@@ -35,7 +31,7 @@ export default function viewOngoingMaintenancesScreen() {
       const response = await axiosApi.get(`/user/maintenance/${maintenanceId}`);
       setMaintenance(response.data);
     } catch (err: any) {
-      setError('Failed to fetch data');
+      setError(err.message);
       Alert.alert('Error', err.message);
     } finally {
       setLoading(false);
@@ -52,20 +48,13 @@ export default function viewOngoingMaintenancesScreen() {
     initializeAndFetch();
   }, []);
 
-  const handleUpdateButtonPress = ({ item }: { item: MaintenanceDetailed }) => {
-    router.replace({
-      pathname: '/(clerk)/(maintenances)/(ongoing)/update-maintenance',
-      params: { maintenanceId: item.maintenanceId },
-    });
-  };
-
   return (
     <BackgroundLayout>
       <MainHeader title='Maintenances' />
-      <ClerkMaintenancesHorizontalBar selectedIndex={1} />
+      <TechnicianMaintHorizontalBar selectedIndex={1} />
       <ContentContainer>
         <View style={styles.container}>
-          <ContentContainerHeader title='View Maintenance' />
+          <ContentContainerHeader title='Update Maintenance' />
           {loading ? (
             <ActivityIndicator size='large' color='#ffffff' />
           ) : error ? (
@@ -74,39 +63,40 @@ export default function viewOngoingMaintenancesScreen() {
               <Button title='Retry' onPress={fetchData} />
             </View>
           ) : maintenance ? (
-            <SingleItemBackground>
+            <EditSingleItemBackground>
               <ScrollView
-                style={{ width: '100%' }}
+                style={{ width: '95%' }}
                 contentContainerStyle={{ alignItems: 'center' }}
               >
-                <Text style={styles.titleText}>Maintenance Details</Text>
-                <Text style={styles.text}>Name: {maintenance.itemName}</Text>
-                <Text style={styles.text}>Model: {maintenance.itemModel}</Text>
+                <Text style={styles.title}>
+                  {maintenance.itemName} ({maintenance.itemModel})
+                </Text>
+                <View style={styles.separator} />
                 <Text style={styles.text}>
                   Serial Number: {maintenance.itemSerialNumber}
                 </Text>
                 <Text style={styles.text}>Lab: {maintenance.labName}</Text>
-                <View style={styles.textSeparator} />
+                <View style={styles.separator} />
                 <Text style={styles.text}>
+                  From: {maintenance.startDate.split('T')[0]} To:{' '}
+                  {maintenance.endDate.split('T')[0]}
+                </Text>
+                <View style={styles.separator} />
+                <Text style={[styles.descriptionText, { width: '80%' }]}>
                   Task Description: {maintenance.taskDescription}
                 </Text>
+                <View style={styles.separator} />
                 <Text style={styles.text}>
-                  Assigned To: {maintenance.technicianName}
+                  Assigned By: {maintenance.createdClerkName}
                 </Text>
                 <Text style={styles.text}>
-                  Start Date: {maintenance.startDate.split('T')[0]}
+                  Assigned At: {maintenance.createdAt.split('T')[0]}{' '}
+                  {maintenance.createdAt
+                    .split('T')[1]
+                    .split('.')[0]
+                    .slice(0, 5)}
                 </Text>
-                <Text style={styles.text}>
-                  End Date: {maintenance.endDate.split('T')[0]}
-                </Text>
-                <View style={styles.textSeparator} />
-                <Text style={styles.text}>Status: {maintenance.status}</Text>
-                {maintenance.submitNote && (
-                  <Text style={styles.text}>
-                    Submit Note: {maintenance.submitNote}
-                  </Text>
-                )}
-                <View style={styles.textSeparator} />
+                <View style={styles.separator} />
                 {maintenance.reviewNote && (
                   <Text style={styles.text}>
                     Review Note: {maintenance.reviewNote}
@@ -126,17 +116,27 @@ export default function viewOngoingMaintenancesScreen() {
                       .slice(0, 5)}
                   </Text>
                 )}
-                {maintenance && maintenance.status === 'UnderReview' && (
-                  <WideButton
-                    text='Review Maintenance'
-                    buttonClickHandler={() =>
-                      handleUpdateButtonPress({ item: maintenance })
-                    }
-                  />
+                <View style={styles.separator} />
+                <Text style={styles.text}>Status: {maintenance.status}</Text>
+                {maintenance.reviewNote && (
+                  <>
+                    <View style={styles.separator} />
+                    <Text style={styles.descriptionText}>
+                      Review Note: {maintenance.reviewNote}
+                    </Text>
+                  </>
                 )}
-                <View style={styles.textSeparator} />
+                <View style={styles.separator} />
+                {maintenance.cost && (
+                  <Text style={styles.text}>Cost: {maintenance.cost}</Text>
+                )}
+                {maintenance.submitNote && (
+                  <Text style={styles.text}>
+                    Submit Note: {maintenance.submitNote}
+                  </Text>
+                )}
               </ScrollView>
-            </SingleItemBackground>
+            </EditSingleItemBackground>
           ) : null}
         </View>
       </ContentContainer>
@@ -152,69 +152,67 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
     width: '100%',
   },
-  titleText: {
-    color: 'white',
-    fontSize: 18,
+  title: {
+    fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: '2%',
+    marginTop: '2%',
+    marginBottom: '1%',
+  },
+  separator: {
+    marginVertical: '1%',
+    width: '80%',
   },
   text: {
-    color: 'white',
     fontSize: 12,
-    marginBottom: '0.2%',
+    // fontWeight: 'bold',
+    marginTop: '0.1%',
   },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 12,
+  },
+  descriptionText: {
+    fontSize: 12,
+    // fontWeight: 'bold',
+  },
+  textInput: {
     width: '80%',
-    backgroundColor: 'transparent',
-  },
-  dropdown: {
+    padding: '1%',
     marginTop: '2%',
-    marginBottom: '4%',
+    marginBottom: '2%',
     backgroundColor: 'white',
-    borderRadius: 8,
-    paddingHorizontal: '5%',
-    paddingVertical: '2%',
-    width: 200,
-  },
-  dropdownText: {
-    color: 'black',
-    fontSize: 13,
-    alignSelf: 'center',
-    paddingLeft: '3%',
-    paddingVertical: '1%',
-  },
-  multilineInput: {
-    backgroundColor: 'white',
-    width: 200,
+    borderRadius: 10,
+    paddingLeft: 15,
     height: 60,
-    borderRadius: 8,
-    paddingLeft: '3%',
   },
-  buttonsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: '3%',
-    backgroundColor: 'transparent',
+  costInput: {
+    width: '80%',
+    padding: '1%',
+    marginTop: '2%',
+    marginBottom: '2%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    paddingLeft: 15,
+  },
+  image: {
+    marginTop: '4%',
+    marginBottom: '3%',
+    width: 100,
+    height: 100,
   },
   button: {
-    width: '90%',
-    marginHorizontal: '5%',
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    marginTop: '4%',
+    width: '100%',
+    marginTop: '1%',
   },
   buttonBackground: {
-    justifyContent: 'center',
+    width: '100%',
     alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: '2.5%',
   },
   buttonText: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-    paddingTop: '2.5%',
-    paddingBottom: '2.5%',
+    fontSize: 18,
   },
 });

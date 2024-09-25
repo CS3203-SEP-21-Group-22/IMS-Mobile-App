@@ -41,3 +41,11 @@ export interface MaintenanceDetailed {
   cost?: number | null;
   status: string;
 }
+
+export interface MaintenanceCreate {
+  itemId: number | null;
+  startDate: string | null;
+  endDate: string | null;
+  technicianId: number | null;
+  taskDescription: string | null;
+}

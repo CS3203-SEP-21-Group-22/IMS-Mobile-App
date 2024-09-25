@@ -147,16 +147,18 @@ export default function ViewEquipmentScreen() {
                 >
                   <Text style={styles.text}>Model: {equipment.model}</Text>
                   <Text style={styles.text}>Lab: {equipment.labName}</Text>
-                  <Text style={styles.text}>
-                    Maintenance Interval: {equipment.maintenanceIntervalDays}{' '}
-                    days
-                  </Text>
+                  {equipment.maintenanceIntervalDays && (
+                    <Text style={styles.text}>
+                      Maintenance Interval: {equipment.maintenanceIntervalDays}{' '}
+                      days
+                    </Text>
+                  )}
                   <View style={styles.textSeparator} />
                   <Text style={styles.text}>
                     Total Items: {equipment.totalCount}
                   </Text>
                   <Text style={styles.text}>
-                    Reserved Items: {equipment.reservedCount}
+                    Reservations Count: {equipment.reservedCount}
                   </Text>
                   <Text style={styles.text}>
                     Available Items: {equipment.availableCount}

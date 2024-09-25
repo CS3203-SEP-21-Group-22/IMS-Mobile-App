@@ -1,4 +1,11 @@
-import { StyleSheet, Pressable, FlatList, ImageBackground } from 'react-native';
+import {
+  StyleSheet,
+  FlatList,
+  Alert,
+  ActivityIndicator,
+  Button,
+  Pressable,
+} from 'react-native';
 import { Link, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -10,17 +17,8 @@ import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import React, { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
-
-interface Maintenance {
-  id: number;
-  name: string;
-  model: string;
-  serialNumber: string;
-  lab: string;
-  endDate: string;
-  status: string;
-  imageURL?: string | null;
-}
+import { Maintenance } from '@/interfaces/maintenance.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 const handleButtonPress = () => {
   router.push('/(clerk)/(maintenances)/(ongoing)/add-maintenance');
@@ -30,19 +28,24 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
   <Link
     href={{
       pathname: '/(clerk)/(maintenances)/(ongoing)/view-maintenance',
-      params: { maintenanceId: item.id },
+      params: { maintenanceId: item.maintenanceId },
     }}
     asChild
   >
     <Pressable>
       {({ pressed }) => (
         <ListItemBackground>
-          <ListItemWithImage link={item.imageURL ?? 'equipment'}>
-            <Text style={styles.titleText}>{item.name}</Text>
-            <Text style={styles.text}>Model: {item.model}</Text>
-            <Text style={styles.text}>Serial Number: {item.serialNumber}</Text>
-            <Text style={styles.text}>Lab: {item.lab}</Text>
-            <Text style={styles.text}>End Date: {item.endDate}</Text>
+          <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
+            <Text style={styles.titleText}>
+              {item.itemName ? item.itemName + ' (' + item.itemModel + ')' : ''}
+            </Text>
+            <Text style={styles.text}>
+              Serial Number: {item.itemSerialNumber}
+            </Text>
+            <Text style={styles.text}>Lab: {item.labName}</Text>
+            <Text style={styles.text}>
+              End Date: {item.endDate.split('T')[0]}
+            </Text>
             <Text style={styles.text}>Status: {item.status}</Text>
           </ListItemWithImage>
         </ListItemBackground>
@@ -53,46 +56,31 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
 
 export default function viewOngoingMaintenancesScreen() {
   const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await axiosApi.get(`/clerk/maintenance?completed=false`);
+      setMaintenances(response.data);
+    } catch (err: any) {
+      setError('Failed to fetch data');
+      Alert.alert('Error', err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Initialize Axios and fetch data on component mount
   useEffect(() => {
-    setMaintenances([
-      {
-        id: 1,
-        name: '4-Port WiFi Router',
-        model: 'Cisco SRP541W',
-        serialNumber: 'FOC1234X56Y',
-        lab: 'Network Lab',
-        endDate: '2024-08-02',
-        status: 'Under Review',
-      },
-      {
-        id: 2,
-        name: '8-Port Ethernet Switch',
-        model: 'Cisco SG300-10',
-        serialNumber: 'FOC1234X56Z',
-        lab: 'Network Lab',
-        endDate: '2024-08-02',
-        status: 'Under Review',
-      },
-      {
-        id: 3,
-        name: '16-Port Ethernet Switch',
-        model: 'Cisco SG300-20',
-        serialNumber: 'FOC1234X56A',
-        lab: 'Network Lab',
-        endDate: '2024-08-02',
-        status: 'Under Review',
-      },
-      {
-        id: 4,
-        name: '24-Port Ethernet Switch',
-        model: 'Cisco SG300-28',
-        serialNumber: 'FOC1234X56B',
-        lab: 'Network Lab',
-        endDate: '2024-08-02',
-        status: 'Under Review',
-      },
-    ]);
+    const initializeAndFetch = async () => {
+      await initializeAxiosApi(); // Initialize Axios instance
+      fetchData(); // Fetch data from the API
+    };
+
+    initializeAndFetch();
   }, []);
+
   return (
     <BackgroundLayout>
       <MainHeader title='Maintenances' />
@@ -100,18 +88,31 @@ export default function viewOngoingMaintenancesScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Ongoing Maintenances' />
-          <FlatList
-            data={maintenances}
-            renderItem={({ item }) => <ItemComponent item={item} />}
-            keyExtractor={(item) => item.id.toString()}
-            style={styles.flatList}
-            contentContainerStyle={{
-              alignItems: 'stretch',
-              justifyContent: 'center',
-              width: '100%',
-              backgroundColor: 'transparent',
-            }}
-          />
+          {loading ? (
+            <ActivityIndicator size='large' color='#ffffff' />
+          ) : error ? (
+            <View>
+              <Text>Error: {error}</Text>
+              <Button title='Retry' onPress={fetchData} />
+            </View>
+          ) : maintenances ? (
+            maintenances.length > 0 ? (
+              <FlatList
+                data={maintenances}
+                renderItem={({ item }) => <ItemComponent item={item} />}
+                keyExtractor={(item) => item.maintenanceId.toString()}
+                style={styles.flatList}
+                contentContainerStyle={{
+                  alignItems: 'stretch',
+                  justifyContent: 'center',
+                  width: '100%',
+                  backgroundColor: 'transparent',
+                }}
+              />
+            ) : (
+              <Text style={styles.text}>No maintenances found</Text>
+            )
+          ) : null}
         </View>
         <WideButton
           text='Create New Maintenance'

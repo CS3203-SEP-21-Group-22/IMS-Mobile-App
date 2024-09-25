@@ -50,15 +50,25 @@ export default function ViewMaintenancesScreen() {
 
   const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
     <ListItemBackground>
-      <Text style={styles.text}>{item.itemName}</Text>
+      <Text style={styles.titleText}>{item.itemName}</Text>
       <Text style={styles.text}>Model: {item.itemModel}</Text>
       <Text style={styles.text}>Serial Number: {item.itemSerialNumber}</Text>
       <Text style={styles.text}>Lab: {item.labName}</Text>
-      <Text style={styles.text}>Start Date: {item.startDate}</Text>
-      <Text style={styles.text}>End Date: {item.endDate}</Text>
-      <Text style={styles.text}>Created At: {item.createdAt}</Text>
-      <Text style={styles.text}>Submitted At: {item.submittedAt}</Text>
-      <Text style={styles.text}>Reviewed At: {item.reviewedAt}</Text>
+      <Text style={styles.text}>
+        From: {item.startDate.split('T')[0]} To: {item.endDate.split('T')[0]}
+      </Text>
+      <Text style={styles.text}>
+        Created At: {item.createdAt.split('T')[0]}{' '}
+        {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
+      </Text>
+      <Text style={styles.text}>
+        Submitted At: {item.submittedAt?.split('T')[0]}{' '}
+        {item.submittedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+      </Text>
+      <Text style={styles.text}>
+        Reviewed At: {item.reviewedAt?.split('T')[0]}{' '}
+        {item.reviewedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+      </Text>
       <Text style={styles.text}>Status: {item.status}</Text>
     </ListItemBackground>
   );
@@ -114,12 +124,12 @@ const styles = StyleSheet.create({
   },
   titleText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 'bold',
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 11,
   },
   button: {
     width: '100%',

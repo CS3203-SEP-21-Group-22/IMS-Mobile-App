@@ -57,6 +57,10 @@ function CompletedMaintenancesLayoutNav() {
           name='maintenances'
           options={{ title: 'Approved Maintenances', headerShown: false }}
         />
+        <Stack.Screen
+          name='view-maintenance'
+          options={{ title: 'View Completed Maintenance', headerShown: false }}
+        />
       </Stack>
     </ThemeProvider>
   );
