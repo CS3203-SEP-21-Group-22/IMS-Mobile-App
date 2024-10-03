@@ -23,6 +23,10 @@ export default function AddLabScreen() {
   const [lab, setLab] = useState<CreateLab>({ labName: null, labCode: null });
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<[string, string][]>([]);
+  const [imageURL, setImageURL] = useState<string | null>(null);
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
+
   const handleButtonPress = async () => {
     try {
       setLoading(true);
@@ -49,7 +53,33 @@ export default function AddLabScreen() {
       quality: 1,
     });
     if (!result.canceled) {
-      setLab({ ...lab, imageURL: result.assets[0].uri });
+      const pickedImage = await fetch(result.assets[0].uri);
+      const imageBody = await pickedImage.blob();
+      setUploadLoading(true);
+      try {
+        const response = await axiosApi.post('/upload-url/lab', {
+          extension: imageBody.type.split('/')[1],
+        });
+        const presignedUrl = response.data.presignedUrl;
+        const resp = await fetch(presignedUrl, {
+          method: 'PUT',
+          body: imageBody,
+          headers: {
+            'Content-Type': imageBody.type,
+            'x-ms-blob-type': 'BlockBlob',
+          },
+        });
+        if (!resp.ok) {
+          throw new Error('Failed to upload image');
+        }
+        setImageURL(result.assets[0].uri);
+        setLab({ ...lab, imageURL: presignedUrl.split('?')[0] });
+        setUploadError(null);
+      } catch (err: any) {
+        setUploadError('Failed to upload image');
+      } finally {
+        setUploadLoading(false);
+      }
     }
   };
   return (
@@ -90,13 +120,19 @@ export default function AddLabScreen() {
               ))}
             <Image
               source={
-                lab.imageURL
-                  ? { uri: lab.imageURL }
+                imageURL
+                  ? { uri: imageURL }
                   : require('@/assets/images/labSample.png')
               }
               style={styles.image}
             />
-            <Button title='Pick an Image' onPress={pickImage} />
+            {uploadLoading ? (
+              <ActivityIndicator size='large' color='#ffffff' />
+            ) : uploadError ? (
+              <Text style={styles.errorText}>{uploadError}</Text>
+            ) : (
+              <Button title='Pick an Image' onPress={pickImage} />
+            )}
             {errors
               .filter(([key, value]) => key === 'imageURL')
               .map(([key, value]) => (

@@ -59,7 +59,7 @@ export default function ViewEquipmentsScreen() {
           name: item.name,
           model: item.model,
           labName: item.labName,
-          imageURL: item.imageURL,
+          imageURL: item.imageUrl,
         },
       }}
       asChild
@@ -67,7 +67,7 @@ export default function ViewEquipmentsScreen() {
       <Pressable>
         {({ pressed }) => (
           <ListItemBackground>
-            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+            <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
               <Text style={styles.titleText}>{item.name}</Text>
               <Text style={styles.text}>Model: {item.model}</Text>
               <Text style={styles.text}>Lab: {item.labName}</Text>

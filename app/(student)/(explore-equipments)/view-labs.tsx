@@ -25,7 +25,7 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
         labId: item.labId,
         labName: item.labName,
         labCode: item.labCode,
-        imageURL: item.imageURL,
+        imageURL: item.imageUrl,
       },
     }}
     asChild
@@ -33,7 +33,7 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
     <Pressable>
       {({ pressed }) => (
         <ListItemBackground>
-          <ListItemWithImage link={item.imageURL ?? 'lab'}>
+          <ListItemWithImage link={item.imageUrl ?? 'lab'}>
             <Text style={styles.titleText}>{item.labName}</Text>
             <Text style={styles.text}>Code: {item.labCode}</Text>
           </ListItemWithImage>

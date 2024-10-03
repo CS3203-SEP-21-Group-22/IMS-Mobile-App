@@ -60,7 +60,7 @@ export default function ViewEquipmentsScreen() {
       <Pressable>
         {({ pressed }) => (
           <ListItemBackground>
-            <ListItemWithImage link={item.imageURL ?? 'equipment'}>
+            <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
               <Text style={styles.titleText}>{item.name}</Text>
               <Text style={styles.text}>Model: {item.model}</Text>
               <Text style={styles.text}>Lab: {item.labName}</Text>

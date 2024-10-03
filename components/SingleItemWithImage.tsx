@@ -6,6 +6,7 @@ const SingleItemWithImage: React.FC<{
   link: string;
   children: React.ReactNode;
 }> = ({ title, link, children }) => {
+  console.log('imageSrc:', link);
   const imageSrc =
     link === 'lab'
       ? require('@/assets/images/labSample.png')

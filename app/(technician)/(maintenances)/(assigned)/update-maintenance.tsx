@@ -164,16 +164,16 @@ export default function UpdateMaintenanceScreen() {
                 <View style={styles.separator} />
                 <Text style={styles.text}>Status: {maintenance.status}</Text>
                 {maintenance.reviewNote && (
-                  <>
+                  <View>
                     <View style={styles.separator} />
                     <Text style={styles.descriptionText}>
                       Review Note: {maintenance.reviewNote}
                     </Text>
-                  </>
+                  </View>
                 )}
                 <View style={styles.separator} />
                 {maintenance.status === 'Ongoing' && (
-                  <>
+                  <View>
                     <Text style={styles.text}>Submit Note</Text>
                     <TextInput
                       style={styles.textInput}
@@ -214,7 +214,7 @@ export default function UpdateMaintenanceScreen() {
                           {value}
                         </Text>
                       ))}
-                  </>
+                  </View>
                 )}
                 {errors
                   .filter(

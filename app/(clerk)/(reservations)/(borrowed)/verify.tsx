@@ -53,10 +53,10 @@ export default function VerifyReturningItemScreen() {
           {!qrValue ? (
             <Text>QR code not found</Text>
           ) : (
-            <>
+            <View>
               <Text style={styles.text}>Scan QR code to verify Returning</Text>
               <QRCode value={qrValue} size={200} />
-            </>
+            </View>
           )}
         </View>
       </ContentContainer>

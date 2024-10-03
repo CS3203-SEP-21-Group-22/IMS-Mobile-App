@@ -2,7 +2,7 @@ export interface EquipmentDetailed {
   equipmentId: number;
   name: string;
   model: string;
-  imageURL?: string | null;
+  imageUrl?: string | null;
   labId: number;
   labName: string;
   specification?: string | null;
@@ -16,7 +16,7 @@ export interface Equipment {
   equipmentId: number;
   name: string;
   model: string;
-  imageURL?: string | null;
+  imageUrl?: string | null;
   labId: number;
   labName: string;
   specification?: string | null;

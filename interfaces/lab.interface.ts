@@ -2,7 +2,7 @@ export interface Lab {
   labId: number;
   labName: string;
   labCode: string;
-  imageURL?: string | null;
+  imageUrl?: string | null;
 }
 
 export interface CreateLab {

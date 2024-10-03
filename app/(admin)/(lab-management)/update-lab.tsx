@@ -20,21 +20,24 @@ import { Lab } from '@/interfaces/lab.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function UpdateLabScreen() {
+  const [uploadLoading, setUploadLoading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [updateLoading, setUpdateLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [errors, setErrors] = useState<[string, string][]>([]);
-  const { labId, labName, labCode, imageURL } = useLocalSearchParams<{
+  const { labId, labName, labCode, imageURLProp } = useLocalSearchParams<{
     labId: string;
     labName: string;
     labCode: string;
-    imageURL: string;
+    imageURLProp: string;
   }>();
   if (!labId || !labName || !labCode) throw new Error('Invalid lab data');
+  const [imageURL, setImageURL] = useState<string | null>(imageURLProp);
   const [lab, setLab] = useState<Lab>({
     labId: parseInt(labId),
     labName,
     labCode,
-    imageURL,
+    imageUrl: imageURL,
   });
 
   const handleUpdateButtonPress = async () => {
@@ -96,8 +99,34 @@ export default function UpdateLabScreen() {
       aspect: [4, 3],
       quality: 1,
     });
-    if (!result.canceled && lab) {
-      setLab({ ...lab, imageURL: result.assets[0].uri });
+    if (!result.canceled) {
+      const pickedImage = await fetch(result.assets[0].uri);
+      const imageBody = await pickedImage.blob();
+      setUploadLoading(true);
+      try {
+        const response = await axiosApi.post('/upload-url/lab', {
+          extension: imageBody.type.split('/')[1],
+        });
+        const presignedUrl = response.data.presignedUrl;
+        const resp = await fetch(presignedUrl, {
+          method: 'PUT',
+          body: imageBody,
+          headers: {
+            'Content-Type': imageBody.type,
+            'x-ms-blob-type': 'BlockBlob',
+          },
+        });
+        if (!resp.ok) {
+          throw new Error('Failed to upload image');
+        }
+        setImageURL(result.assets[0].uri);
+        setLab({ ...lab, imageUrl: presignedUrl.split('?')[0] });
+        setUploadError(null);
+      } catch (err: any) {
+        setUploadError('Failed to upload image');
+      } finally {
+        setUploadLoading(false);
+      }
     }
   };
   return (
@@ -139,13 +168,19 @@ export default function UpdateLabScreen() {
                 ))}
               <Image
                 source={
-                  lab.imageURL
-                    ? { uri: lab.imageURL }
+                  imageURL
+                    ? { uri: imageURL }
                     : require('@/assets/images/labSample.png')
                 }
                 style={styles.image}
               />
-              <Button title='Pick an Image' onPress={pickImage} />
+              {uploadLoading ? (
+                <ActivityIndicator size='large' color='#ffffff' />
+              ) : uploadError ? (
+                <Text style={styles.errorText}>{uploadError}</Text>
+              ) : (
+                <Button title='Pick an Image' onPress={pickImage} />
+              )}
               {errors
                 .filter(([key, value]) => key === 'imageURL')
                 .map(([key, value]) => (

@@ -51,10 +51,10 @@ export default function ReservedItemsScreen() {
           {!qrValue ? (
             <Text>QR code not found</Text>
           ) : (
-            <>
+            <View>
               <Text style={styles.text}>Scan QR code to verify borrowing</Text>
               <QRCode value={qrValue} size={200} />
-            </>
+            </View>
           )}
         </View>
       </ContentContainer>

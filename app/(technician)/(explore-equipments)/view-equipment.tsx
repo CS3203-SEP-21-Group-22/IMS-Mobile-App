@@ -57,7 +57,7 @@ export default function ViewEquipmentScreen() {
         equipmentId: item.equipmentId,
         labId,
         name: item.name,
-        imageUrl: item.imageURL,
+        imageUrl: item.imageUrl,
         model: item.model,
         maintenanceIntervalDays: item.maintenanceIntervalDays,
       },
@@ -82,7 +82,7 @@ export default function ViewEquipmentScreen() {
               <ScrollView style={{ width: '100%' }}>
                 <SingleItemWithImage
                   title={equipment.name ?? ''}
-                  link={equipment.imageURL ?? 'equipment'}
+                  link={equipment.imageUrl ?? 'equipment'}
                 >
                   <Text style={styles.text}>Model: {equipment.model}</Text>
                   <Text style={styles.text}>Lab: {equipment.labName}</Text>

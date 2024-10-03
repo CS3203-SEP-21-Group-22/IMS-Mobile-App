@@ -12,6 +12,7 @@ import {
   storeTokens,
   removeTokens,
   storeUserProfile,
+  clearUserProfile,
   setLoginStatusLoading,
   setLoginStatusLoggedIn,
   setLoginStatusLoggedOut,
@@ -77,10 +78,16 @@ const getRoleFromServer = async (
       await setLoginStatusLoggedIn();
       router.push(roleRoutes[role]);
     } else {
+      await removeTokens();
+      await clearUserProfile();
+      await setLoginStatusLoggedOut();
       console.error('Unknown role');
     }
   } catch (error) {
     console.error(error);
+    await removeTokens();
+    await clearUserProfile();
+    await setLoginStatusLoggedOut();
     router.push('/login');
   }
 };
