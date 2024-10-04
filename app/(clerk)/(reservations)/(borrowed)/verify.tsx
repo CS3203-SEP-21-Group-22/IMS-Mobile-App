@@ -48,16 +48,20 @@ export default function VerifyReturningItemScreen() {
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Verify Returning Item' />
-          {loading && <ActivityIndicator />}
-          {error && <Text>{error}</Text>}
-          {!qrValue ? (
-            <Text>QR code not found</Text>
-          ) : (
-            <View>
-              <Text style={styles.text}>Scan QR code to verify Returning</Text>
-              <QRCode value={qrValue} size={200} />
-            </View>
-          )}
+          <View style={styles.subContainer}>
+            {loading && <ActivityIndicator />}
+            {error && <Text>{error}</Text>}
+            {!qrValue ? (
+              <Text>QR code not found</Text>
+            ) : (
+              <View style={styles.qrContainer}>
+                <Text style={styles.text}>
+                  Scan QR code to verify Returning
+                </Text>
+                <QRCode value={qrValue} size={200} />
+              </View>
+            )}
+          </View>
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -68,7 +72,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -81,12 +85,23 @@ const styles = StyleSheet.create({
     height: 1,
     width: '80%',
   },
+  subContainer: {
+    width: '100%',
+    marginTop: '20%',
+    backgroundColor: 'transparent',
+  },
   text: {
     fontSize: 16,
     fontWeight: 'bold',
     alignSelf: 'center',
     alignContent: 'center',
     justifyContent: 'center',
-    marginBottom: '3%',
+    marginBottom: '10%',
+  },
+  qrContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    backgroundColor: 'transparent',
   },
 });
