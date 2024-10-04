@@ -134,15 +134,15 @@ export default function ViewBorrowedItemScreen() {
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
               </ScrollView>
+              {reservation.status === 'Borrowed' && (
+                <WideButton
+                  text='Accept Item'
+                  buttonClickHandler={() => handleReturn({ item: reservation })}
+                />
+              )}
             </SingleItemBackground>
           ) : (
             <Text>No reservation found</Text>
-          )}
-          {reservation && reservation.status === 'Borrowed' && (
-            <WideButton
-              text='Accept Item'
-              buttonClickHandler={() => handleReturn({ item: reservation })}
-            />
           )}
         </View>
       </ContentContainer>
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

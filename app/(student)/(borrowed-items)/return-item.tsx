@@ -95,7 +95,7 @@ export default function ReturnItemScreen() {
   return (
     <BackgroundLayout>
       <MainHeader title='Borrowed Items' />
-      <ClerkReservationsHorizontalBar selectedIndex={1} />
+      <ClerkReservationsHorizontalBar selectedIndex={2} />
       <ContentContainer>
         <View style={styles.container}>
           <ContentContainerHeader title='Verify Returning Item' />

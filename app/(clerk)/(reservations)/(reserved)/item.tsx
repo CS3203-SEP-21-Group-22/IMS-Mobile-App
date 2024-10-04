@@ -123,13 +123,13 @@ export default function ViewReservedItemScreen() {
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
               </ScrollView>
+              {reservation && reservation.status === 'Reserved' ? (
+                <WideButton
+                  text='Lend Item'
+                  buttonClickHandler={() => handleVerify({ item: reservation })}
+                />
+              ) : null}
             </SingleItemBackground>
-          ) : null}
-          {reservation && reservation.status === 'Reserved' ? (
-            <WideButton
-              text='Lend Item'
-              buttonClickHandler={() => handleVerify({ item: reservation })}
-            />
           ) : null}
         </View>
       </ContentContainer>
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

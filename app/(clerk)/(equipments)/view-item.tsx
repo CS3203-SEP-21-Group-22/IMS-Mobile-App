@@ -146,6 +146,10 @@ export default function ViewItemScreen() {
                   <Text style={styles.text}>Status: {item.status}</Text>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
+
+                <View style={styles.textSeparator} />
+              </ScrollView>
+              <View style={styles.bottomContainer}>
                 <WideButton
                   text='View Reservations History'
                   buttonClickHandler={() =>
@@ -167,8 +171,7 @@ export default function ViewItemScreen() {
                     danger={true}
                   />
                 )}
-                <View style={styles.textSeparator} />
-              </ScrollView>
+              </View>
             </SingleItemBackground>
           ) : null}
         </View>
@@ -248,5 +251,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  bottomContainer: {
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+    width: '100%',
+    bottom: 0,
   },
 });

@@ -5,6 +5,7 @@ import {
   Alert,
   ActivityIndicator,
   Button,
+  RefreshControl,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -18,6 +19,7 @@ import ListItemWithImage from '@/components/ListItemWithImage';
 import React, { useState, useEffect } from 'react';
 import { Maintenance } from '@/interfaces/maintenance.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
   <Link
@@ -51,6 +53,7 @@ export default function ViewPendingMaintenancesScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/clerk/maintenance/pending`);
       setMaintenances(response.data);
@@ -80,7 +83,11 @@ export default function ViewPendingMaintenancesScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Pending Maintenances' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -99,6 +106,13 @@ export default function ViewPendingMaintenancesScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    tintColor={Colors.light.primary.button}
+                  />
+                }
               />
             ) : (
               <Text style={styles.text}>No maintenances found</Text>
@@ -114,7 +128,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

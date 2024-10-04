@@ -5,6 +5,7 @@ import {
   Alert,
   ActivityIndicator,
   Button,
+  RefreshControl,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -18,6 +19,7 @@ import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
 import { Reservation } from '@/interfaces/reservation.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
   <Link
@@ -55,6 +57,7 @@ export default function ViewRequestedItemsScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/clerk/reservations?requested=true`);
       setReservations(response.data);
@@ -84,7 +87,11 @@ export default function ViewRequestedItemsScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Reservation Requests' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -103,6 +110,13 @@ export default function ViewRequestedItemsScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    tintColor={Colors.light.primary.button}
+                  />
+                }
               />
             ) : (
               <Text>No reservations found</Text>
@@ -118,7 +132,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
