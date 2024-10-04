@@ -15,7 +15,13 @@ const ListItemWithImage: React.FC<{
     <View style={styles.container}>
       <Image
         testID='list-item-image'
-        style={{ width: 70, height: 70, borderRadius: 5, marginRight: 10 }}
+        style={{
+          width: 70,
+          height: 70,
+          borderRadius: 6,
+          marginRight: 15,
+          // marginLeft: 1,
+        }}
         source={imageSrc}
       />
       <View style={styles.textsContainer}>{children}</View>

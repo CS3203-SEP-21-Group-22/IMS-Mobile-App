@@ -3,6 +3,7 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -16,6 +17,7 @@ import { useState, useEffect } from 'react';
 import { Equipment } from '@/interfaces/equipment.interface';
 import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
 import { Alert, Button } from 'react-native';
+import Colors from '@/constants/Colors';
 
 export default function ViewEquipmentsScreen() {
   const [equipments, setEquipments] = useState<Equipment[]>([]);
@@ -28,6 +30,7 @@ export default function ViewEquipmentsScreen() {
   if (!labId || !labName) throw new Error('Missing labId or labName');
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/user/equipments?labId=${labId}`);
       setEquipments(response.data);
@@ -77,7 +80,11 @@ export default function ViewEquipmentsScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title={`${labName} - Equipments`} />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -96,6 +103,13 @@ export default function ViewEquipmentsScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    tintColor={Colors.light.primary.button}
+                  />
+                }
               />
             ) : (
               <Text style={styles.text}>No equipments found</Text>

@@ -30,6 +30,7 @@ export default function ViewItemScreen() {
   if (!equipmentId || !itemId) throw new Error('Missing equipmentId or itemId');
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/user/items/${itemId}`);
       setItem(response.data);
@@ -72,7 +73,11 @@ export default function ViewItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Item' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -80,7 +85,12 @@ export default function ViewItemScreen() {
             </View>
           ) : item ? (
             <SingleItemBackground>
-              <ScrollView style={{ width: '100%' }}>
+              <ScrollView
+                style={{ width: '100%' }}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                }}
+              >
                 <SingleItemWithImage
                   title={item.itemName ?? ''}
                   link={item.imageUrl ?? 'equipment'}
@@ -105,6 +115,8 @@ export default function ViewItemScreen() {
                   <Text style={styles.text}>Status: {item.status}</Text>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
+              </ScrollView>
+              <View style={styles.bottomContainer}>
                 <WideButton
                   text='View Reservations History'
                   buttonClickHandler={() =>
@@ -117,8 +129,7 @@ export default function ViewItemScreen() {
                     handleViewMaintHistory({ item: item })
                   }
                 />
-                <View style={styles.textSeparator} />
-              </ScrollView>
+              </View>
             </SingleItemBackground>
           ) : null}
         </View>
@@ -131,7 +142,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -173,5 +184,11 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     paddingLeft: '3%',
+  },
+  bottomContainer: {
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+    width: '100%',
+    bottom: 0,
   },
 });

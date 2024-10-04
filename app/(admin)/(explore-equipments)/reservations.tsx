@@ -4,6 +4,7 @@ import {
   FlatList,
   Alert,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -15,6 +16,7 @@ import ListItemBackground from '@/components/ListItemBackground';
 import { useState, useEffect } from 'react';
 import { Reservation } from '@/interfaces/reservation.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 export default function ViewReservationsScreen() {
   const [reservations, setReservations] = useState<Reservation[]>([]);
@@ -24,6 +26,7 @@ export default function ViewReservationsScreen() {
   if (!itemId) throw new Error('Missing itemId');
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(
         `/user/reservations?itemId=${itemId}`,
@@ -58,7 +61,6 @@ export default function ViewReservationsScreen() {
       <Text style={styles.text}>
         From: {item.startDate.split('T')[0]} To: {item.endDate.split('T')[0]}
       </Text>
-      <Text style={styles.text}>To Date: {item.endDate}</Text>
       <Text style={styles.text}>
         Requested At: {item.createdAt.split('T')[0]}{' '}
         {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
@@ -104,7 +106,11 @@ export default function ViewReservationsScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Reservations History' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -123,6 +129,13 @@ export default function ViewReservationsScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    tintColor={Colors.light.primary.button}
+                  />
+                }
               />
             ) : (
               <Text>No reservations found</Text>
@@ -138,7 +151,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

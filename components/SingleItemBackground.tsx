@@ -30,12 +30,15 @@ const SingleItemBackground: React.FC<BackgroundProps> = ({ children }) => (
 const styles = StyleSheet.create({
   container: {
     width: '100%',
+    height: '90%',
+    marginTop: '2%',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: 'transparent',
     marginBottom: '2%',
   },
   background: {
+    height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',

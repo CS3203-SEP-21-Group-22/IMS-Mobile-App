@@ -31,6 +31,7 @@ export default function ViewItemScreen() {
   if (!equipmentId || !itemId) throw new Error('Missing equipmentId or itemId');
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/user/items/${itemId}`);
       setItem(response.data);
@@ -108,7 +109,11 @@ export default function ViewItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Item' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -176,7 +181,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

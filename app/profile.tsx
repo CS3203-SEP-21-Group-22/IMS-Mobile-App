@@ -45,27 +45,29 @@ export default function ProfileScreen() {
           <ContentContainerHeader title='User Details' />
           {user && (
             <SingleItemBackground>
-              <View style={styles.textSeparator} />
-              <View style={styles.textSeparator} />
-              <Text style={styles.titleText}>
-                Name: {user.firstName} {user.lastName}
-              </Text>
-              <View style={styles.textSeparator} />
-              <Text style={styles.text}>Email: {user.email}</Text>
-              <Text style={styles.text}>
-                Contact Number: {user.contactNumber}
-              </Text>
-              <View style={styles.textSeparator} />
-              <Text style={styles.text}>Role: {user.role}</Text>
-              <View style={styles.textSeparator} />
-              <View style={styles.textSeparator} />
+              <View style={styles.contentContainer}>
+                <View style={styles.textSeparator} />
+                <View style={styles.textSeparator} />
+                <Text style={styles.titleText}>
+                  Name: {user.firstName} {user.lastName}
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>Email: {user.email}</Text>
+                <Text style={styles.text}>
+                  Contact Number: {user.contactNumber}
+                </Text>
+                <View style={styles.textSeparator} />
+                <Text style={styles.text}>Role: {user.role}</Text>
+                <View style={styles.textSeparator} />
+                <View style={styles.textSeparator} />
+              </View>
+              <WideButton
+                text='Logout'
+                buttonClickHandler={handleLogout}
+                danger={true}
+              />
             </SingleItemBackground>
           )}
-          <WideButton
-            text='Logout'
-            buttonClickHandler={handleLogout}
-            danger={true}
-          />
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -74,6 +76,13 @@ export default function ProfileScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  contentContainer: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

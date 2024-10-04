@@ -6,7 +6,6 @@ const SingleItemWithImage: React.FC<{
   link: string;
   children: React.ReactNode;
 }> = ({ title, link, children }) => {
-  console.log('imageSrc:', link);
   const imageSrc =
     link === 'lab'
       ? require('@/assets/images/labSample.png')
@@ -38,12 +37,12 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
-    marginTop: '2%',
-    marginBottom: '3%',
+    marginTop: '4%',
+    marginBottom: '5%',
   },
   textsContainer: {
     flexDirection: 'column',
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: 'transparent',
   },

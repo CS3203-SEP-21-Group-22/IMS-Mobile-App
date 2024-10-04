@@ -5,6 +5,7 @@ import {
   Alert,
   ActivityIndicator,
   Button,
+  RefreshControl,
 } from 'react-native';
 import { Link, useLocalSearchParams, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -18,6 +19,7 @@ import { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
 import { Item } from '@/interfaces/item.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 export default function ViewItemsScreen() {
   const [items, setItems] = useState<Item[]>([]);
@@ -36,6 +38,7 @@ export default function ViewItemsScreen() {
     throw new Error('Missing labId, equipmentId, name or model');
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(
         `/user/items?equipmentId=${equipmentId}`,
@@ -107,7 +110,11 @@ export default function ViewItemsScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Items' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -126,6 +133,13 @@ export default function ViewItemsScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    tintColor={Colors.light.primary.button}
+                  />
+                }
               />
             ) : (
               <Text>No items found</Text>
@@ -145,7 +159,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

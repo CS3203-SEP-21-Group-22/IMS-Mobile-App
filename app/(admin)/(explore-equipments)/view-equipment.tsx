@@ -29,6 +29,7 @@ export default function ViewEquipmentScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/user/equipments/${equipmentId}`);
       setEquipment(response.data);
@@ -71,7 +72,11 @@ export default function ViewEquipmentScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Equipment' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -122,7 +127,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

@@ -30,6 +30,7 @@ export default function ViewEquipmentScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(`/user/equipments/${equipmentId}`);
       setEquipment(response.data);
@@ -132,7 +133,11 @@ export default function ViewEquipmentScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Equipment' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -140,7 +145,12 @@ export default function ViewEquipmentScreen() {
             </View>
           ) : equipment ? (
             <SingleItemBackground>
-              <ScrollView style={{ width: '100%' }}>
+              <ScrollView
+                style={{ width: '100%' }}
+                contentContainerStyle={{
+                  flexGrow: 1,
+                }}
+              >
                 <SingleItemWithImage
                   title={equipment.name ?? ''}
                   link={equipment.imageUrl ?? 'equipment'}
@@ -165,6 +175,8 @@ export default function ViewEquipmentScreen() {
                   </Text>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
+              </ScrollView>
+              <View style={styles.bottomContainer}>
                 <WideButton
                   text='View Items'
                   buttonClickHandler={() =>
@@ -186,8 +198,7 @@ export default function ViewEquipmentScreen() {
                     danger={true}
                   />
                 )}
-                <View style={styles.textSeparator} />
-              </ScrollView>
+              </View>
             </SingleItemBackground>
           ) : null}
         </View>
@@ -200,7 +211,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -267,5 +278,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  bottomContainer: {
+    backgroundColor: 'transparent',
+    justifyContent: 'flex-end',
+    width: '100%',
+    bottom: 0,
   },
 });
