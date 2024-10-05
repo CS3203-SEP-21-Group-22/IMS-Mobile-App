@@ -1,4 +1,4 @@
-import { StyleSheet, Alert, ActivityIndicator } from 'react-native';
+import { StyleSheet, Alert, ActivityIndicator, Pressable } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useLocalSearchParams } from 'expo-router';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -17,6 +17,7 @@ export default function ReservedItemsScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(
         `/student/reservations/${reservationId}/token`,
@@ -50,7 +51,18 @@ export default function ReservedItemsScreen() {
             {loading && <ActivityIndicator />}
             {error && <Text>{error}</Text>}
             {!qrValue ? (
-              <Text>QR code not found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData}>
+                  <Text style={styles.notFoundText}>
+                    QR code not found. Tap to retry
+                  </Text>
+                </Pressable>
+              </View>
             ) : (
               <View style={styles.qrContainer}>
                 <Text style={styles.text}>
@@ -87,6 +99,8 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: '20%',
     backgroundColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   text: {
     fontSize: 16,
@@ -101,5 +115,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     backgroundColor: 'transparent',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginTop: '50%',
   },
 });

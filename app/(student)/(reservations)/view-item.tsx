@@ -37,6 +37,7 @@ export default function ViewReservedItemScreen() {
   const [cancelError, setCancelError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(
         `/user/reservations/${reservationId}`,
@@ -108,7 +109,11 @@ export default function ViewReservedItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Reservation' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -116,7 +121,10 @@ export default function ViewReservedItemScreen() {
             </View>
           ) : reservation ? (
             <SingleItemBackground>
-              <ScrollView>
+              <ScrollView
+                style={{ width: '100%' }}
+                contentContainerStyle={{ alignItems: 'center' }}
+              >
                 <SingleItemWithImage
                   title={
                     reservation.itemName
@@ -128,64 +136,122 @@ export default function ViewReservedItemScreen() {
                   }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
+                  <View style={styles.textSeparator} />
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.labName}
+                    </Text>
+                  </View>
                   {reservation.itemSerialNumber && (
-                    <Text style={styles.text}>
-                      Serial Number: {reservation.itemSerialNumber}
-                    </Text>
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Serial Number :</Text>
+                      <Text style={styles.columnValue}>
+                        {reservation.itemSerialNumber}
+                      </Text>
+                    </View>
                   )}
-                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Start Date: {reservation.startDate.split('T')[0]}
-                  </Text>
-                  <Text style={styles.text}>
-                    End Date: {reservation.endDate.split('T')[0]}
-                  </Text>
-                  <View style={styles.textSeparator} />
-                  {reservation.status === 'Reserved' && (
-                    <Text style={styles.text}>
-                      Accepted By: {reservation.respondedClerkName}
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Start Date :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.startDate.split('T')[0]}
                     </Text>
-                  )}
-                  {reservation.status === 'Reserved' && (
-                    <Text style={styles.text}>
-                      Accepted At: {reservation.respondedAt?.split('T')[0]}{' '}
-                      {reservation.respondedAt
-                        ?.split('T')[1]
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>End Date :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.endDate.split('T')[0]}
+                    </Text>
+                  </View>
+                  <View style={styles.textSeparator} />
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Requested At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.createdAt.split('T')[0]}{' '}
+                      {reservation.createdAt
+                        .split('T')[1]
                         .split('.')[0]
                         .slice(0, 5)}
                     </Text>
+                  </View>
+                  {reservation.status === 'Reserved' && (
+                    <View style={styles.textSeparator} />
                   )}
-                  <Text style={styles.text}>Status: {reservation.status}</Text>
-                  {reservation && reservation.status === 'Rejected' && (
-                    <Text style={styles.text}>
-                      Rejection Reason: {reservation.responseNote}
-                    </Text>
+                  {reservation.status === 'Reserved' && (
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Accepted By :</Text>
+                      <Text style={styles.columnValue}>
+                        {reservation.respondedClerkName}
+                      </Text>
+                    </View>
                   )}
+                  {reservation.status === 'Reserved' && (
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Accepted At :</Text>
+                      <Text style={styles.columnValue}>
+                        {reservation.respondedAt?.split('T')[0]}{' '}
+                        {reservation.respondedAt
+                          ?.split('T')[1]
+                          .split('.')[0]
+                          .slice(0, 5)}
+                      </Text>
+                    </View>
+                  )}
+
+                  {reservation.status === 'Rejected' && (
+                    <View style={styles.textSeparator} />
+                  )}
+                  {reservation.status === 'Rejected' && (
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Rejected By :</Text>
+                      <Text style={styles.columnValue}>
+                        {reservation.respondedClerkName}
+                      </Text>
+                    </View>
+                  )}
+
                   <View style={styles.textSeparator} />
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Status :</Text>
+                    <Text style={styles.columnValue}>{reservation.status}</Text>
+                  </View>
+
+                  {reservation.status === 'Rejected' && (
+                    <View style={styles.textSeparator} />
+                  )}
+                  {reservation.status === 'Rejected' && (
+                    <View style={styles.descriptionContainer}>
+                      <Text style={styles.cHeader}>Rejected Reason</Text>
+                      <Text style={styles.descriptionValue}>
+                        {reservation.responseNote}
+                      </Text>
+                    </View>
+                  )}
                 </SingleItemWithImage>
               </ScrollView>
             </SingleItemBackground>
           ) : (
             <Text>No reservation found</Text>
           )}
-          {reservation && reservation.status === 'Reserved' && (
-            <WideButton
-              text='Borrow Item'
-              buttonClickHandler={() => handleBorrow({ item: reservation })}
-            />
-          )}
-          {cancelError && <Text>Error: {cancelError}</Text>}
-          {cancelLoading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
-          ) : reservation && reservation.status === 'Reserved' ? (
-            <WideButton
-              text='Cancel Reservation'
-              buttonClickHandler={() => showAlert({ item: reservation })}
-              danger={true}
-            />
-          ) : null}
         </View>
+        {reservation && reservation.status === 'Reserved' && (
+          <WideButton
+            text='Borrow Item'
+            buttonClickHandler={() => handleBorrow({ item: reservation })}
+          />
+        )}
+        {cancelError && <Text>Error: {cancelError}</Text>}
+        {cancelLoading ? (
+          <ActivityIndicator size='large' color='#ffffff' />
+        ) : reservation && reservation.status === 'Reserved' ? (
+          <WideButton
+            text='Cancel Reservation'
+            buttonClickHandler={() => showAlert({ item: reservation })}
+            danger={true}
+          />
+        ) : null}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -195,7 +261,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -208,12 +274,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     marginBottom: '0.2%',
-  },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
   },
   dropdown: {
     marginTop: '2%',
@@ -261,5 +321,57 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  descriptionContainer: {
+    backgroundColor: 'transparent',
+    marginHorizontal: '5%',
+    marginTop: '2%',
+  },
+  cHeader: {
+    color: 'white',
+    fontSize: 13,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  descriptionValue: {
+    color: 'white',
+    fontSize: 13,
   },
 });

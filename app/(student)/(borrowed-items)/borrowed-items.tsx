@@ -84,7 +84,7 @@ export default function BorrowedItemsScreen() {
       <MainHeader title='Borrowed Items' />
       <ContentContainer>
         <View style={styles.container}>
-          <ContentContainerHeader title='Items to be returned' />
+          <ContentContainerHeader title='Items to be Returned' />
           {loading ? (
             <ActivityIndicator
               size='large'
@@ -118,7 +118,16 @@ export default function BorrowedItemsScreen() {
                 }
               />
             ) : (
-              <Text>No reservations found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No Borrowed Items</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -164,5 +173,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginTop: '50%',
   },
 });

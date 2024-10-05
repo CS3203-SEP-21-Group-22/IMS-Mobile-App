@@ -80,7 +80,10 @@ export default function viewOngoingMaintenancesScreen() {
             </View>
           ) : maintenance ? (
             <SingleItemBackground>
-              <ScrollView style={{ width: '100%' }}>
+              <ScrollView
+                style={{ width: '100%' }}
+                contentContainerStyle={{ alignItems: 'center' }}
+              >
                 <SingleItemWithImage
                   title={
                     maintenance.itemName
@@ -191,17 +194,17 @@ export default function viewOngoingMaintenancesScreen() {
                   )}
                 </SingleItemWithImage>
               </ScrollView>
-              {maintenance && maintenance.status === 'UnderReview' && (
-                <WideButton
-                  text='Review Maintenance'
-                  buttonClickHandler={() =>
-                    handleUpdateButtonPress({ item: maintenance })
-                  }
-                />
-              )}
             </SingleItemBackground>
           ) : null}
         </View>
+        {maintenance && maintenance.status === 'UnderReview' && (
+          <WideButton
+            text='Review Maintenance'
+            buttonClickHandler={() =>
+              handleUpdateButtonPress({ item: maintenance })
+            }
+          />
+        )}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -324,6 +327,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
+    alignSelf: 'center',
   },
   descriptionValue: {
     color: 'white',

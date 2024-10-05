@@ -35,6 +35,7 @@ export default function ViewBorrowedItemScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(
         `/user/reservations/${reservationId}`,
@@ -65,7 +66,11 @@ export default function ViewBorrowedItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Reservation' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -73,7 +78,7 @@ export default function ViewBorrowedItemScreen() {
             </View>
           ) : reservation ? (
             <SingleItemBackground>
-              <ScrollView>
+              <ScrollView style={{ width: '100%' }}>
                 <SingleItemWithImage
                   title={
                     reservation.itemName
@@ -85,50 +90,86 @@ export default function ViewBorrowedItemScreen() {
                   }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
+                  <View style={styles.separator} />
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.labName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Serial Number :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.itemSerialNumber}
+                    </Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Requested By: {reservation.reservedUserName}
-                  </Text>
-                  <Text style={styles.text}>
-                    From: {reservation.startDate.split('T')[0]}
-                  </Text>
-                  <Text style={styles.text}>
-                    To: {reservation.endDate.split('T')[0]}
-                  </Text>
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Start Date :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.startDate.split('T')[0]}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>End Date :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.endDate.split('T')[0]}
+                    </Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Requested At: {reservation.createdAt.split('T')[0]}{' '}
-                    {reservation.createdAt
-                      .split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Requested At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.createdAt.split('T')[0]}{' '}
+                      {reservation.createdAt
+                        .split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
+                    </Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Assigned Item: {reservation.itemSerialNumber}
-                  </Text>
-                  <Text style={styles.text}>
-                    Assigned By: {reservation.respondedClerkName}
-                  </Text>
-                  <Text style={styles.text}>
-                    Assigned At: {reservation.respondedAt?.split('T')[0]}{' '}
-                    {reservation.respondedAt
-                      ?.split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Accepted By :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.respondedClerkName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Accepted At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.respondedAt?.split('T')[0]}{' '}
+                      {reservation.respondedAt
+                        ?.split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
+                    </Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Borrowed From: {reservation.lentClerkName}
-                  </Text>
-                  <Text style={styles.text}>
-                    Borrowed At: {reservation.borrowedAt?.split('T')[0]}{' '}
-                    {reservation.borrowedAt
-                      ?.split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Borrowed From :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.lentClerkName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Borrowed At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.borrowedAt?.split('T')[0]}{' '}
+                      {reservation.borrowedAt
+                        ?.split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
+                    </Text>
+                  </View>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
               </ScrollView>
@@ -136,13 +177,13 @@ export default function ViewBorrowedItemScreen() {
           ) : (
             <Text>No reservation found</Text>
           )}
-          {reservation && reservation.status === 'Borrowed' && (
-            <WideButton
-              text='Return Item'
-              buttonClickHandler={() => handleReturn({ item: reservation })}
-            />
-          )}
         </View>
+        {!loading && reservation && reservation.status === 'Borrowed' && (
+          <WideButton
+            text='Return Item'
+            buttonClickHandler={() => handleReturn({ item: reservation })}
+          />
+        )}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -152,7 +193,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -165,12 +206,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     marginBottom: '0.2%',
-  },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
   },
   dropdown: {
     marginTop: '2%',
@@ -218,5 +253,61 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  separator: {
+    marginVertical: '1%',
+    width: '80%',
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  descriptionContainer: {
+    backgroundColor: 'transparent',
+    marginHorizontal: '5%',
+    marginTop: '2%',
+  },
+  cHeader: {
+    color: 'white',
+    fontSize: 13,
+    fontWeight: 'bold',
+    alignSelf: 'center',
+  },
+  descriptionValue: {
+    color: 'white',
+    fontSize: 13,
   },
 });

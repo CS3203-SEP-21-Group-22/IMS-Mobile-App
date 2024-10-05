@@ -5,6 +5,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { router, useLocalSearchParams } from 'expo-router';
@@ -18,6 +19,7 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import WideButton from '@/components/WideButton';
 import { CreateReservation } from '@/interfaces/reservation.interface';
 import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 export default function ReserveEquipmentScreen() {
   const { equipmentId, labId, name, model, labName, imageURL } =
@@ -79,8 +81,8 @@ export default function ReserveEquipmentScreen() {
               style={{ width: '100%' }}
               contentContainerStyle={{ alignItems: 'center' }}
             >
+              <View style={styles.separator} />
               <Text style={styles.title}>Reservation Details</Text>
-              <Text style={styles.text}>Equipment</Text>
               {imageURL ? (
                 <Image source={{ uri: imageURL }} style={styles.image} />
               ) : (
@@ -89,38 +91,42 @@ export default function ReserveEquipmentScreen() {
                   style={styles.image}
                 />
               )}
-              <Text style={styles.text}>Name: {name}</Text>
-              <Text style={styles.text}>Model: {model}</Text>
-              <Text style={styles.text}>Lab: {labName}</Text>
-              <View
-                style={{
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  width: '80%',
-                  backgroundColor: 'transparent',
-                }}
-              >
-                <View
-                  style={{
-                    width: '50%',
-                    backgroundColor: 'transparent',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Text style={[styles.text, { marginBottom: '1%' }]}>
-                    Start Date :
-                  </Text>
-                  <Button
-                    title={
-                      reservation.startDate
-                        ? reservation.startDate
-                        : 'Start Date'
-                    }
+              <View style={styles.separator} />
+              <View style={styles.row}>
+                <Text style={styles.columnField}>Equipment:</Text>
+                <Text style={styles.columnValue}>{name}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.columnField}>Model:</Text>
+                <Text style={styles.columnValue}>{model}</Text>
+              </View>
+              <View style={styles.row}>
+                <Text style={styles.columnField}>Laboratory:</Text>
+                <Text style={styles.columnValue}>{labName}</Text>
+              </View>
+
+              <View style={styles.separator} />
+
+              <View style={styles.FieldLine}>
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.dateRowField}>
+                    <Text>Start Date: </Text>
+                  </View>
+                  <Pressable
                     onPress={() =>
                       setStartDatePickerVisible(!startDatePickerVisible)
                     }
-                  />
+                    style={styles.datePickerButton}
+                  >
+                    <Text>
+                      {reservation.startDate
+                        ? reservation.startDate !==
+                          new Date().toISOString().split('T')[0]
+                          ? reservation.startDate
+                          : 'Select Start Date'
+                        : 'Select Start Date'}
+                    </Text>
+                  </Pressable>
                   {startDatePickerVisible && (
                     <DateTimePicker
                       value={
@@ -161,25 +167,27 @@ export default function ReserveEquipmentScreen() {
                       {value}
                     </Text>
                   ))}
-                <View
-                  style={{
-                    width: '50%',
-                    backgroundColor: 'transparent',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                  }}
-                >
-                  <Text style={[styles.text, { marginBottom: '1%' }]}>
-                    End Date :
-                  </Text>
-                  <Button
-                    title={
-                      reservation.endDate ? reservation.endDate : 'End Date'
-                    }
+              </View>
+              <View style={styles.FieldLine}>
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.dateRowField}>
+                    <Text>End Date: </Text>
+                  </View>
+                  <Pressable
                     onPress={() =>
                       setEndDatePickerVisible(!endDatePickerVisible)
                     }
-                  />
+                    style={styles.datePickerButton}
+                  >
+                    <Text>
+                      {reservation.endDate
+                        ? reservation.endDate !==
+                          new Date().toISOString().split('T')[0]
+                          ? reservation.endDate
+                          : 'Select End Date'
+                        : 'Select End Date'}
+                    </Text>
+                  </Pressable>
                   {endDatePickerVisible && (
                     <DateTimePicker
                       value={
@@ -235,17 +243,17 @@ export default function ReserveEquipmentScreen() {
               <View style={styles.separator} />
             </ScrollView>
           </EditSingleItemBackground>
-          {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
-          ) : errors.length > 0 ? (
-            <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
-          ) : (
-            <WideButton
-              text='Reserve Equipment'
-              buttonClickHandler={handleButtonPress}
-            />
-          )}
         </View>
+        {loading ? (
+          <ActivityIndicator size='large' color='#ffffff' />
+        ) : errors.length > 0 ? (
+          <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
+        ) : (
+          <WideButton
+            text='Reserve Equipment'
+            buttonClickHandler={handleButtonPress}
+          />
+        )}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -255,7 +263,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -336,5 +344,72 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingTop: '3%',
     paddingBottom: '3%',
+  },
+  selectBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  FieldLine: {
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    // paddingTop: '3%',
+  },
+  dateRowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    paddingTop: '3%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 14,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 14,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  datePickerButton: {
+    backgroundColor: Colors.dark.secondary.background,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: '2%',
+    width: '60%',
+    marginTop: '2%',
+    marginBottom: '1%',
   },
 });

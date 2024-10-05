@@ -40,8 +40,8 @@ export default function ReturnItemScreen() {
   };
 
   const makeRequest = async (qrValue: string) => {
+    setLoading(true);
     try {
-      setLoading(true);
       await initializeAxiosApi();
       await axiosApi.patch(
         `/student/reservations/${reservationId}/verify?token=${qrValue}`,

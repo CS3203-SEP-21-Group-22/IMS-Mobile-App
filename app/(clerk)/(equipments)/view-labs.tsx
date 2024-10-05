@@ -119,7 +119,7 @@ export default function ViewLabsScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
                   <Text style={styles.notFoundText}>No labs found</Text>
                 </Pressable>
               </View>

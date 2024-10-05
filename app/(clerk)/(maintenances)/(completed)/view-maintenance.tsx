@@ -337,6 +337,7 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 13,
     fontWeight: 'bold',
+    alignSelf: 'center',
   },
   descriptionValue: {
     color: 'white',
