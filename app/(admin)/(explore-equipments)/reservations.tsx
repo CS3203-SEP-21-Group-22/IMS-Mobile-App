@@ -5,6 +5,7 @@ import {
   Alert,
   ActivityIndicator,
   RefreshControl,
+  Pressable,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -52,50 +53,83 @@ export default function ViewReservationsScreen() {
 
   const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
     <ListItemBackground>
-      <Text style={styles.titleText}>{item.itemName}</Text>
-      <Text style={styles.text}>Model: {item.itemModel}</Text>
+      <Text style={styles.titleText}>
+        {item.itemName} ({item.itemModel})
+      </Text>
+      <View style={styles.textSeparator} />
       {item.itemSerialNumber ? (
-        <Text style={styles.text}>Serial Number: {item.itemSerialNumber}</Text>
+        <View style={styles.row}>
+          <Text style={styles.columnField}>Serial Number:</Text>
+          <Text style={styles.columnValue}>{item.itemSerialNumber}</Text>
+        </View>
       ) : null}
-      <Text style={styles.text}>Lab: {item.labName}</Text>
-      <Text style={styles.text}>
-        From: {item.startDate.split('T')[0]} To: {item.endDate.split('T')[0]}
-      </Text>
-      <Text style={styles.text}>
-        Requested At: {item.createdAt.split('T')[0]}{' '}
-        {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
-      </Text>
-      {item.status === 'Reserved' ? (
-        <Text style={styles.text}>
-          Responded At: {item.respondedAt?.split('T')[0]}{' '}
-          {item.respondedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Lab:</Text>
+        <Text style={styles.columnValue}>{item.labName}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Start Date:</Text>
+        <Text style={styles.columnValue}>{item.startDate.split('T')[0]}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>End Date:</Text>
+        <Text style={styles.columnValue}>{item.endDate.split('T')[0]}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Requested At:</Text>
+        <Text style={styles.columnValue}>
+          {item.createdAt.split('T')[0]}{' '}
+          {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
         </Text>
+      </View>
+      {item.status === 'Reserved' ||
+      item.status === 'Rejected' ||
+      item.status === 'Borrowed' ||
+      item.status === 'Returned' ||
+      item.status === 'Canceled' ? (
+        <View style={styles.row}>
+          <Text style={styles.columnField}>
+            {item.status === 'Reserved'
+              ? 'Responded At'
+              : item.status === 'Borrowed'
+                ? 'Borrowed At'
+                : item.status === 'Returned'
+                  ? 'Returned At'
+                  : 'Cancelled At'}
+            :
+          </Text>
+          <Text style={styles.columnValue}>
+            {
+              item[
+                item.status === 'Reserved'
+                  ? 'respondedAt'
+                  : item.status === 'Borrowed'
+                    ? 'borrowedAt'
+                    : item.status === 'Returned'
+                      ? 'returnedAt'
+                      : 'cancelledAt'
+              ]?.split('T')[0]
+            }{' '}
+            {item[
+              item.status === 'Reserved'
+                ? 'respondedAt'
+                : item.status === 'Borrowed'
+                  ? 'borrowedAt'
+                  : item.status === 'Returned'
+                    ? 'returnedAt'
+                    : 'cancelledAt'
+            ]
+              ?.split('T')[1]
+              .split('.')[0]
+              .slice(0, 5)}
+          </Text>
+        </View>
       ) : null}
-      {item.status === 'Rejected' ? (
-        <Text style={styles.text}>
-          Responded At: {item.respondedAt?.split('T')[0]}{' '}
-          {item.respondedAt?.split('T')[1].split('.')[0].slice(0, 5)}
-        </Text>
-      ) : null}
-      {item.status === 'Borrowed' ? (
-        <Text style={styles.text}>
-          Borrowed At: {item.borrowedAt?.split('T')[0]}{' '}
-          {item.borrowedAt?.split('T')[1].split('.')[0].slice(0, 5)}
-        </Text>
-      ) : null}
-      {item.status === 'Returned' ? (
-        <Text style={styles.text}>
-          Returned At: {item.returnedAt?.split('T')[0]}{' '}
-          {item.returnedAt?.split('T')[1].split('.')[0].slice(0, 5)}
-        </Text>
-      ) : null}
-      {item.status === 'Canceled' ? (
-        <Text style={styles.text}>
-          Cancelled At: {item.cancelledAt?.split('T')[0]}{' '}
-          {item.cancelledAt?.split('T')[1].split('.')[0].slice(0, 5)}
-        </Text>
-      ) : null}
-      <Text style={styles.text}>Status: {item.status}</Text>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Status:</Text>
+        <Text style={styles.columnValue}>{item.status}</Text>
+      </View>
+      <View style={styles.textSeparator} />
     </ListItemBackground>
   );
 
@@ -138,7 +172,16 @@ export default function ViewReservationsScreen() {
                 }
               />
             ) : (
-              <Text>No reservations found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No reservations found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -184,5 +227,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 15,
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '3%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
   },
 });

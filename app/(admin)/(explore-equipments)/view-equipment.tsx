@@ -89,24 +89,46 @@ export default function ViewEquipmentScreen() {
                   title={equipment.name ?? ''}
                   link={equipment.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>Model: {equipment.model}</Text>
-                  <Text style={styles.text}>Lab: {equipment.labName}</Text>
+                  <View style={styles.textSeparator} />
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Model Name :</Text>
+                    <Text style={styles.columnValue}>{equipment.model}</Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory :</Text>
+                    <Text style={styles.columnValue}>{equipment.labName}</Text>
+                  </View>
                   {equipment.maintenanceIntervalDays && (
-                    <Text style={styles.text}>
-                      Maintenance Interval: {equipment.maintenanceIntervalDays}{' '}
-                      days
-                    </Text>
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>
+                        Maintenance Interval :
+                      </Text>
+                      <Text style={styles.columnValue}>
+                        {equipment.maintenanceIntervalDays} days
+                      </Text>
+                    </View>
                   )}
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Total Items: {equipment.totalCount}
-                  </Text>
-                  <Text style={styles.text}>
-                    Reservations Count: {equipment.reservedCount}
-                  </Text>
-                  <Text style={styles.text}>
-                    Available Items: {equipment.availableCount}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Total Item Count :</Text>
+                    <Text style={styles.columnValue}>
+                      {equipment.totalCount}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Reservation Count :</Text>
+                    <Text style={styles.columnValue}>
+                      {equipment.reservedCount}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>
+                      Available Item Count :
+                    </Text>
+                    <Text style={styles.columnValue}>
+                      {equipment.availableCount}
+                    </Text>
+                  </View>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
                 <View style={styles.textSeparator} />
@@ -141,12 +163,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: '0.2%',
   },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
-  },
   dropdown: {
     marginTop: '2%',
     marginBottom: '4%',
@@ -169,5 +185,29 @@ const styles = StyleSheet.create({
     height: 60,
     borderRadius: 8,
     paddingLeft: '3%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '2%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
   },
 });

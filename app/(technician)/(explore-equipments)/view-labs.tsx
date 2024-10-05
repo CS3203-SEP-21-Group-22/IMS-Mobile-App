@@ -113,7 +113,16 @@ export default function ViewLabsScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No labs found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No labs found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -142,5 +151,10 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 10,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

@@ -126,7 +126,16 @@ export default function ViewItemsScreen() {
                 }
               />
             ) : (
-              <Text>No items found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                  <Text style={styles.notFoundText}>No items found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -172,5 +181,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

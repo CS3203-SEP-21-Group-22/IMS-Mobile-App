@@ -90,40 +90,56 @@ export default function ViewItemScreen() {
                   title={item.itemName ?? ''}
                   link={item.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>Model: {item.itemModel}</Text>
-                  <Text style={styles.text}>Lab: {item.labName}</Text>
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Serial Number: {item.serialNumber}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Model Name:</Text>
+                    <Text style={styles.columnValue}>{item.itemModel}</Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnValue}>{item.labName}</Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Serial Number:</Text>
+                    <Text style={styles.columnValue}>{item.serialNumber}</Text>
+                  </View>
                   {item.lastMaintenanceOn && (
-                    <Text style={styles.text}>
-                      Last Maintenance On:{' '}
-                      {item.lastMaintenanceOn.split('T')[0]}
-                    </Text>
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Last Repair Date:</Text>
+                      <Text style={styles.columnValue}>
+                        {item.lastMaintenanceOn.split('T')[0]}
+                      </Text>
+                    </View>
                   )}
                   {item.lastMaintenanceBy && (
-                    <Text style={styles.text}>
-                      Last Maintenance By: {item.lastMaintenanceBy}
-                    </Text>
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Last Repair By:</Text>
+                      <Text style={styles.columnValue}>
+                        {item.lastMaintenanceBy}
+                      </Text>
+                    </View>
                   )}
-                  <Text style={styles.text}>Status: {item.status}</Text>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Status:</Text>
+                    <Text style={styles.columnValue}>{item.status}</Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
-                <WideButton
-                  text='View Reservations History'
-                  buttonClickHandler={() =>
-                    handleViewReservHistory({ item: item })
-                  }
-                />
-                <WideButton
-                  text='View Maintenance History'
-                  buttonClickHandler={() =>
-                    handleViewMaintHistory({ item: item })
-                  }
-                />
-                <View style={styles.textSeparator} />
               </ScrollView>
+              <WideButton
+                text='View Reservations History'
+                buttonClickHandler={() =>
+                  handleViewReservHistory({ item: item })
+                }
+              />
+              <WideButton
+                text='View Maintenance History'
+                buttonClickHandler={() =>
+                  handleViewMaintHistory({ item: item })
+                }
+              />
+              <View style={styles.textSeparator} />
             </SingleItemBackground>
           ) : null}
         </View>
@@ -149,12 +165,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 12,
     marginBottom: '0.2%',
-  },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
   },
   dropdown: {
     marginTop: '2%',
@@ -203,5 +213,29 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
   },
 });

@@ -53,26 +53,52 @@ export default function ViewMaintenancesScreen() {
 
   const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
     <ListItemBackground>
-      <Text style={styles.titleText}>{item.itemName}</Text>
-      <Text style={styles.text}>Model: {item.itemModel}</Text>
-      <Text style={styles.text}>Serial Number: {item.itemSerialNumber}</Text>
-      <Text style={styles.text}>Lab: {item.labName}</Text>
-      <Text style={styles.text}>
-        From: {item.startDate.split('T')[0]} To: {item.endDate.split('T')[0]}
+      <Text style={styles.titleText}>
+        {item.itemName} ({item.itemModel})
       </Text>
-      <Text style={styles.text}>
-        Created At: {item.createdAt.split('T')[0]}{' '}
-        {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
-      </Text>
-      <Text style={styles.text}>
-        Submitted At: {item.submittedAt?.split('T')[0]}{' '}
-        {item.submittedAt?.split('T')[1].split('.')[0].slice(0, 5)}
-      </Text>
-      <Text style={styles.text}>
-        Reviewed At: {item.reviewedAt?.split('T')[0]}{' '}
-        {item.reviewedAt?.split('T')[1].split('.')[0].slice(0, 5)}
-      </Text>
-      <Text style={styles.text}>Status: {item.status}</Text>
+      <View style={styles.textSeparator} />
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Serial Number:</Text>
+        <Text style={styles.columnValue}>{item.itemSerialNumber}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Lab:</Text>
+        <Text style={styles.columnValue}>{item.labName}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Start Date:</Text>
+        <Text style={styles.columnValue}>{item.startDate.split('T')[0]}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>End Date:</Text>
+        <Text style={styles.columnValue}>{item.endDate.split('T')[0]}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Created At:</Text>
+        <Text style={styles.columnValue}>
+          {item.createdAt.split('T')[0]}{' '}
+          {item.createdAt.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Submitted At:</Text>
+        <Text style={styles.columnValue}>
+          {item.submittedAt?.split('T')[0]}{' '}
+          {item.submittedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Reviewed At:</Text>
+        <Text style={styles.columnValue}>
+          {item.reviewedAt?.split('T')[0]}{' '}
+          {item.reviewedAt?.split('T')[1].split('.')[0].slice(0, 5)}
+        </Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>Status:</Text>
+        <Text style={styles.columnValue}>{item.status}</Text>
+      </View>
+      <View style={styles.textSeparator} />
     </ListItemBackground>
   );
 
@@ -115,7 +141,16 @@ export default function ViewMaintenancesScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No maintenances found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No maintenances found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -161,5 +196,34 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 15,
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '3%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

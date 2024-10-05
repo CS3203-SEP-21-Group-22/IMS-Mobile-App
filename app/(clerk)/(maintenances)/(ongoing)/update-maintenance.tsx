@@ -149,6 +149,16 @@ export default function UpdateMaintenanceScreen() {
                     {maintenance.createdClerkName}
                   </Text>
                 </View>
+                <View style={styles.row}>
+                  <Text style={styles.columnField}>Assigned At:</Text>
+                  <Text style={styles.columnValue}>
+                    {maintenance.createdAt.split('T')[0]}{' '}
+                    {maintenance.createdAt
+                      .split('T')[1]
+                      .split('.')[0]
+                      .slice(0, 5)}
+                  </Text>
+                </View>
                 {maintenance.reviewedClerkName && (
                   <View style={styles.separator} />
                 )}

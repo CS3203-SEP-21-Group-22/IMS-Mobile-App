@@ -5,6 +5,7 @@ import {
   Alert,
   ActivityIndicator,
   Button,
+  RefreshControl,
 } from 'react-native';
 import { Link } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -18,6 +19,7 @@ import ListItemWithImage from '@/components/ListItemWithImage';
 import { useState, useEffect } from 'react';
 import { Maintenance } from '@/interfaces/maintenance.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
   <Link
@@ -55,6 +57,7 @@ export default function AssignedMaintenancesScreen() {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get(
         `/technician/maintenance?completed=false`,
@@ -86,7 +89,11 @@ export default function AssignedMaintenancesScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Assigned Maintenances' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -105,9 +112,25 @@ export default function AssignedMaintenancesScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    tintColor={Colors.light.primary.button}
+                  />
+                }
               />
             ) : (
-              <Text style={styles.text}>No maintenances found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No maintenances found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -120,7 +143,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -136,5 +159,10 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 10,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });
