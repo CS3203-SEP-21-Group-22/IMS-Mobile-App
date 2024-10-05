@@ -129,7 +129,7 @@ export default function ReservedItemsScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '45%' }}>
                   <Text style={styles.notFoundText}>No Reservations Found</Text>
                 </Pressable>
               </View>
