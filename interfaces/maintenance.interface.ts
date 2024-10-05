@@ -49,3 +49,16 @@ export interface MaintenanceCreate {
   technicianId: number | null;
   taskDescription: string | null;
 }
+
+export interface PendingMaintenance {
+  itemId: number;
+  itemName: string;
+  itemModel: string;
+  imageUrl?: string | null;
+  itemSerialNumber: string;
+  labId: number;
+  labName: string;
+  lastMaintenanceId: number;
+  lastMaintenanceStartDate: string;
+  lastMaintenanceEndDate: string;
+}

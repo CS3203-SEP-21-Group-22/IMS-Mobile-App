@@ -17,15 +17,20 @@ import ContentContainerHeader from '@/components/ContentContainerHeader';
 import ListItemBackground from '@/components/ListItemBackground';
 import ListItemWithImage from '@/components/ListItemWithImage';
 import React, { useState, useEffect } from 'react';
-import { Maintenance } from '@/interfaces/maintenance.interface';
+import { PendingMaintenance } from '@/interfaces/maintenance.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 import Colors from '@/constants/Colors';
 
-const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
+const ItemComponent: React.FC<{ item: PendingMaintenance }> = ({ item }) => (
   <Link
     href={{
       pathname: '/(clerk)/(maintenances)/(ongoing)/add-maintenance',
-      params: { itemId: item.itemId },
+      params: {
+        itemId: item.itemId,
+        itemSerialNumber: item.itemSerialNumber,
+        itemName: item.itemName,
+        labName: item.labName,
+      },
     }}
     asChild
   >
@@ -40,6 +45,9 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
             <Text style={styles.text}>
               Serial Number: {item.itemSerialNumber}
             </Text>
+            <Text style={styles.text}>
+              Last Repair On: {item.lastMaintenanceEndDate.split('T')[0]}
+            </Text>
           </ListItemWithImage>
         </ListItemBackground>
       )}
@@ -48,7 +56,7 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
 );
 
 export default function ViewPendingMaintenancesScreen() {
-  const [maintenances, setMaintenances] = useState<Maintenance[]>([]);
+  const [maintenances, setMaintenances] = useState<PendingMaintenance[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -98,7 +106,7 @@ export default function ViewPendingMaintenancesScreen() {
               <FlatList
                 data={maintenances}
                 renderItem={({ item }) => <ItemComponent item={item} />}
-                keyExtractor={(item) => item.maintenanceId.toString()}
+                keyExtractor={(item) => item.itemId.toString()}
                 style={styles.flatList}
                 contentContainerStyle={{
                   alignItems: 'stretch',
@@ -115,7 +123,7 @@ export default function ViewPendingMaintenancesScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No maintenances found</Text>
+              <Text style={styles.notFoundText}>No maintenances found</Text>
             )
           ) : null}
         </View>
@@ -144,5 +152,11 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 10,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginTop: '50%',
   },
 });

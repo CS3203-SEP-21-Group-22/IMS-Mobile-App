@@ -145,10 +145,12 @@ export default function ViewItemsScreen() {
               <Text>No items found</Text>
             )
           ) : null}
-          <WideButton
-            text='Add New Item'
-            buttonClickHandler={handleButtonClick}
-          />
+          {!loading ? (
+            <WideButton
+              text='Add New Item'
+              buttonClickHandler={handleButtonClick}
+            />
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 13,
   },
   button: {
     width: '100%',

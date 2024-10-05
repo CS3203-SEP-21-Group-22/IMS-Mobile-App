@@ -40,9 +40,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     alignSelf: 'center',
     width: '100%',
-    paddingVertical: '4%',
-    paddingHorizontal: '6%',
+    paddingTop: '3%',
     paddingBottom: '6%',
+    paddingHorizontal: '6%',
+    // marginTop: '2%',
+    marginBottom: '16%',
     borderRadius: 16,
   },
 });

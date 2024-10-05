@@ -5,6 +5,7 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  Pressable,
 } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { Link, router, useLocalSearchParams } from 'expo-router';
@@ -24,9 +25,15 @@ import { Item } from '@/interfaces/item.interface';
 import { User } from '@/interfaces/userProfile.interface';
 import { Lab } from '@/interfaces/lab.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 export default function AddMaintenanceScreen() {
-  const { itemId } = useLocalSearchParams<{ itemId: string }>();
+  const { itemId, itemSerialNumber, itemName, labName } = useLocalSearchParams<{
+    itemId: string;
+    itemSerialNumber: string;
+    itemName: string;
+    labName: string;
+  }>();
   const [startDatePickerVisible, setStartDatePickerVisible] = useState(false);
   const [endDatePickerVisible, setEndDatePickerVisible] = useState(false);
   const [labs, setLabs] = useState<Lab[]>([]);
@@ -86,6 +93,15 @@ export default function AddMaintenanceScreen() {
   useEffect(() => {
     if (selectedLab) {
       fetchEquipments(selectedLab.labId);
+      setSelectedEquipment(null);
+      setItems([]);
+      setMaintenance({
+        itemId: null,
+        startDate: null,
+        endDate: null,
+        technicianId: null,
+        taskDescription: null,
+      });
     }
   }, [selectedLab]);
 
@@ -104,6 +120,13 @@ export default function AddMaintenanceScreen() {
   useEffect(() => {
     if (selectedEquipment) {
       fetchItems(selectedEquipment.equipmentId);
+      setMaintenance({
+        itemId: null,
+        startDate: null,
+        endDate: null,
+        technicianId: null,
+        taskDescription: null,
+      });
     }
   }, [selectedEquipment]);
 
@@ -132,6 +155,7 @@ export default function AddMaintenanceScreen() {
   }, [itemId]);
 
   const handleButtonPress = async () => {
+    console.log(maintenance.itemId);
     const errorsList: [string, string][] = [];
     if (!maintenance.itemId) errorsList.push(['$.itemId', 'Item is required']);
     if (!maintenance.startDate)
@@ -196,103 +220,123 @@ export default function AddMaintenanceScreen() {
           ) : labs && technicians ? (
             <EditSingleItemBackground>
               <ScrollView
-                style={{ width: '100%' }}
-                contentContainerStyle={{ alignItems: 'center' }}
+                style={{
+                  width: '100%',
+                  maxHeight: '100%',
+                }}
+                contentContainerStyle={{
+                  alignItems: 'center',
+                }}
               >
                 <Text style={styles.title}>Maintenance Details</Text>
-                <Text style={styles.text}>Lab :</Text>
-                <Dropdown
-                  data={labs}
-                  mode='modal'
-                  search
-                  searchPlaceholder='Search Lab'
-                  labelField='labName'
-                  valueField='labId'
-                  onChange={(item) => handleSelectLab(item)}
-                  style={styles.dropdown}
-                  placeholder={selectedLab ? selectedLab.labName : 'Select Lab'}
-                  placeholderStyle={styles.dropdownText}
-                  selectedTextStyle={styles.dropdownText}
-                />
-                <Text style={styles.text}>Equipment :</Text>
-                <Dropdown
-                  data={equipments}
-                  mode='modal'
-                  search
-                  searchPlaceholder='Search Item'
-                  labelField='name'
-                  valueField='equipmentId'
-                  onChange={(item) => handleSelectEquipment(item)}
-                  style={styles.dropdown}
-                  placeholder={
-                    selectedEquipment
-                      ? equipments.find(
-                          (equipment) =>
-                            equipment.equipmentId ===
-                            selectedEquipment.equipmentId,
-                        )?.name
-                      : 'Select Equipment'
-                  }
-                  placeholderStyle={styles.dropdownText}
-                  selectedTextStyle={styles.dropdownText}
-                />
-                <Text style={styles.text}>Serial Number :</Text>
-                <Dropdown
-                  data={items}
-                  mode='modal'
-                  search
-                  searchPlaceholder='Search Item'
-                  labelField='serialNumber'
-                  valueField='itemId'
-                  onChange={(item) =>
-                    setMaintenance({ ...maintenance, itemId: item.itemId })
-                  }
-                  style={styles.dropdown}
-                  placeholder={
-                    maintenance.itemId
-                      ? items.find((item) => item.itemId === maintenance.itemId)
-                          ?.serialNumber
-                      : 'Select Item'
-                  }
-                  placeholderStyle={styles.dropdownText}
-                  selectedTextStyle={styles.dropdownText}
-                />
-                {errors
-                  .filter(([key, value]) => key === '$.itemId')
-                  .map(([key, value]) => (
-                    <Text key={key} style={styles.errorText}>
-                      {value}
-                    </Text>
-                  ))}
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-between',
-                    width: '100%',
-                    backgroundColor: 'transparent',
-                  }}
-                >
-                  <View
-                    style={{
-                      width: '50%',
-                      backgroundColor: 'transparent',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Text style={[styles.text, { marginBottom: '1%' }]}>
-                      Start Date :
-                    </Text>
-                    <Button
-                      title={
-                        maintenance.startDate
-                          ? maintenance.startDate
-                          : 'Start Date'
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.rowField}>
+                    <Text>Laboratory: </Text>
+                  </View>
+                  <Dropdown
+                    data={labs}
+                    mode='modal'
+                    search
+                    searchPlaceholder='Search Lab'
+                    labelField='labName'
+                    valueField='labId'
+                    onChange={(item) => handleSelectLab(item)}
+                    style={styles.dropdown}
+                    placeholder={
+                      selectedLab
+                        ? selectedLab.labName
+                        : labName
+                          ? labName
+                          : 'Select Lab'
+                    }
+                    placeholderStyle={styles.dropdownText}
+                    selectedTextStyle={styles.dropdownText}
+                  />
+                </View>
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.rowField}>
+                    <Text>Equipment: </Text>
+                  </View>
+                  <Dropdown
+                    data={equipments}
+                    mode='modal'
+                    search
+                    searchPlaceholder='Search Item'
+                    labelField='name'
+                    valueField='equipmentId'
+                    onChange={(item) => handleSelectEquipment(item)}
+                    style={styles.dropdown}
+                    placeholder={
+                      selectedEquipment
+                        ? equipments.find(
+                            (equipment) =>
+                              equipment.equipmentId ===
+                              selectedEquipment.equipmentId,
+                          )?.name
+                        : itemName && !selectedLab && !selectedEquipment
+                          ? itemName
+                          : 'Select Equipment'
+                    }
+                    placeholderStyle={styles.dropdownText}
+                    selectedTextStyle={styles.dropdownText}
+                  />
+                </View>
+
+                <View style={styles.FieldLine}>
+                  <View style={styles.selectBoxRow}>
+                    <View style={styles.rowField}>
+                      <Text>Item: </Text>
+                    </View>
+                    <Dropdown
+                      data={items}
+                      mode='modal'
+                      search
+                      searchPlaceholder='Search Item'
+                      labelField='serialNumber'
+                      valueField='itemId'
+                      onChange={(item) =>
+                        setMaintenance({ ...maintenance, itemId: item.itemId })
                       }
+                      style={styles.dropdown}
+                      placeholder={
+                        itemSerialNumber && !selectedLab && !selectedEquipment
+                          ? itemSerialNumber
+                          : maintenance.itemId
+                            ? items.find(
+                                (item) => item.itemId === maintenance.itemId,
+                              )?.serialNumber
+                            : 'Select Item'
+                      }
+                      placeholderStyle={styles.dropdownText}
+                      selectedTextStyle={styles.dropdownText}
+                    />
+                  </View>
+                  {errors
+                    .filter(([key, value]) => key === '$.itemId')
+                    .map(([key, value]) => (
+                      <Text key={key} style={styles.errorText}>
+                        {value}
+                      </Text>
+                    ))}
+                </View>
+
+                <View style={styles.FieldLine}>
+                  <View style={styles.selectBoxRow}>
+                    <View style={styles.dateRowField}>
+                      <Text>Start Date: </Text>
+                    </View>
+                    <Pressable
                       onPress={() =>
                         setStartDatePickerVisible(!startDatePickerVisible)
                       }
-                    />
+                      style={styles.datePickerButton}
+                    >
+                      <Text>
+                        {maintenance.startDate
+                          ? maintenance.startDate
+                          : 'Select Start Date'}
+                      </Text>
+                    </Pressable>
                     {startDatePickerVisible && (
                       <DateTimePicker
                         value={
@@ -325,34 +369,33 @@ export default function AddMaintenanceScreen() {
                         }}
                       />
                     )}
-                    {errors
-                      .filter(([key, value]) => key === 'startDate')
-                      .map(([key, value]) => (
-                        <Text key={key} style={styles.errorText}>
-                          {value}
-                        </Text>
-                      ))}
                   </View>
+                  {errors
+                    .filter(([key, value]) => key === 'startDate')
+                    .map(([key, value]) => (
+                      <Text key={key} style={styles.errorText}>
+                        {value}
+                      </Text>
+                    ))}
+                </View>
 
-                  <View
-                    style={{
-                      width: '50%',
-                      backgroundColor: 'transparent',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <Text style={[styles.text, { marginBottom: '1%' }]}>
-                      End Date :
-                    </Text>
-                    <Button
-                      title={
-                        maintenance.endDate ? maintenance.endDate : 'End Date'
-                      }
+                <View style={styles.FieldLine}>
+                  <View style={styles.selectBoxRow}>
+                    <View style={styles.dateRowField}>
+                      <Text>End Date: </Text>
+                    </View>
+                    <Pressable
                       onPress={() =>
                         setEndDatePickerVisible(!endDatePickerVisible)
                       }
-                    />
+                      style={styles.datePickerButton}
+                    >
+                      <Text>
+                        {maintenance.endDate
+                          ? maintenance.endDate
+                          : 'Select End Date'}
+                      </Text>
+                    </Pressable>
                     {endDatePickerVisible && (
                       <DateTimePicker
                         value={
@@ -384,50 +427,63 @@ export default function AddMaintenanceScreen() {
                         }}
                       />
                     )}
-                    {errors
-                      .filter(([key, value]) => key === 'endDate')
-                      .map(([key, value]) => (
-                        <Text key={key} style={styles.errorText}>
-                          {value}
-                        </Text>
-                      ))}
+                  </View>
+                  {errors
+                    .filter(([key, value]) => key === 'endDate')
+                    .map(([key, value]) => (
+                      <Text key={key} style={styles.errorText}>
+                        {value}
+                      </Text>
+                    ))}
+                </View>
+
+                <View style={styles.separator} />
+
+                <View style={styles.FieldLine}>
+                  <View style={styles.selectBoxRow}>
+                    <View style={styles.rowField}>
+                      <Text>Technician: </Text>
+                    </View>
+                    <Dropdown
+                      data={technicians}
+                      mode='modal'
+                      search
+                      searchPlaceholder='Search Item'
+                      labelField='firstName'
+                      valueField='userId'
+                      onChange={(item) =>
+                        setMaintenance({
+                          ...maintenance,
+                          technicianId: item.userId,
+                        })
+                      }
+                      style={styles.dropdown}
+                      placeholder={
+                        maintenance.technicianId
+                          ? (technicians.find(
+                              (technician) =>
+                                technician.userId === maintenance.technicianId,
+                            )?.firstName ?? 'Select Technician')
+                          : 'Select Technician'
+                      }
+                      placeholderStyle={styles.dropdownText}
+                      selectedTextStyle={styles.dropdownText}
+                    />
+                  </View>
+                  {errors
+                    .filter(([key, value]) => key === 'technicianId')
+                    .map(([key, value]) => (
+                      <Text key={key} style={styles.errorText}>
+                        {value}
+                      </Text>
+                    ))}
+                </View>
+
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.rowField}>
+                    <Text>Task Description :</Text>
                   </View>
                 </View>
-                <View style={styles.separator} />
-                <Text style={styles.text}>Assigned Technician :</Text>
-                <Dropdown
-                  data={technicians}
-                  mode='modal'
-                  search
-                  searchPlaceholder='Search Item'
-                  labelField='firstName'
-                  valueField='userId'
-                  onChange={(item) =>
-                    setMaintenance({
-                      ...maintenance,
-                      technicianId: item.userId,
-                    })
-                  }
-                  style={styles.dropdown}
-                  placeholder={
-                    maintenance.technicianId
-                      ? (technicians.find(
-                          (technician) =>
-                            technician.userId === maintenance.technicianId,
-                        )?.firstName ?? 'Select Technician')
-                      : 'Select Technician'
-                  }
-                  placeholderStyle={styles.dropdownText}
-                  selectedTextStyle={styles.dropdownText}
-                />
-                {errors
-                  .filter(([key, value]) => key === 'technicianId')
-                  .map(([key, value]) => (
-                    <Text key={key} style={styles.errorText}>
-                      {value}
-                    </Text>
-                  ))}
-                <Text style={styles.text}>Task Description :</Text>
                 <TextInput
                   style={styles.multilineInput}
                   placeholder='Enter Task Description'
@@ -450,16 +506,16 @@ export default function AddMaintenanceScreen() {
                   ))}
                 <View style={styles.separator} />
               </ScrollView>
+              {updateLoading ? (
+                <ActivityIndicator size='large' color='#ffffff' />
+              ) : (
+                <WideButton
+                  text='Create Maintenance'
+                  buttonClickHandler={handleButtonPress}
+                />
+              )}
             </EditSingleItemBackground>
           ) : null}
-          {updateLoading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
-          ) : (
-            <WideButton
-              text='Create Maintenance'
-              buttonClickHandler={handleButtonPress}
-            />
-          )}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -470,7 +526,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -498,8 +554,9 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    marginTop: '1%',
+    // marginTop: '2%',
     fontSize: 12,
+    alignSelf: 'center',
   },
   image: {
     marginTop: '4%',
@@ -508,28 +565,20 @@ const styles = StyleSheet.create({
     height: 100,
   },
   dropdown: {
-    marginTop: '1%',
-    marginBottom: '2%',
+    marginTop: '2%',
+    marginBottom: '1%',
     backgroundColor: 'white',
     borderRadius: 8,
     paddingHorizontal: '5%',
     paddingVertical: '2%',
-    width: 200,
+    width: '60%',
   },
   dropdownText: {
     color: 'black',
     fontSize: 13,
     alignSelf: 'center',
     paddingLeft: '3%',
-    // paddingVertical: '1%',
-  },
-  multilineInput: {
-    backgroundColor: 'white',
-    width: 200,
-    height: 60,
-    borderRadius: 8,
-    paddingLeft: '3%',
-    marginTop: '1%',
+    paddingVertical: '1%',
   },
   buttonsContainer: {
     flexDirection: 'row',
@@ -551,5 +600,79 @@ const styles = StyleSheet.create({
     fontSize: 15,
     paddingTop: '3%',
     paddingBottom: '3%',
+  },
+  multilineInput: {
+    backgroundColor: 'white',
+    width: 230,
+    height: 40,
+    borderRadius: 8,
+    paddingLeft: '6%',
+  },
+  selectBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  FieldLine: {
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    // paddingTop: '3%',
+  },
+  dateRowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    paddingTop: '3%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  datePickerButton: {
+    backgroundColor: Colors.dark.secondary.background,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: '2%',
+    width: '60%',
+    marginTop: '2%',
+    marginBottom: '1%',
   },
 });

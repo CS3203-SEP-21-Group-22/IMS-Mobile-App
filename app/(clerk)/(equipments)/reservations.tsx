@@ -53,11 +53,10 @@ export default function ViewReservationsScreen() {
 
   const ItemComponent: React.FC<{ item: Reservation }> = ({ item }) => (
     <ListItemBackground>
-      <Text style={styles.titleText}>{item.itemName}</Text>
-      <View style={styles.row}>
-        <Text style={styles.columnField}>Model:</Text>
-        <Text style={styles.columnValue}>{item.itemModel}</Text>
-      </View>
+      <Text style={styles.titleText}>
+        {item.itemName} ({item.itemModel})
+      </Text>
+      <View style={styles.textSeparator} />
       {item.itemSerialNumber ? (
         <View style={styles.row}>
           <Text style={styles.columnField}>Serial Number:</Text>
@@ -69,10 +68,12 @@ export default function ViewReservationsScreen() {
         <Text style={styles.columnValue}>{item.labName}</Text>
       </View>
       <View style={styles.row}>
-        <Text style={styles.columnField}>Date Range:</Text>
-        <Text style={styles.columnValue}>
-          {item.startDate.split('T')[0]} - {item.endDate.split('T')[0]}
-        </Text>
+        <Text style={styles.columnField}>Start Date:</Text>
+        <Text style={styles.columnValue}>{item.startDate.split('T')[0]}</Text>
+      </View>
+      <View style={styles.row}>
+        <Text style={styles.columnField}>End Date:</Text>
+        <Text style={styles.columnValue}>{item.endDate.split('T')[0]}</Text>
       </View>
       <View style={styles.row}>
         <Text style={styles.columnField}>Requested At:</Text>
@@ -128,6 +129,7 @@ export default function ViewReservationsScreen() {
         <Text style={styles.columnField}>Status:</Text>
         <Text style={styles.columnValue}>{item.status}</Text>
       </View>
+      <View style={styles.textSeparator} />
     </ListItemBackground>
   );
 
@@ -225,12 +227,20 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   columnField: {
-    fontWeight: 'bold',
     flex: 1,
+    paddingLeft: '3%',
+    fontSize: 13,
   },
   columnValue: {
     flex: 1,
-    textAlign: 'right',
-    fontSize: 11,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
   },
 });

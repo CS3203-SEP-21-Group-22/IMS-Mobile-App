@@ -67,7 +67,11 @@ export default function ViewReservedItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Item Request' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -75,7 +79,7 @@ export default function ViewReservedItemScreen() {
             </View>
           ) : reservation ? (
             <SingleItemBackground>
-              <ScrollView>
+              <ScrollView style={{ width: '100%' }}>
                 <SingleItemWithImage
                   title={
                     reservation.itemName
@@ -87,39 +91,57 @@ export default function ViewReservedItemScreen() {
                   }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Requested By: {reservation.reservedUserName}
-                  </Text>
-                  <Text style={styles.text}>
-                    From: {reservation.startDate.split('T')[0]}
-                  </Text>
-                  <Text style={styles.text}>
-                    To: {reservation.endDate.split('T')[0]}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.labName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Serial Number:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.itemSerialNumber}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Requested User:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.reservedUserName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Start Date:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.startDate.split('T')[0]}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>End Date:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.endDate.split('T')[0]}
+                    </Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Requested At: {reservation.createdAt.split('T')[0]}{' '}
-                    {reservation.createdAt
-                      .split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Accepted By:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.respondedClerkName}
+                    </Text>
+                  </View>
+
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Assigned Item: {reservation.itemSerialNumber}
-                  </Text>
-                  <Text style={styles.text}>
-                    Assigned By: {reservation.respondedClerkName}
-                  </Text>
-                  <Text style={styles.text}>
-                    Assigned At: {reservation.respondedAt?.split('T')[0]}{' '}
-                    {reservation.respondedAt
-                      ?.split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.text}>
+                      Accepted At : {reservation.respondedAt?.split('T')[0]}{' '}
+                      {reservation.createdAt
+                        .split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
+                    </Text>
+                  </View>
                   <View style={styles.textSeparator} />
                 </SingleItemWithImage>
               </ScrollView>
@@ -155,12 +177,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginBottom: '0.2%',
   },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
-  },
   dropdown: {
     marginTop: '2%',
     marginBottom: '4%',
@@ -170,18 +186,41 @@ const styles = StyleSheet.create({
     paddingVertical: '2%',
     width: 200,
   },
-  dropdownText: {
-    color: 'black',
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
     fontSize: 13,
     alignSelf: 'center',
-    paddingLeft: '3%',
-    paddingVertical: '1%',
+    paddingBottom: '2%',
   },
-  multilineInput: {
-    backgroundColor: 'white',
-    width: 200,
-    height: 60,
-    borderRadius: 8,
-    paddingLeft: '3%',
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
   },
 });

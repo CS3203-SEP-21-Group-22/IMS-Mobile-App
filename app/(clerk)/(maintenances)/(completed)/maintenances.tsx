@@ -120,7 +120,7 @@ export default function ViewCompletedMaintenancesScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No maintenances found</Text>
+              <Text style={styles.notFoundText}>No maintenances found</Text>
             )
           ) : null}
         </View>
@@ -167,5 +167,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginTop: '50%',
   },
 });

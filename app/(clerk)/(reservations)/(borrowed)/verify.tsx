@@ -49,10 +49,18 @@ export default function VerifyReturningItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Verify Returning Item' />
           <View style={styles.subContainer}>
-            {loading && <ActivityIndicator />}
+            {loading && (
+              <ActivityIndicator
+                size='large'
+                color='#ffffff'
+                style={{ marginTop: '50%' }}
+              />
+            )}
             {error && <Text>{error}</Text>}
             {!qrValue ? (
-              <Text>QR code not found</Text>
+              !loading && (
+                <Text style={styles.notFoundText}>QR code not found</Text>
+              )
             ) : (
               <View style={styles.qrContainer}>
                 <Text style={styles.text}>
@@ -103,5 +111,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%',
     backgroundColor: 'transparent',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginTop: '50%',
   },
 });

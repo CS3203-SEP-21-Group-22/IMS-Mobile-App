@@ -116,7 +116,11 @@ export default function ViewRequestedItemScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Item Request' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -136,56 +140,79 @@ export default function ViewRequestedItemScreen() {
                   }
                   link={reservation.imageUrl ?? 'equipment'}
                 >
-                  <Text style={styles.text}>Lab: {reservation.labName}</Text>
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Requested By: {reservation.reservedUserName}
-                  </Text>
-                  <Text style={styles.text}>
-                    From: {reservation.startDate.split('T')[0]}
-                  </Text>
-                  <Text style={styles.text}>
-                    To: {reservation.endDate.split('T')[0]}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.labName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Requested User:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.reservedUserName}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Start Date:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.startDate.split('T')[0]}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>End Date:</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.endDate.split('T')[0]}
+                    </Text>
+                  </View>
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>
-                    Requested At: {reservation.createdAt.split('T')[0]}{' '}
-                    {reservation.createdAt
-                      .split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
+                  <View style={styles.row}>
+                    <Text style={styles.text}>
+                      Requested At : {reservation.createdAt.split('T')[0]}{' '}
+                      {reservation.createdAt
+                        .split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
+                    </Text>
+                  </View>
                   <View style={styles.textSeparator} />
-                  <Text style={styles.text}>Select item to assign: </Text>
-                  <Dropdown
-                    data={itemsList}
-                    mode='modal'
-                    search
-                    searchPlaceholder='Search Item'
-                    labelField='serialNumber'
-                    valueField='itemId'
-                    onChange={(item) => setSelectedItem(item)}
-                    style={styles.dropdown}
-                    placeholder={
-                      selectedItem ? selectedItem.serialNumber : 'Select Item'
-                    }
-                    placeholderStyle={styles.dropdownText}
-                    selectedTextStyle={styles.dropdownText}
-                  />
-                  {responseErrors
-                    .filter(([key, value]) => key === 'itemId')
-                    .map(([key, value]) => (
-                      <View key={key}>
-                        <Text key={key} style={styles.errorText}>
-                          {value}
-                        </Text>
-                        <View style={styles.textSeparator} />
-                      </View>
-                    ))}
+                  <View style={styles.selectBoxRow}>
+                    <View style={styles.rowField}>
+                      <Text>Assigned Item: </Text>
+                    </View>
+                    <Dropdown
+                      data={itemsList}
+                      mode='modal'
+                      search
+                      searchPlaceholder='Search Item'
+                      labelField='serialNumber'
+                      valueField='itemId'
+                      onChange={(item) => setSelectedItem(item)}
+                      style={styles.dropdown}
+                      placeholder={
+                        selectedItem ? selectedItem.serialNumber : 'Select Item'
+                      }
+                      placeholderStyle={styles.dropdownText}
+                      selectedTextStyle={styles.dropdownText}
+                    />
+                    {responseErrors
+                      .filter(([key, value]) => key === 'itemId')
+                      .map(([key, value]) => (
+                        <View key={key}>
+                          <Text key={key} style={styles.errorText}>
+                            {value}
+                          </Text>
+                          <View style={styles.textSeparator} />
+                        </View>
+                      ))}
+                  </View>
 
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Reject Note:</Text>
+                  </View>
                   <TextInput
                     style={styles.multilineInput}
-                    placeholder='Reject Note'
+                    placeholder='Enter Reason for Rejection'
                     value={note ? note.toString() : ''}
                     onChangeText={(text) => setNote(text)}
                     multiline
@@ -253,13 +280,6 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     fontSize: 12,
-    marginBottom: '0.2%',
-  },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
   },
   dropdown: {
     marginTop: '2%',
@@ -268,7 +288,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: '5%',
     paddingVertical: '2%',
-    width: 200,
+    width: '50%',
   },
   dropdownText: {
     color: 'black',
@@ -279,9 +299,53 @@ const styles = StyleSheet.create({
   },
   multilineInput: {
     backgroundColor: 'white',
-    width: 200,
-    height: 60,
+    width: 220,
+    height: 40,
     borderRadius: 8,
     paddingLeft: '3%',
+    marginTop: '2%',
+  },
+  selectBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
   },
 });

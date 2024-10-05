@@ -76,7 +76,7 @@ const getRoleFromServer = async (
       await storeUserProfile(userProfile);
       await storeTokens(access_token, refresh_token, token);
       await setLoginStatusLoggedIn();
-      router.push(roleRoutes[role]);
+      router.replace(roleRoutes[role]);
     } else {
       await removeTokens();
       await clearUserProfile();
@@ -88,7 +88,7 @@ const getRoleFromServer = async (
     await removeTokens();
     await clearUserProfile();
     await setLoginStatusLoggedOut();
-    router.push('/login');
+    router.replace('/login');
   }
 };
 

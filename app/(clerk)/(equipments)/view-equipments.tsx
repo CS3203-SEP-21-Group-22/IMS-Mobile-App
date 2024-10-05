@@ -123,10 +123,12 @@ export default function ViewEquipmentsScreen() {
               <Text style={styles.text}>No equipments found</Text>
             )
           ) : null}
-          <WideButton
-            text='Add New Equipment'
-            buttonClickHandler={handleButtonClick}
-          />
+          {!loading ? (
+            <WideButton
+              text='Add New Equipment'
+              buttonClickHandler={handleButtonClick}
+            />
+          ) : null}
         </View>
       </ContentContainer>
     </BackgroundLayout>
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },

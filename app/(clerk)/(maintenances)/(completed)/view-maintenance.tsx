@@ -14,6 +14,7 @@ import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
+import SingleItemWithImage from '@/components/SingleItemWithImage';
 import SingleItemBackground from '@/components/SingleItemBackground';
 import ClerkMaintenancesHorizontalBar from '@/components/ClerkMaintHorizontalBar';
 import React, { useState, useEffect } from 'react';
@@ -68,77 +69,93 @@ export default function viewCompletedMaintenanceScreen() {
             </View>
           ) : maintenance ? (
             <SingleItemBackground>
-              <ScrollView
-                style={{ width: '100%' }}
-                contentContainerStyle={{ alignItems: 'center' }}
-              >
-                <Text style={styles.title}>
-                  {maintenance.itemName} ({maintenance.itemModel})
-                </Text>
-                <View style={styles.separator} />
-                <Text style={styles.text}>
-                  Serial Number: {maintenance.itemSerialNumber}
-                </Text>
-                <Text style={styles.text}>Lab: {maintenance.labName}</Text>
-                <View style={styles.separator} />
-                <Text style={styles.text}>
-                  From: {maintenance.startDate.split('T')[0]} To:{' '}
-                  {maintenance.endDate.split('T')[0]}
-                </Text>
-                <View style={styles.separator} />
-                <Text style={[styles.descriptionText, { width: '95%' }]}>
-                  Task Description: {maintenance.taskDescription}
-                </Text>
-                <View style={styles.separator} />
-                <Text style={styles.text}>
-                  Assigned By: {maintenance.createdClerkName}
-                </Text>
-                <Text style={styles.text}>
-                  Assigned At: {maintenance.createdAt.split('T')[0]}{' '}
-                  {maintenance.createdAt
-                    .split('T')[1]
-                    .split('.')[0]
-                    .slice(0, 5)}
-                </Text>
-                <View style={styles.separator} />
-                {maintenance.reviewNote && (
-                  <Text style={styles.text}>
-                    Review Note: {maintenance.reviewNote}
-                  </Text>
-                )}
-                {maintenance.reviewedClerkName && (
-                  <Text style={styles.text}>
-                    Reviewed By: {maintenance.reviewedClerkName}
-                  </Text>
-                )}
-                {maintenance.reviewedAt && (
-                  <Text style={styles.text}>
-                    Reviewed At: {maintenance.reviewedAt.split('T')[0]}{' '}
-                    {maintenance.reviewedAt
-                      .split('T')[1]
-                      .split('.')[0]
-                      .slice(0, 5)}
-                  </Text>
-                )}
-                <View style={styles.separator} />
-                <Text style={styles.text}>Status: {maintenance.status}</Text>
-                {maintenance.reviewNote && (
-                  <>
+              <ScrollView style={{ width: '100%' }}>
+                <SingleItemWithImage
+                  title={
+                    maintenance.itemName
+                      ? maintenance.itemName +
+                        ' (' +
+                        maintenance.itemModel +
+                        ')'
+                      : ''
+                  }
+                  link={maintenance.imageUrl ?? 'equipment'}
+                >
+                  <ScrollView
+                    style={{ width: '100%' }}
+                    contentContainerStyle={{ alignItems: 'center' }}
+                  >
+                    {/* <Text style={styles.title}>
+                      {maintenance.itemName} ({maintenance.itemModel})
+                    </Text> */}
                     <View style={styles.separator} />
-                    <Text style={styles.descriptionText}>
-                      Review Note: {maintenance.reviewNote}
+                    <Text style={styles.text}>
+                      Serial Number: {maintenance.itemSerialNumber}
                     </Text>
-                  </>
-                )}
-                <View style={styles.separator} />
-                {maintenance.cost && (
-                  <Text style={styles.text}>Cost: {maintenance.cost}</Text>
-                )}
-                {maintenance.submitNote && (
-                  <Text style={styles.text}>
-                    Submit Note: {maintenance.submitNote}
-                  </Text>
-                )}
+                    <Text style={styles.text}>Lab: {maintenance.labName}</Text>
+                    <View style={styles.separator} />
+                    <Text style={styles.text}>
+                      From: {maintenance.startDate.split('T')[0]} To:{' '}
+                      {maintenance.endDate.split('T')[0]}
+                    </Text>
+                    <View style={styles.separator} />
+                    <Text style={[styles.descriptionText, { width: '95%' }]}>
+                      Task Description: {maintenance.taskDescription}
+                    </Text>
+                    <View style={styles.separator} />
+                    <Text style={styles.text}>
+                      Assigned By: {maintenance.createdClerkName}
+                    </Text>
+                    <Text style={styles.text}>
+                      Assigned At: {maintenance.createdAt.split('T')[0]}{' '}
+                      {maintenance.createdAt
+                        .split('T')[1]
+                        .split('.')[0]
+                        .slice(0, 5)}
+                    </Text>
+                    <View style={styles.separator} />
+                    {maintenance.reviewNote && (
+                      <Text style={styles.text}>
+                        Review Note: {maintenance.reviewNote}
+                      </Text>
+                    )}
+                    {maintenance.reviewedClerkName && (
+                      <Text style={styles.text}>
+                        Reviewed By: {maintenance.reviewedClerkName}
+                      </Text>
+                    )}
+                    {maintenance.reviewedAt && (
+                      <Text style={styles.text}>
+                        Reviewed At: {maintenance.reviewedAt.split('T')[0]}{' '}
+                        {maintenance.reviewedAt
+                          .split('T')[1]
+                          .split('.')[0]
+                          .slice(0, 5)}
+                      </Text>
+                    )}
+                    <View style={styles.separator} />
+                    <Text style={styles.text}>
+                      Status: {maintenance.status}
+                    </Text>
+                    {maintenance.reviewNote && (
+                      <>
+                        <View style={styles.separator} />
+                        <Text style={styles.descriptionText}>
+                          Review Note: {maintenance.reviewNote}
+                        </Text>
+                      </>
+                    )}
+                    <View style={styles.separator} />
+                    {maintenance.cost && (
+                      <Text style={styles.text}>Cost: {maintenance.cost}</Text>
+                    )}
+                    {maintenance.submitNote && (
+                      <Text style={styles.text}>
+                        Submit Note: {maintenance.submitNote}
+                      </Text>
+                    )}
+                  </ScrollView>
+                </SingleItemWithImage>
               </ScrollView>
             </SingleItemBackground>
           ) : null}

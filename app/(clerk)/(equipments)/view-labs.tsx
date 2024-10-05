@@ -37,7 +37,7 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
         <ListItemBackground>
           <ListItemWithImage link={item.imageUrl ?? 'lab'}>
             <Text style={styles.titleText}>{item.labName}</Text>
-            <Text style={styles.text}>Code: {item.labCode}</Text>
+            <Text style={styles.text}>Lab Code: {item.labCode}</Text>
           </ListItemWithImage>
         </ListItemBackground>
       )}

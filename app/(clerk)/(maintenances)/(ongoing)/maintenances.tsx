@@ -45,9 +45,15 @@ const ItemComponent: React.FC<{ item: Maintenance }> = ({ item }) => (
               Serial Number: {item.itemSerialNumber}
             </Text>
             <Text style={styles.text}>Lab: {item.labName}</Text>
-            <Text style={styles.text}>
-              End Date: {item.endDate.split('T')[0]}
-            </Text>
+            {item.status === 'Scheduled' ? (
+              <Text style={styles.text}>
+                Start Date: {item.startDate.split('T')[0]}
+              </Text>
+            ) : (
+              <Text style={styles.text}>
+                End Date: {item.endDate.split('T')[0]}
+              </Text>
+            )}
             <Text style={styles.text}>Status: {item.status}</Text>
           </ListItemWithImage>
         </ListItemBackground>
@@ -124,7 +130,7 @@ export default function viewOngoingMaintenancesScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No maintenances found</Text>
+              <Text style={styles.notFoundText}>No maintenances found</Text>
             )
           ) : null}
         </View>
@@ -171,5 +177,11 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: 'semibold',
+    marginTop: '50%',
   },
 });
