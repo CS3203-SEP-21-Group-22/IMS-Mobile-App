@@ -157,17 +157,17 @@ export default function ViewEquipmentScreen() {
                 >
                   <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Model Name:</Text>
+                    <Text style={styles.columnField}>Model Name :</Text>
                     <Text style={styles.columnValue}>{equipment.model}</Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnField}>Laboratory :</Text>
                     <Text style={styles.columnValue}>{equipment.labName}</Text>
                   </View>
                   {equipment.maintenanceIntervalDays && (
                     <View style={styles.row}>
                       <Text style={styles.columnField}>
-                        Maintenance Interval:
+                        Maintenance Interval :
                       </Text>
                       <Text style={styles.columnValue}>
                         {equipment.maintenanceIntervalDays} days
@@ -176,20 +176,20 @@ export default function ViewEquipmentScreen() {
                   )}
                   <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Total Item Count:</Text>
+                    <Text style={styles.columnField}>Total Item Count :</Text>
                     <Text style={styles.columnValue}>
                       {equipment.totalCount}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Reservation Count:</Text>
+                    <Text style={styles.columnField}>Reservation Count :</Text>
                     <Text style={styles.columnValue}>
                       {equipment.reservedCount}
                     </Text>
                   </View>
                   <View style={styles.row}>
                     <Text style={styles.columnField}>
-                      Available Item Count:
+                      Available Item Count :
                     </Text>
                     <Text style={styles.columnValue}>
                       {equipment.availableCount}

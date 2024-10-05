@@ -119,7 +119,18 @@ export default function ViewRequestedItemsScreen() {
                 }
               />
             ) : (
-              <Text style={styles.notFoundText}>No reservations found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>
+                    No reservation requests found
+                  </Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>

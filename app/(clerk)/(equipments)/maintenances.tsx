@@ -5,6 +5,7 @@ import {
   ActivityIndicator,
   Button,
   RefreshControl,
+  Pressable,
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -140,7 +141,16 @@ export default function ViewMaintenancesScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No maintenances found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No maintenances found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -210,5 +220,10 @@ const styles = StyleSheet.create({
     height: 0.1,
     width: '80%',
     backgroundColor: 'transparent',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

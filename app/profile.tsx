@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Image } from 'react-native';
 import { router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
 import BackgroundLayout from '@/components/BackgroundLayout';
@@ -49,15 +49,33 @@ export default function ProfileScreen() {
                 <View style={styles.textSeparator} />
                 <View style={styles.textSeparator} />
                 <Text style={styles.titleText}>
-                  Name: {user.firstName} {user.lastName}
+                  {user.firstName} {user.lastName}
                 </Text>
                 <View style={styles.textSeparator} />
-                <Text style={styles.text}>Email: {user.email}</Text>
-                <Text style={styles.text}>
-                  Contact Number: {user.contactNumber}
-                </Text>
                 <View style={styles.textSeparator} />
-                <Text style={styles.text}>Role: {user.role}</Text>
+                <Image
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 50,
+                    marginBottom: '4%',
+                  }}
+                  source={require('@/assets/images/profile.jpg')}
+                />
+                <View style={styles.textSeparator} />
+                <View style={styles.textSeparator} />
+                <View style={styles.row}>
+                  <Text style={styles.columnField}>Email : </Text>
+                  <Text style={styles.columnValue}>{user.email}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.columnField}>Contact No. : </Text>
+                  <Text style={styles.columnValue}>{user.contactNumber}</Text>
+                </View>
+                <View style={styles.row}>
+                  <Text style={styles.columnField}>User Role : </Text>
+                  <Text style={styles.columnValue}>{user.role}</Text>
+                </View>
                 <View style={styles.textSeparator} />
                 <View style={styles.textSeparator} />
               </View>
@@ -85,12 +103,12 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
   titleText: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   text: {
@@ -150,5 +168,24 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: '1%',
+    marginBottom: '2%',
+  },
+  columnField: {
+    flex: 0.7,
+    paddingLeft: '5%',
+    fontSize: 14,
+  },
+  columnValue: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 14,
+    fontWeight: 'semibold',
   },
 });

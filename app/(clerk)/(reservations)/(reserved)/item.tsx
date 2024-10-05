@@ -93,31 +93,31 @@ export default function ViewReservedItemScreen() {
                 >
                   <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnField}>Laboratory :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.labName}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Serial Number:</Text>
+                    <Text style={styles.columnField}>Serial Number :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.itemSerialNumber}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Requested User:</Text>
+                    <Text style={styles.columnField}>Requested User :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.reservedUserName}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Start Date:</Text>
+                    <Text style={styles.columnField}>Start Date :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.startDate.split('T')[0]}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>End Date:</Text>
+                    <Text style={styles.columnField}>End Date :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.endDate.split('T')[0]}
                     </Text>
@@ -126,16 +126,16 @@ export default function ViewReservedItemScreen() {
                   <View style={styles.textSeparator} />
 
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Accepted By:</Text>
+                    <Text style={styles.columnField}>Accepted By :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.respondedClerkName}
                     </Text>
                   </View>
 
-                  <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.text}>
-                      Accepted At : {reservation.respondedAt?.split('T')[0]}{' '}
+                    <Text style={styles.columnField}>Accepted At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.respondedAt?.split('T')[0]}{' '}
                       {reservation.createdAt
                         .split('T')[1]
                         .split('.')[0]

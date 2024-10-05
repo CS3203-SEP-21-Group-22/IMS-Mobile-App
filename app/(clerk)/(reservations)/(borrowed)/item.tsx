@@ -93,31 +93,31 @@ export default function ViewBorrowedItemScreen() {
                 >
                   <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnField}>Laboratory :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.labName}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Serial Number:</Text>
+                    <Text style={styles.columnField}>Serial Number :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.itemSerialNumber}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Borrowed User:</Text>
+                    <Text style={styles.columnField}>Borrowed User :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.reservedUserName}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Start Date:</Text>
+                    <Text style={styles.columnField}>Start Date :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.startDate.split('T')[0]}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>End Date:</Text>
+                    <Text style={styles.columnField}>End Date :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.endDate.split('T')[0]}
                     </Text>
@@ -126,15 +126,15 @@ export default function ViewBorrowedItemScreen() {
                   <View style={styles.textSeparator} />
 
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Borrowed From:</Text>
+                    <Text style={styles.columnField}>Borrowed From :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.lentClerkName}
                     </Text>
                   </View>
-                  <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.text}>
-                      Borrowed At: {reservation.borrowedAt?.split('T')[0]}{' '}
+                    <Text style={styles.columnField}>Borrowed At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.borrowedAt?.split('T')[0]}{' '}
                       {reservation.borrowedAt
                         ?.split('T')[1]
                         .split('.')[0]

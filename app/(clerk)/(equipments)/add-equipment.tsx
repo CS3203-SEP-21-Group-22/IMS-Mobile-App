@@ -18,6 +18,7 @@ import WideButton from '@/components/WideButton';
 import { CreateEquipment } from '@/interfaces/equipment.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 import { Alert } from 'react-native';
+import Colors from '@/constants/Colors';
 
 export default function AddEquipmentScreen() {
   const { labId } = useLocalSearchParams<{ labId: string }>();
@@ -100,43 +101,62 @@ export default function AddEquipmentScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Add New Equipment' />
           <EditSingleItemBackground>
+            <View style={styles.separator} />
             <Text style={styles.title}>Equipment Details</Text>
-            <Text style={styles.text}>Name</Text>
+            <View style={styles.textSeparator} />
+            <View style={styles.FieldLine}>
+              <View style={styles.selectBoxRow}>
+                <View style={styles.rowField}>
+                  <Text>Name :</Text>
+                </View>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder='Enter Equipment Name'
+                  value={equipment.name ?? ''}
+                  onChangeText={(text) =>
+                    setEquipment({ ...equipment, name: text })
+                  }
+                />
+              </View>
+              {errors
+                .filter(([key, value]) => key === 'name')
+                .map(([key, value]) => (
+                  <Text key={key} style={styles.errorText}>
+                    {value}
+                  </Text>
+                ))}
+            </View>
+            <View style={styles.FieldLine}>
+              <View style={styles.selectBoxRow}>
+                <View style={styles.rowField}>
+                  <Text>Model :</Text>
+                </View>
+                <TextInput
+                  style={styles.textInput}
+                  placeholder='Enter Equipment Model'
+                  value={equipment.model ?? ''}
+                  onChangeText={(text) =>
+                    setEquipment({ ...equipment, model: text })
+                  }
+                />
+              </View>
+              {errors
+                .filter(([key, value]) => key === 'model')
+                .map(([key, value]) => (
+                  <Text key={key} style={styles.errorText}>
+                    {value}
+                  </Text>
+                ))}
+            </View>
+            <View style={styles.textSeparator} />
+            <View style={styles.selectBoxRow}>
+              <View style={styles.rowField}>
+                <Text>Maintenance Interval :</Text>
+              </View>
+            </View>
             <TextInput
-              style={styles.textInput}
-              placeholder='Enter Equipment Name'
-              value={equipment.name ?? ''}
-              onChangeText={(text) =>
-                setEquipment({ ...equipment, name: text })
-              }
-            />
-            {errors
-              .filter(([key, value]) => key === 'name')
-              .map(([key, value]) => (
-                <Text key={key} style={styles.errorText}>
-                  {value}
-                </Text>
-              ))}
-            <Text style={styles.text}>Model</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder='Enter Equipment Model'
-              value={equipment.model ?? ''}
-              onChangeText={(text) =>
-                setEquipment({ ...equipment, model: text })
-              }
-            />
-            {errors
-              .filter(([key, value]) => key === 'model')
-              .map(([key, value]) => (
-                <Text key={key} style={styles.errorText}>
-                  {value}
-                </Text>
-              ))}
-            <Text style={styles.text}>Maintenance Interval (Days)</Text>
-            <TextInput
-              style={styles.textInput}
-              placeholder='Enter Maintenance Interval'
+              style={styles.longTextInput}
+              placeholder='Enter Number of Days'
               keyboardType='numeric'
               value={
                 equipment.maintenanceIntervalDays
@@ -157,6 +177,7 @@ export default function AddEquipmentScreen() {
                   {value}
                 </Text>
               ))}
+            <View style={styles.textSeparator} />
             <Image
               source={
                 imageURL
@@ -179,6 +200,7 @@ export default function AddEquipmentScreen() {
                   {value}
                 </Text>
               ))}
+            <View style={styles.separator} />
             <View style={styles.separator} />
           </EditSingleItemBackground>
           {loading ? (
@@ -206,10 +228,10 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: '2%',
-    marginBottom: '1%',
+    marginBottom: '5%',
   },
   separator: {
     marginVertical: '1%',
@@ -223,15 +245,26 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    marginTop: '1%',
     fontSize: 12,
+    alignSelf: 'center',
+    marginBottom: '3%',
   },
   textInput: {
-    width: '80%',
-    padding: '1%',
+    width: '70%',
+    padding: '0.5%',
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 8,
+    paddingLeft: 13,
+    marginBottom: '2%',
+  },
+  longTextInput: {
+    width: '90%',
+    padding: '0.5%',
+    backgroundColor: 'white',
+    borderRadius: 8,
     paddingLeft: 15,
+    marginLeft: '3%',
+    marginBottom: '2%',
   },
   image: {
     marginTop: '4%',
@@ -252,5 +285,72 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+  },
+  selectBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  FieldLine: {
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    // paddingTop: '3%',
+  },
+  dateRowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    paddingTop: '3%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  datePickerButton: {
+    backgroundColor: Colors.dark.secondary.background,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: '2%',
+    width: '60%',
+    marginTop: '2%',
+    marginBottom: '1%',
   },
 });

@@ -119,7 +119,16 @@ export default function ViewReservedItemsScreen() {
                 }
               />
             ) : (
-              <Text style={styles.notFoundText}>No reservations found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No Reserved Items</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>

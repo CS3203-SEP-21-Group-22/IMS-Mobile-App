@@ -37,7 +37,7 @@ const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => (
         <ListItemBackground>
           <ListItemWithImage link={item.imageUrl ?? 'lab'}>
             <Text style={styles.titleText}>{item.labName}</Text>
-            <Text style={styles.text}>Lab Code: {item.labCode}</Text>
+            <Text style={styles.text}>Lab Code : {item.labCode}</Text>
           </ListItemWithImage>
         </ListItemBackground>
       )}
@@ -113,7 +113,16 @@ export default function ViewLabsScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No labs found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                  <Text style={styles.notFoundText}>No labs found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -141,6 +150,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 11,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

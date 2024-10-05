@@ -73,8 +73,8 @@ export default function ViewEquipmentsScreen() {
           <ListItemBackground>
             <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
               <Text style={styles.titleText}>{item.name}</Text>
-              <Text style={styles.text}>Model: {item.model}</Text>
-              <Text style={styles.text}>Lab: {item.labName}</Text>
+              <Text style={styles.text}>Model : {item.model}</Text>
+              <Text style={styles.text}>Lab : {item.labName}</Text>
             </ListItemWithImage>
           </ListItemBackground>
         )}
@@ -120,7 +120,16 @@ export default function ViewEquipmentsScreen() {
                 }
               />
             ) : (
-              <Text style={styles.text}>No equipments found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                  <Text style={styles.notFoundText}>No equipments found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
           {!loading ? (
@@ -154,7 +163,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 11,
   },
   button: {
     width: '100%',
@@ -172,5 +181,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

@@ -93,9 +93,9 @@ export default function ViewItemsScreen() {
           <ListItemBackground>
             <ListItemWithImage link={item.imageUrl ?? 'equipment'}>
               <Text style={styles.text}>
-                Serial Number: {item.serialNumber}
+                Serial Number : {item.serialNumber}
               </Text>
-              <Text style={styles.text}>Status: {item.status}</Text>
+              <Text style={styles.text}>Status : {item.status}</Text>
             </ListItemWithImage>
           </ListItemBackground>
         )}
@@ -142,7 +142,16 @@ export default function ViewItemsScreen() {
                 }
               />
             ) : (
-              <Text>No items found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                  <Text style={styles.notFoundText}>No items found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
           {!loading ? (
@@ -176,7 +185,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 13,
+    fontSize: 12,
   },
   button: {
     width: '100%',
@@ -194,5 +203,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     paddingTop: '2.5%',
     paddingBottom: '2.5%',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

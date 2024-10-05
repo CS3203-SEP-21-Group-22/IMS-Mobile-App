@@ -172,7 +172,16 @@ export default function ViewReservationsScreen() {
                 }
               />
             ) : (
-              <Text>No reservations found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No reservations found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
@@ -242,5 +251,10 @@ const styles = StyleSheet.create({
     height: 0.1,
     width: '80%',
     backgroundColor: 'transparent',
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });

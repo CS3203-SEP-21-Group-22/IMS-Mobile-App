@@ -142,33 +142,34 @@ export default function ViewRequestedItemScreen() {
                 >
                   <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnField}>Laboratory :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.labName}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Requested User:</Text>
+                    <Text style={styles.columnField}>Requested User :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.reservedUserName}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Start Date:</Text>
+                    <Text style={styles.columnField}>Start Date :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.startDate.split('T')[0]}
                     </Text>
                   </View>
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>End Date:</Text>
+                    <Text style={styles.columnField}>End Date :</Text>
                     <Text style={styles.columnValue}>
                       {reservation.endDate.split('T')[0]}
                     </Text>
                   </View>
                   <View style={styles.textSeparator} />
                   <View style={styles.row}>
-                    <Text style={styles.text}>
-                      Requested At : {reservation.createdAt.split('T')[0]}{' '}
+                    <Text style={styles.columnField}>Requested At :</Text>
+                    <Text style={styles.columnValue}>
+                      {reservation.createdAt.split('T')[0]}{' '}
                       {reservation.createdAt
                         .split('T')[1]
                         .split('.')[0]
@@ -178,7 +179,7 @@ export default function ViewRequestedItemScreen() {
                   <View style={styles.textSeparator} />
                   <View style={styles.selectBoxRow}>
                     <View style={styles.rowField}>
-                      <Text>Assigned Item: </Text>
+                      <Text>Assigned Item :</Text>
                     </View>
                     <Dropdown
                       data={itemsList}
@@ -208,7 +209,7 @@ export default function ViewRequestedItemScreen() {
                   </View>
 
                   <View style={styles.row}>
-                    <Text style={styles.columnField}>Reject Note:</Text>
+                    <Text style={styles.columnField}>Reject Note :</Text>
                   </View>
                   <TextInput
                     style={styles.multilineInput}
@@ -321,12 +322,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     // marginBottom: 8,
     backgroundColor: 'transparent',
-    marginHorizontal: 5,
+    marginHorizontal: '1%',
   },
   rowField: {
     backgroundColor: 'transparent',
     flex: 1,
-    paddingLeft: '5%',
+    paddingLeft: '4%',
     fontSize: 13,
     alignSelf: 'center',
     paddingBottom: '2%',

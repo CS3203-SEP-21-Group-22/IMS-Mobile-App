@@ -211,7 +211,11 @@ export default function AddMaintenanceScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='Create Maintenance' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -554,7 +558,6 @@ const styles = StyleSheet.create({
   },
   errorText: {
     color: 'red',
-    // marginTop: '2%',
     fontSize: 12,
     alignSelf: 'center',
   },

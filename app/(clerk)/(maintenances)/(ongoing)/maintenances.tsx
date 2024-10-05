@@ -130,7 +130,18 @@ export default function viewOngoingMaintenancesScreen() {
                 }
               />
             ) : (
-              <Text style={styles.notFoundText}>No maintenances found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                  <Text style={styles.notFoundText}>
+                    No Ongoing Maintenances
+                  </Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>

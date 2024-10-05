@@ -14,8 +14,8 @@ import BackgroundLayout from '@/components/BackgroundLayout';
 import ContentContainer from '@/components/ContentContainer';
 import MainHeader from '@/components/MainHeader';
 import ContentContainerHeader from '@/components/ContentContainerHeader';
-import SingleItemWithImage from '@/components/SingleItemWithImage';
 import SingleItemBackground from '@/components/SingleItemBackground';
+import SingleItemWithImage from '@/components/SingleItemWithImage';
 import ClerkMaintenancesHorizontalBar from '@/components/ClerkMaintHorizontalBar';
 import React, { useState, useEffect } from 'react';
 import WideButton from '@/components/WideButton';
@@ -61,7 +61,11 @@ export default function viewCompletedMaintenanceScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Maintenance' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -81,80 +85,121 @@ export default function viewCompletedMaintenanceScreen() {
                   }
                   link={maintenance.imageUrl ?? 'equipment'}
                 >
-                  <ScrollView
-                    style={{ width: '100%' }}
-                    contentContainerStyle={{ alignItems: 'center' }}
-                  >
-                    {/* <Text style={styles.title}>
-                      {maintenance.itemName} ({maintenance.itemModel})
-                    </Text> */}
-                    <View style={styles.separator} />
-                    <Text style={styles.text}>
-                      Serial Number: {maintenance.itemSerialNumber}
+                  <View style={styles.separator} />
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Laboratory:</Text>
+                    <Text style={styles.columnValue}>
+                      {maintenance.labName}
                     </Text>
-                    <Text style={styles.text}>Lab: {maintenance.labName}</Text>
-                    <View style={styles.separator} />
-                    <Text style={styles.text}>
-                      From: {maintenance.startDate.split('T')[0]} To:{' '}
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Serial Number:</Text>
+                    <Text style={styles.columnValue}>
+                      {maintenance.itemSerialNumber}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Start Date:</Text>
+                    <Text style={styles.columnValue}>
+                      {maintenance.startDate.split('T')[0]}
+                    </Text>
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>End Date:</Text>
+                    <Text style={styles.columnValue}>
                       {maintenance.endDate.split('T')[0]}
                     </Text>
-                    <View style={styles.separator} />
-                    <Text style={[styles.descriptionText, { width: '95%' }]}>
-                      Task Description: {maintenance.taskDescription}
+                  </View>
+
+                  <View style={styles.separator} />
+
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Assigned By:</Text>
+                    <Text style={styles.columnValue}>
+                      {maintenance.createdClerkName}
                     </Text>
-                    <View style={styles.separator} />
-                    <Text style={styles.text}>
-                      Assigned By: {maintenance.createdClerkName}
-                    </Text>
-                    <Text style={styles.text}>
-                      Assigned At: {maintenance.createdAt.split('T')[0]}{' '}
+                  </View>
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Assigned At:</Text>
+                    <Text style={styles.columnValue}>
+                      {maintenance.createdAt.split('T')[0]}{' '}
                       {maintenance.createdAt
                         .split('T')[1]
                         .split('.')[0]
                         .slice(0, 5)}
                     </Text>
-                    <View style={styles.separator} />
-                    {maintenance.reviewNote && (
-                      <Text style={styles.text}>
-                        Review Note: {maintenance.reviewNote}
+                  </View>
+
+                  <View style={styles.textSeparator} />
+
+                  {maintenance.reviewedClerkName && (
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Reviewed By:</Text>
+                      <Text style={styles.columnValue}>
+                        {maintenance.reviewedClerkName}
                       </Text>
-                    )}
-                    {maintenance.reviewedClerkName && (
-                      <Text style={styles.text}>
-                        Reviewed By: {maintenance.reviewedClerkName}
-                      </Text>
-                    )}
-                    {maintenance.reviewedAt && (
-                      <Text style={styles.text}>
-                        Reviewed At: {maintenance.reviewedAt.split('T')[0]}{' '}
+                    </View>
+                  )}
+                  {maintenance.reviewedAt && (
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Reviewed At:</Text>
+                      <Text style={styles.columnValue}>
+                        {maintenance.reviewedAt.split('T')[0]}{' '}
                         {maintenance.reviewedAt
                           .split('T')[1]
                           .split('.')[0]
                           .slice(0, 5)}
                       </Text>
-                    )}
-                    <View style={styles.separator} />
-                    <Text style={styles.text}>
-                      Status: {maintenance.status}
+                    </View>
+                  )}
+
+                  {maintenance.cost && <View style={styles.separator} />}
+                  {maintenance.cost && (
+                    <View style={styles.row}>
+                      <Text style={styles.columnField}>Cost:</Text>
+                      <Text style={styles.columnValue}>{maintenance.cost}</Text>
+                    </View>
+                  )}
+
+                  <View style={styles.separator} />
+                  <View style={styles.row}>
+                    <Text style={styles.columnField}>Status:</Text>
+                    <Text style={styles.columnValue}>{maintenance.status}</Text>
+                  </View>
+
+                  <View style={styles.textSeparator} />
+
+                  <View style={styles.descriptionContainer}>
+                    <Text style={styles.cHeader}>Task Description</Text>
+                    <Text style={styles.descriptionValue}>
+                      {maintenance.taskDescription}
                     </Text>
-                    {maintenance.reviewNote && (
-                      <>
-                        <View style={styles.separator} />
-                        <Text style={styles.descriptionText}>
-                          Review Note: {maintenance.reviewNote}
-                        </Text>
-                      </>
-                    )}
-                    <View style={styles.separator} />
-                    {maintenance.cost && (
-                      <Text style={styles.text}>Cost: {maintenance.cost}</Text>
-                    )}
-                    {maintenance.submitNote && (
-                      <Text style={styles.text}>
-                        Submit Note: {maintenance.submitNote}
+                  </View>
+
+                  {maintenance.submitNote && (
+                    <View style={styles.textSeparator} />
+                  )}
+                  {maintenance.submitNote && (
+                    <View style={styles.descriptionContainer}>
+                      <Text style={styles.cHeader}>Submit Note</Text>
+                      <Text style={styles.descriptionValue}>
+                        {maintenance.submitNote}
                       </Text>
-                    )}
-                  </ScrollView>
+                    </View>
+                  )}
+
+                  {maintenance.reviewNote && (
+                    <View style={styles.textSeparator} />
+                  )}
+                  {maintenance.reviewNote && (
+                    <View style={styles.descriptionContainer}>
+                      <Text style={styles.cHeader}>Review Note</Text>
+                      <Text style={styles.descriptionValue}>
+                        {maintenance.reviewNote}
+                      </Text>
+                    </View>
+                  )}
                 </SingleItemWithImage>
               </ScrollView>
             </SingleItemBackground>
@@ -169,7 +214,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -189,12 +234,6 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 11,
     marginBottom: '0.2%',
-  },
-  textSeparator: {
-    marginVertical: '2%',
-    height: 0.1,
-    width: '80%',
-    backgroundColor: 'transparent',
   },
   dropdown: {
     marginTop: '2%',
@@ -251,5 +290,56 @@ const styles = StyleSheet.create({
   separator: {
     marginVertical: '1%',
     width: '80%',
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '1%',
+    height: 0.1,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  descriptionContainer: {
+    backgroundColor: 'transparent',
+    marginHorizontal: '5%',
+    marginTop: '2%',
+  },
+  cHeader: {
+    color: 'white',
+    fontSize: 13,
+    fontWeight: 'bold',
+  },
+  descriptionValue: {
+    color: 'white',
+    fontSize: 13,
   },
 });
