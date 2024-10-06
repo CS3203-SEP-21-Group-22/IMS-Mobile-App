@@ -18,6 +18,7 @@ import WideButton from '@/components/WideButton';
 import { useState } from 'react';
 import { Lab } from '@/interfaces/lab.interface';
 import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
+import Colors from '@/constants/Colors';
 
 export default function UpdateLabScreen() {
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -138,34 +139,49 @@ export default function UpdateLabScreen() {
           {lab && (
             <EditSingleItemBackground>
               <Text style={styles.title}>Lab Details</Text>
-              <Text style={styles.text}>Lab Name</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder='Enter Lab Name'
-                value={lab.labName ?? ''}
-                onChangeText={(text) => setLab({ ...lab, labName: text })}
-              />
-              {errors
-                .filter(([key, value]) => key === 'labName')
-                .map(([key, value]) => (
-                  <Text key={key} style={styles.errorText}>
-                    {value}
-                  </Text>
-                ))}
-              <Text style={styles.text}>Lab Code</Text>
-              <TextInput
-                style={styles.textInput}
-                placeholder='Enter Lab Code'
-                value={lab.labCode ?? ''}
-                onChangeText={(text) => setLab({ ...lab, labCode: text })}
-              />
-              {errors
-                .filter(([key, value]) => key === 'labCode')
-                .map(([key, value]) => (
-                  <Text key={key} style={styles.errorText}>
-                    {value}
-                  </Text>
-                ))}
+              <View style={styles.textSeparator} />
+              <View style={styles.FieldLine}>
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.rowField}>
+                    <Text>Name :</Text>
+                  </View>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='Enter Lab Name'
+                    value={lab.labName ?? ''}
+                    onChangeText={(text) => setLab({ ...lab, labName: text })}
+                  />
+                </View>
+                {errors
+                  .filter(([key, value]) => key === 'labName')
+                  .map(([key, value]) => (
+                    <Text key={key} style={styles.errorText}>
+                      {value}
+                    </Text>
+                  ))}
+              </View>
+              <View style={styles.separator} />
+              <View style={styles.FieldLine}>
+                <View style={styles.selectBoxRow}>
+                  <View style={styles.rowField}>
+                    <Text>Code :</Text>
+                  </View>
+                  <TextInput
+                    style={styles.textInput}
+                    placeholder='Enter Lab Code'
+                    value={lab.labCode ?? ''}
+                    onChangeText={(text) => setLab({ ...lab, labCode: text })}
+                  />
+                </View>
+                {errors
+                  .filter(([key, value]) => key === 'labCode')
+                  .map(([key, value]) => (
+                    <Text key={key} style={styles.errorText}>
+                      {value}
+                    </Text>
+                  ))}
+              </View>
+              <View style={styles.textSeparator} />
               <Image
                 source={
                   imageURL
@@ -189,26 +205,23 @@ export default function UpdateLabScreen() {
                   </Text>
                 ))}
               <View style={styles.separator} />
+              <View style={styles.textSeparator} />
             </EditSingleItemBackground>
           )}
-          {updateLoading ? (
-            <ActivityIndicator size='large' color='black' />
-          ) : (
-            <WideButton
-              buttonClickHandler={handleUpdateButtonPress}
-              text='Update Lab'
-            />
-          )}
-          {deleteLoading ? (
-            <ActivityIndicator size='large' color='black' />
-          ) : (
-            <WideButton
-              buttonClickHandler={showAlert}
-              text='Remove Lab'
-              danger
-            />
-          )}
         </View>
+        {updateLoading ? (
+          <ActivityIndicator size='large' color='black' />
+        ) : (
+          <WideButton
+            buttonClickHandler={handleUpdateButtonPress}
+            text='Update Lab'
+          />
+        )}
+        {deleteLoading ? (
+          <ActivityIndicator size='large' color='black' />
+        ) : (
+          <WideButton buttonClickHandler={showAlert} text='Remove Lab' danger />
+        )}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -218,12 +231,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
@@ -244,16 +257,84 @@ const styles = StyleSheet.create({
     fontSize: 12,
   },
   textInput: {
-    width: '80%',
-    padding: '1%',
+    width: '70%',
+    padding: '0.5%',
     backgroundColor: 'white',
-    borderRadius: 10,
-    paddingLeft: 15,
+    borderRadius: 8,
+    paddingLeft: 13,
+    marginBottom: '2%',
   },
   image: {
     marginTop: '4%',
     marginBottom: '3%',
     width: 100,
     height: 100,
+  },
+  selectBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    // marginBottom: 8,
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  FieldLine: {
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    // paddingTop: '3%',
+  },
+  dateRowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    paddingTop: '3%',
+  },
+  columnField: {
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+  },
+  columnValue: {
+    flex: 0.8,
+    textAlign: 'left',
+    fontSize: 13,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '2%',
+    height: 0.2,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  datePickerButton: {
+    backgroundColor: Colors.dark.secondary.background,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: '2%',
+    width: '60%',
+    marginTop: '2%',
+    marginBottom: '1%',
   },
 });

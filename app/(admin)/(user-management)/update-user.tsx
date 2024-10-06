@@ -4,6 +4,8 @@ import {
   TextInput,
   ImageBackground,
   Image,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { Link, router, useLocalSearchParams } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -15,59 +17,67 @@ import EditSingleItemBackground from '@/components/EditSingleItemBackground';
 import { useState, useEffect } from 'react';
 import { Dropdown } from 'react-native-element-dropdown';
 import WideButton from '@/components/WideButton';
-
-interface User {
-  id: number | null;
-  email: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  role: string | null;
-  contactNumber: string | null;
-}
-
-interface UserRole {
-  id: number;
-  role: string;
-}
+import Colors from '@/constants/Colors';
+import { User } from '@/interfaces/userProfile.interface';
+import { axiosApi, initializeAxiosApi } from '@/utils/AxiosApi';
 
 export default function UpdateUserScreen() {
-  const { userId } = useLocalSearchParams<{ userId: string }>();
-  const [role, setRole] = useState<string | null>(null);
+  const { userId, firstName, lastName, email, role, contactNumber } =
+    useLocalSearchParams<{
+      userId: string;
+      firstName: string;
+      lastName: string;
+      email: string;
+      role: string;
+      contactNumber: string;
+    }>();
+  if (!userId || !firstName || !lastName || !email || !role || !contactNumber) {
+    throw new Error('Missing user details');
+  }
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
   const [user, setUser] = useState<User>({
-    id: null,
-    email: null,
-    firstName: null,
-    lastName: null,
-    role: null,
-    contactNumber: null,
+    userId: parseInt(userId),
+    firstName,
+    lastName,
+    email,
+    role,
+    contactNumber,
   });
-  const userRoles: UserRole[] = [
-    { id: 1, role: 'Student/Academic Staff' },
-    { id: 2, role: 'Office Clerk' },
-    { id: 3, role: 'Technician' },
-    { id: 4, role: 'Administrator' },
+  const userRoles: { displayedName: string; role: string }[] = [
+    { displayedName: 'Office Clerk', role: 'Clerk' },
+    { displayedName: 'Technician', role: 'Technician' },
+    { displayedName: 'Student', role: 'Student' },
+    { displayedName: 'Academic Staff', role: 'AcademicStaff' },
+    { displayedName: 'System Admin', role: 'SystemAdmin' },
   ];
-  useEffect(() => {
-    if (userId) {
-      setUser({
-        id: 1,
-        email: 'JohnDoe@uok.uk',
-        firstName: 'John',
-        lastName: 'Doe',
-        role: 'Student/Academic Staff',
-        contactNumber: '+4423456765',
-      });
-      setRole('Student/Academic Staff');
-    } else {
-      throw new Error('Missing user ID');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleButtonPress = async () => {
+    setLoading(true);
+    try {
+      await initializeAxiosApi();
+      const response = await axiosApi.patch(
+        `/admin/users/${userId}?role=${selectedRole}`,
+      );
+      if (response.status === 200) {
+        Alert.alert('Success', 'User role updated successfully');
+        router.back();
+      } else Alert.alert('Error', 'Failed to update user role');
+    } catch (err: any) {
+      if (err.response.status === 400) {
+        setError('Failed to update user role');
+      }
+      Alert.alert('Error', 'Failed to update user role');
+    } finally {
+      setLoading(false);
     }
-  }, [userId]);
-  const handleUpdateButtonPress = () => {
-    router.back();
   };
-  const handleSelectRole = (role: UserRole) => {
-    setRole(role.role);
+
+  const handleSelectRole = (role: string) => {
+    setSelectedRole(role);
   };
+
   return (
     <BackgroundLayout>
       <MainHeader title='User Management' />
@@ -76,37 +86,58 @@ export default function UpdateUserScreen() {
           <ContentContainerHeader title='Update User Role' />
           <EditSingleItemBackground>
             <Text style={styles.title}>User Details</Text>
+            <View style={styles.textSeparator} />
+            <View style={styles.row}>
+              <Text style={styles.columnField}>Name :</Text>
+              <Text style={styles.columnValue}>
+                {user.firstName} {user.lastName}
+              </Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.columnField}>Email :</Text>
+              <Text style={styles.columnValue}>{user.email}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.columnField}>Contact No. :</Text>
+              <Text style={styles.columnValue}>{user.contactNumber}</Text>
+            </View>
+            <View style={styles.row}>
+              <Text style={styles.columnField}>Current Role :</Text>
+              <Text style={styles.columnValue}>{user.role}</Text>
+            </View>
+
             <View style={styles.separator} />
-            <Text style={styles.text}>
-              Name: {user.firstName} {user.lastName}
-            </Text>
-            <Text style={styles.text}>Email: {user.email}</Text>
-            <Text style={styles.text}>Current Role: {user.role}</Text>
-            <Text style={styles.text}>
-              Contact Number: {user.contactNumber}
-            </Text>
-            <View style={styles.separator} />
-            <Text style={styles.text}>Change User Role to:</Text>
+            <Text style={styles.text}>Change User Role to :</Text>
             <Dropdown
               data={userRoles}
               mode='modal'
               search
               searchPlaceholder='Search Item'
               labelField='role'
-              valueField='id'
-              onChange={(item) => handleSelectRole(item)}
+              valueField='displayedName'
+              onChange={(item) => handleSelectRole(item.role)}
               style={styles.dropdown}
-              placeholder={role ? role : 'Select Role'}
+              placeholder={selectedRole ? selectedRole : 'Select New Role'}
               placeholderStyle={styles.dropdownText}
               selectedTextStyle={styles.dropdownText}
             />
             <View style={styles.separator} />
           </EditSingleItemBackground>
+        </View>
+        {loading ? (
+          <ActivityIndicator size='large' color='#ffffff' />
+        ) : error ? (
+          <WideButton text='Retry' buttonClickHandler={handleButtonPress} />
+        ) : user.role != selectedRole && user.role != 'SystemAdmin' ? (
           <WideButton
             text='Update User Role'
-            buttonClickHandler={handleUpdateButtonPress}
+            buttonClickHandler={handleButtonPress}
           />
-        </View>
+        ) : (
+          <Text style={styles.errorText}>
+            Cannot update System Admin's Role
+          </Text>
+        )}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -116,12 +147,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginTop: '2%',
     marginBottom: '1%',
@@ -136,12 +167,20 @@ const styles = StyleSheet.create({
     marginTop: '2%',
     // marginBottom: '1%',
   },
+  errorText: {
+    color: 'red',
+    marginTop: '1%',
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginBottom: '40%',
+  },
   textInput: {
-    width: '80%',
-    padding: '1%',
+    width: '70%',
+    padding: '0.5%',
     backgroundColor: 'white',
-    borderRadius: 10,
-    paddingLeft: 15,
+    borderRadius: 8,
+    paddingLeft: 13,
+    marginBottom: '2%',
   },
   image: {
     marginTop: '4%',
@@ -179,5 +218,72 @@ const styles = StyleSheet.create({
   buttonText: {
     color: 'white',
     fontSize: 18,
+  },
+  selectBoxRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+  },
+  singleItemRow: {
+    alignSelf: 'flex-start',
+    marginHorizontal: '6%',
+    backgroundColor: 'transparent',
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    backgroundColor: 'transparent',
+    marginHorizontal: 5,
+    marginBottom: '2%',
+  },
+  FieldLine: {
+    backgroundColor: 'transparent',
+    width: '100%',
+  },
+  rowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    // paddingTop: '3%',
+  },
+  dateRowField: {
+    backgroundColor: 'transparent',
+    flex: 1,
+    paddingLeft: '5%',
+    fontSize: 13,
+    alignSelf: 'center',
+    paddingBottom: '2%',
+    paddingTop: '3%',
+  },
+  columnField: {
+    flex: 0.7,
+    paddingLeft: '5%',
+    fontSize: 14,
+  },
+  columnValue: {
+    flex: 1,
+    textAlign: 'left',
+    fontSize: 14,
+    fontWeight: 'semibold',
+  },
+  textSeparator: {
+    marginVertical: '2%',
+    height: 0.2,
+    width: '80%',
+    backgroundColor: 'transparent',
+  },
+  datePickerButton: {
+    backgroundColor: Colors.dark.secondary.background,
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: '2%',
+    width: '60%',
+    marginTop: '2%',
+    marginBottom: '1%',
   },
 });

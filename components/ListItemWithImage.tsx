@@ -10,7 +10,9 @@ const ListItemWithImage: React.FC<{
       ? require('@/assets/images/labSample.png')
       : link === 'equipment'
         ? require('@/assets/images/equipmentSample.png')
-        : { uri: link };
+        : link === 'user'
+          ? require('@/assets/images/profile.jpg')
+          : { uri: link };
   return (
     <View style={styles.container}>
       <Image
