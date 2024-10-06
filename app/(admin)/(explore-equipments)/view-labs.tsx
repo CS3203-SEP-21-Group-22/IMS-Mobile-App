@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 11,
   },
   notFoundText: {
     color: 'white',

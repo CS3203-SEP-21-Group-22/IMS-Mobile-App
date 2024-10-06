@@ -3,6 +3,7 @@ import {
   Pressable,
   FlatList,
   ActivityIndicator,
+  RefreshControl,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 import { Text, View } from '@/components/Themed';
@@ -17,6 +18,7 @@ import WideButton from '@/components/WideButton';
 import { Lab } from '@/interfaces/lab.interface';
 import { initializeAxiosApi, axiosApi } from '@/utils/AxiosApi';
 import { Alert, Button } from 'react-native';
+import Colors from '@/constants/Colors';
 
 const ItemComponent: React.FC<{ item: Lab }> = ({ item }) => {
   return (
@@ -57,6 +59,7 @@ export default function ViewLabsScreen() {
 
   // Fetch data from the API
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await axiosApi.get('/user/labs');
       setLabs(response.data);
@@ -85,7 +88,11 @@ export default function ViewLabsScreen() {
         <View style={styles.container}>
           <ContentContainerHeader title='View Labs' />
           {loading ? (
-            <ActivityIndicator size='large' color='#ffffff' />
+            <ActivityIndicator
+              size='large'
+              color='#ffffff'
+              style={{ marginTop: '50%' }}
+            />
           ) : error ? (
             <View>
               <Text>Error: {error}</Text>
@@ -104,13 +111,34 @@ export default function ViewLabsScreen() {
                   width: '100%',
                   backgroundColor: 'transparent',
                 }}
+                refreshControl={
+                  <RefreshControl
+                    refreshing={loading}
+                    onRefresh={fetchData}
+                    colors={[Colors.dark.secondary.background]}
+                  />
+                }
               />
             ) : (
-              <Text style={styles.text}>No labs found</Text>
+              <View
+                style={{
+                  height: '83%',
+                  backgroundColor: 'transparent',
+                }}
+              >
+                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                  <Text style={styles.notFoundText}>No labs found</Text>
+                </Pressable>
+              </View>
             )
           ) : null}
         </View>
-        <WideButton text='Add New Lab' buttonClickHandler={handleButtonClick} />
+        {!loading && !error ? (
+          <WideButton
+            text='Add New Lab'
+            buttonClickHandler={handleButtonClick}
+          />
+        ) : null}
       </ContentContainer>
     </BackgroundLayout>
   );
@@ -120,7 +148,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     backgroundColor: 'transparent',
     width: '100%',
   },
@@ -135,6 +163,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: 'white',
-    fontSize: 10,
+    fontSize: 11,
+  },
+  notFoundText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'semibold',
   },
 });
