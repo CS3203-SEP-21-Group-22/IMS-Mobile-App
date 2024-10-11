@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "lab-tracker",
+    "name": "Lab Tracker",
     "slug": "lab-tracker",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logo.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
@@ -19,7 +19,9 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": ["android.permission.RECORD_AUDIO"],
+      "package": "com.sharada001.labtracker"
     },
     "web": {
       "bundler": "metro",
@@ -35,6 +37,11 @@
     },
     "authServerUrl": "https://auth-server-g6hmcdavbgayb3fe.eastus-01.azurewebsites.net",
     "authClientId": "group22-client-id",
-    "backendAPIUrl": "https://ims-api-fbf3hheffacqe5ak.westus2-01.azurewebsites.net/api"
+    "backendAPIUrl": "https://ims-api-fbf3hheffacqe5ak.westus2-01.azurewebsites.net/api",
+    "extra": {
+      "eas": {
+        "projectId": "f448bc6e-4ba1-4b82-864e-e5a36ee4e5db"
+      }
+    }
   }
 }
