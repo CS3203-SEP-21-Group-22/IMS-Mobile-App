@@ -125,7 +125,7 @@ export default function ViewRequestedItemsScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '30%' }}>
                   <Text style={styles.notFoundText}>
                     No reservation requests found
                   </Text>

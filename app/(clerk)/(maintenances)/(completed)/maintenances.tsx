@@ -126,7 +126,7 @@ export default function ViewCompletedMaintenancesScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '30%' }}>
                   <Text style={styles.notFoundText}>
                     No Completed Maintenances
                   </Text>

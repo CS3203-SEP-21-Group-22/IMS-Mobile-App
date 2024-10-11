@@ -128,7 +128,7 @@ export default function ViewRequestedItemScreen() {
             </View>
           ) : reservation ? (
             <SingleItemBackground>
-              <ScrollView>
+              <ScrollView style={{ width: '100%' }}>
                 <SingleItemWithImage
                   title={
                     reservation.itemName
@@ -179,7 +179,7 @@ export default function ViewRequestedItemScreen() {
                   <View style={styles.textSeparator} />
                   <View style={styles.selectBoxRow}>
                     <View style={styles.rowField}>
-                      <Text>Assigned Item :</Text>
+                      <Text>Item :</Text>
                     </View>
                     <Dropdown
                       data={itemsList}
@@ -191,7 +191,9 @@ export default function ViewRequestedItemScreen() {
                       onChange={(item) => setSelectedItem(item)}
                       style={styles.dropdown}
                       placeholder={
-                        selectedItem ? selectedItem.serialNumber : 'Select Item'
+                        selectedItem
+                          ? selectedItem.serialNumber
+                          : 'Assign an Item'
                       }
                       placeholderStyle={styles.dropdownText}
                       selectedTextStyle={styles.dropdownText}
@@ -289,7 +291,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: '5%',
     paddingVertical: '2%',
-    width: '50%',
+    width: '70%',
   },
   dropdownText: {
     color: 'black',

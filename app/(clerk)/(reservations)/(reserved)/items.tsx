@@ -125,7 +125,7 @@ export default function ViewReservedItemsScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '30%' }}>
                   <Text style={styles.notFoundText}>No Reserved Items</Text>
                 </Pressable>
               </View>

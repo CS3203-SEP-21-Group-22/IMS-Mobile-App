@@ -136,7 +136,7 @@ export default function viewOngoingMaintenancesScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '60%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '30%' }}>
                   <Text style={styles.notFoundText}>
                     No Ongoing Maintenances
                   </Text>

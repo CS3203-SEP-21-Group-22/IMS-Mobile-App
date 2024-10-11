@@ -127,7 +127,7 @@ export default function ViewBorrowedItemsScreen() {
                   backgroundColor: 'transparent',
                 }}
               >
-                <Pressable onPress={fetchData} style={{ marginTop: '70%' }}>
+                <Pressable onPress={fetchData} style={{ marginTop: '30%' }}>
                   <Text style={styles.notFoundText}>No Borrowed Items</Text>
                 </Pressable>
               </View>

@@ -607,7 +607,7 @@ const styles = StyleSheet.create({
   multilineInput: {
     backgroundColor: 'white',
     width: 230,
-    height: 40,
+    height: 60,
     borderRadius: 8,
     paddingLeft: '6%',
   },
