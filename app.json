@@ -35,9 +35,9 @@
     "androidStatusBar": {
       "backgroundColor": "#000000"
     },
-    "authServerUrl": "https://auth-server-g6hmcdavbgayb3fe.eastus-01.azurewebsites.net",
+    "authServerUrl": "https://ims-api.azure-api.net",
     "authClientId": "group22-client-id",
-    "backendAPIUrl": "https://ims-api-fbf3hheffacqe5ak.westus2-01.azurewebsites.net/api",
+    "backendAPIUrl": "https://ims-api.azure-api.net/api",
     "extra": {
       "eas": {
         "projectId": "f448bc6e-4ba1-4b82-864e-e5a36ee4e5db"
